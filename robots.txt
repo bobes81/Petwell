@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://petwell-app-ivo-59ea39e413cf.herokuapp.com/sitemap.xml
