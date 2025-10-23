@@ -1,17 +1,23 @@
 {% extends "base.html" %}
-{% load static %}
+{% load i18n %}
+
 {% block content %}
-<div class="container mt-5" style="max-width: 450px;">
+<div class="container mt-5" style="max-width: 480px;">
   <div class="card shadow-sm">
     <div class="card-body">
-      <h2 class="text-center mb-4">Login to PetWell</h2>
+      <h3 class="text-center mb-4">Sign In</h3>
       <form method="post" action="{% url 'account_login' %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-primary w-100 mt-2">Login</button>
+        <div class="d-grid">
+          <button class="btn btn-primary mt-3" type="submit">Sign In</button>
+        </div>
       </form>
-      <p class="text-center mt-3">
-        <a href="{% url 'account_signup' %}">Don't have an account? Register here.</a>
+      <hr>
+      <p class="text-center">
+        <a href="{% url 'account_reset_password' %}">Forgot your password?</a><br>
+        Don't have an account?
+        <a href="{% url 'account_signup' %}">Register here</a>.
       </p>
     </div>
   </div>
