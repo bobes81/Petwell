@@ -9,15 +9,12 @@
       <form method="post" action="{% url 'account_login' %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <div class="d-grid">
-          <button class="btn btn-primary mt-3" type="submit">Sign In</button>
-        </div>
+        <button class="btn btn-primary w-100" type="submit">Sign In</button>
       </form>
       <hr>
-      <p class="text-center">
+      <p class="text-center small mb-0">
         <a href="{% url 'account_reset_password' %}">Forgot your password?</a><br>
-        Don't have an account?
-        <a href="{% url 'account_signup' %}">Register here</a>.
+        Don't have an account? <a href="{% url 'account_signup' %}">Register</a>
       </p>
     </div>
   </div>
