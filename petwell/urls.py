@@ -7,9 +7,10 @@ The `urlpatterns` list routes URLs to views. For more information please see:
 
 from django.contrib import admin
 from django.urls import path, include, re_path
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
 from django.http import HttpResponse
+from django.conf.urls import handler404
 
 # --- Robots.txt handler ---
 def robots_txt(request):
@@ -20,17 +21,27 @@ def robots_txt(request):
     )
     return HttpResponse(content, content_type="text/plain")
 
+
+# --- Custom 404 handler ---
+def custom_404(request, exception=None):
+    return render(request, "404.html", status=404)
+
+
+# --- URL patterns ---
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('blog/', include('blog.urls')),
-    path('accounts/', include('allauth.urls')),
+    path("admin/", admin.site.urls),
+    path("blog/", include("blog.urls")),
+    path("accounts/", include("allauth.urls")),
 
     # Redirect homepage to blog
-    path('', lambda request: redirect('blog_list')),
+    path("", lambda request: redirect("blog_list")),
 
     # Serve robots.txt
-    path('robots.txt', robots_txt, name='robots_txt'),
+    path("robots.txt", robots_txt, name="robots_txt"),
 
-    # Test 404 custom page
-    re_path(r'^404test/?$', TemplateView.as_view(template_name="404.html"), name='test_404'),
+    # Test 404 custom page (for verification)
+    re_path(r"^404test/?$", TemplateView.as_view(template_name="404.html"), name="test_404"),
 ]
+
+# --- Attach handler ---
+handler404 = custom_404
