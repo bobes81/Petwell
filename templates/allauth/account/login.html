@@ -1,16 +1,19 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
-<div class="container mt-5" style="max-width: 500px;">
-    <h2 class="text-center mb-4">Sign In</h2>
-    <form method="post" class="border p-4 rounded bg-light shadow-sm">
+<div class="container mt-5" style="max-width: 450px;">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h2 class="text-center mb-4">Login to PetWell</h2>
+      <form method="post" action="{% url 'account_login' %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <div class="text-center">
-            <button type="submit" class="btn btn-primary px-4">Sign In</button>
-        </div>
-    </form>
-    <div class="text-center mt-3">
-        <p>Don't have an account? <a href="{% url 'account_signup' %}">Sign up</a></p>
+        <button type="submit" class="btn btn-primary w-100 mt-2">Login</button>
+      </form>
+      <p class="text-center mt-3">
+        <a href="{% url 'account_signup' %}">Don't have an account? Register here.</a>
+      </p>
     </div>
+  </div>
 </div>
 {% endblock %}
