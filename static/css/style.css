@@ -125,3 +125,33 @@ footer a:hover {
         padding: 2rem;
     }
 }
+
+/* --- Blog List Styling --- */
+.blog-container h1 {
+  color: #1a1a1a;
+  font-weight: 700;
+  font-size: 2.2rem;
+}
+
+.blog-container p.text-muted {
+  font-size: 1.05rem;
+}
+
+.blog-container .card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.blog-container .card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile optimization */
+@media (max-width: 768px) {
+  .blog-container h1 {
+    font-size: 1.8rem;
+  }
+  .blog-container .card {
+    border-radius: 10px;
+  }
+}
