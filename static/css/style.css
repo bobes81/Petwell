@@ -6,16 +6,70 @@ html, body {
     flex-direction: column;
 }
 
-main {
+/* --- Body background for all pages --- */
+body {
+    background: linear-gradient(135deg, #eaf3ff 0%, #ffffff 100%) !important;
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    color: #1a1a1a;
     flex: 1 0 auto;
 }
 
-footer {
-    flex-shrink: 0;
+/* --- Hero (Homepage) --- */
+.hero {
+    min-height: 75vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 60px 20px;
 }
 
-/* --- PetWell Modern Footer --- */
+.hero h1 {
+    font-weight: 700;
+    color: #111;
+}
+
+.hero h1 span {
+    color: #007bff;
+}
+
+.hero p {
+    color: #5c6c7a;
+}
+
+.hero .btn {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    border-radius: 30px;
+    padding: 10px 30px;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.hero .btn:hover {
+    background-color: #0056d2;
+    transform: translateY(-2px);
+}
+
+/* --- Card Styling --- */
+.card {
+    background-color: #fff;
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* --- Footer --- */
 footer {
+    flex-shrink: 0;
     background: linear-gradient(90deg, #1f1f1f 0%, #2b2b2b 100%);
     color: #ccc;
     padding: 18px 0;
@@ -36,55 +90,38 @@ footer a:hover {
     color: #ffffff;
 }
 
-/* --- Small hover glow --- */
-footer:hover {
-    background: linear-gradient(90deg, #242424 0%, #333333 100%);
-}
-
-.btn-primary {
-    background-color: #2b8bfc;
-    border: none;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  }
-  .btn-primary:hover {
-    background-color: #1f6cd6;
-    box-shadow: 0 0 8px rgba(43, 139, 252, 0.4);
-  }
-/* --- PetWell Home Page --- */
-.hero {
-  min-height: 80vh;
-  background: linear-gradient(135deg, #e6f1ff 0%, #ffffff 100%);
-  padding: 60px 20px;
-}
-
-.hero h1 span {
-  color: #2b8bfc;
-}
-
-.features .card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.features .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-}
-
-/* --- PetWell Unified Page Background --- */
-body {
-  background: linear-gradient(135deg, #e6f1ff 0%, #ffffff 100%) !important;
-  min-height: 100vh;
-}
-
-/* Keep cards readable on light background */
-.card {
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-}
-
-/* Center login/register pages better */
+/* --- Login & Register Pages --- */
 .login, .signup, form.login, form.signup {
-  background-color: transparent !important;
+    max-width: 420px;
+    margin: 5rem auto;
+    padding: 2.5rem;
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }
 
+/* --- Blog Page --- */
+.blog-container {
+    padding: 4rem 1rem;
+}
+
+.blog-container h1 {
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
+    .login, .signup, form.login, form.signup {
+        margin: 3rem 1rem;
+        padding: 2rem;
+    }
+}
