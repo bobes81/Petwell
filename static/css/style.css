@@ -217,3 +217,34 @@ footer a:hover {
         padding: 2rem 1rem;
     }
 }
+
+/* --- FINAL FIX: bring feature cards closer to hero section --- */
+.hero {
+    min-height: 60vh; /* sníží výšku hero sekce na desktopu */
+    padding-bottom: 1.5rem; /* méně volného místa pod nadpisem */
+}
+
+.features {
+    margin-top: -160px; /* přitáhne sekci vysoko pod hero */
+    position: relative;
+    z-index: 5;
+}
+
+@media (max-width: 992px) {
+    .hero {
+        min-height: 65vh;
+    }
+    .features {
+        margin-top: -100px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        min-height: auto;
+        padding-bottom: 2rem;
+    }
+    .features {
+        margin-top: 0;
+    }
+}
