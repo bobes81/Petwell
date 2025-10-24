@@ -17,7 +17,7 @@ def create_post(request):
             post.author = request.user
             post.save()
             messages.success(request, 'New blog post created successfully!')
-            return redirect('blog_list')
+            return redirect('blog:blog_list')
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
@@ -32,7 +32,7 @@ def edit_post(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Post updated successfully!')
-            return redirect('blog_list')
+            return redirect('blog:blog_list')
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
@@ -45,7 +45,7 @@ def delete_post(request, pk):
     if request.method == 'POST':
         post.delete()
         messages.success(request, 'Post deleted successfully!')
-        return redirect('blog_list')
+        return redirect('blog:blog_list')
     return render(request, 'blog/blog_confirm_delete.html', {'post': post})
 
 from django.shortcuts import get_object_or_404, render
