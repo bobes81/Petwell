@@ -248,3 +248,24 @@ footer a:hover {
         margin-top: 0;
     }
 }
+
+/* --- FINAL TOUCH: blue bordered feature cards --- */
+.feature-card {
+    background: #ffffff;
+    border: 2px solid #007bff; /* modrý rámeček */
+    border-radius: 18px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.05);
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+    background: #f5faff;
+    box-shadow: 0 12px 25px rgba(0, 123, 255, 0.15);
+    border-color: #0056d2; /* tmavší modrá při hoveru */
+}
+
+.feature-card h5 {
+    color: #007bff;
+    font-weight: 600;
+}
