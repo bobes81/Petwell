@@ -183,3 +183,37 @@ footer a:hover {
         padding: 1.5rem;
     }
 }
+
+/* --- FIX: elevate feature section to align with hero --- */
+.hero {
+    padding-bottom: 3rem; /* zmenší prázdný prostor pod hlavním textem */
+}
+
+.features {
+    margin-top: -80px; /* výraznější posun sekce nahoru */
+    background: linear-gradient(180deg, #f6f9ff 0%, #f9fbff 100%);
+    border-radius: 20px;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.feature-card {
+    transition: all 0.3s ease;
+    background: #ffffff;
+    border: 2px solid #b9d6ff;
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px rgba(0, 123, 255, 0.15);
+    border-color: #007bff;
+    background: #f0f7ff;
+}
+
+@media (max-width: 768px) {
+    .features {
+        margin-top: 0;
+        border-radius: 0;
+        padding: 2rem 1rem;
+    }
+}
