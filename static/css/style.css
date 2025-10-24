@@ -50,3 +50,22 @@ footer:hover {
     background-color: #1f6cd6;
     box-shadow: 0 0 8px rgba(43, 139, 252, 0.4);
   }
+/* --- PetWell Home Page --- */
+.hero {
+  min-height: 80vh;
+  background: linear-gradient(135deg, #e6f1ff 0%, #ffffff 100%);
+  padding: 60px 20px;
+}
+
+.hero h1 span {
+  color: #2b8bfc;
+}
+
+.features .card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.features .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
