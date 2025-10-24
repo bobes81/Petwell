@@ -4,7 +4,7 @@
   <h1 class="text-center mb-5">PetWell Blog</h1>
   {% if user.is_authenticated %}
   <div class="text-center mb-4">
-    <a href="{% url 'create_post' %}" class="btn btn-success">+ Add new post</a>
+    <a href="{% url 'blog:create_post' %}" class="btn btn-success">+ Add new post</a>
   </div>
   {% endif %}
 
