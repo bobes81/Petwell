@@ -1,24 +1,21 @@
 {% extends "base.html" %}
 {% load i18n %}
-
 {% block content %}
-<div class="container mt-5" style="max-width: 480px;">
-  <div class="card shadow-sm">
-    <div class="card-body">
-      <h3 class="text-center mb-4">Create Account</h3>
-      <form method="post" action="{% url 'account_signup' %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <div class="d-grid">
-          <button class="btn btn-success mt-3" type="submit">Register</button>
-        </div>
-      </form>
-      <hr>
-      <p class="text-center">
-        Already have an account?
-        <a href="{% url 'account_login' %}">Sign in here</a>.
-      </p>
+<div class="signup">
+  <h2 class="mb-4 text-primary fw-bold text-center">{% trans "Create an Account" %}</h2>
+  <form method="post" action="{% url 'account_signup' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="text-center mt-3">
+      <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill shadow-sm">
+        {% trans "Sign Up" %}
+      </button>
     </div>
+  </form>
+  <div class="text-center mt-4">
+    <p class="text-muted">{% trans "Already have an account?" %}
+      <a href="{% url 'account_login' %}" class="text-primary">{% trans "Sign In" %}</a>
+    </p>
   </div>
 </div>
 {% endblock %}
