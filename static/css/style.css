@@ -40,3 +40,13 @@ footer a:hover {
 footer:hover {
     background: linear-gradient(90deg, #242424 0%, #333333 100%);
 }
+
+.btn-primary {
+    background-color: #2b8bfc;
+    border: none;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .btn-primary:hover {
+    background-color: #1f6cd6;
+    box-shadow: 0 0 8px rgba(43, 139, 252, 0.4);
+  }
