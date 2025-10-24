@@ -302,3 +302,26 @@ input.btn-success:hover {
     outline: none !important;
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25) !important;
 }
+
+/* --- FIX: make all .btn-success buttons PetWell blue --- */
+.btn-success {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+    color: #fff !important;
+    border-radius: 30px;
+    padding: 8px 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+    background-color: #0056d2 !important;
+    border-color: #0056d2 !important;
+    transform: translateY(-2px);
+    color: #fff !important;
+}
+
+.btn-success:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25) !important;
+}
