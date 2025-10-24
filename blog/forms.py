@@ -15,7 +15,4 @@ class BlogPostForm(forms.ModelForm):
                 'rows': 5,
                 'placeholder': 'Write your story here...'
             }),
-            'image': forms.ClearableFileInput(attrs={
-                'class': 'form-control-file'
-            }),
         }
