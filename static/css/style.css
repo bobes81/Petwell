@@ -155,3 +155,31 @@ footer a:hover {
     border-radius: 10px;
   }
 }
+
+/* --- Home Feature Cards --- */
+.features {
+    margin-top: -30px; /* posune karty výš k hero sekci */
+}
+
+.feature-card {
+    transition: all 0.3s ease;
+    background: #f8fbff;
+}
+
+.feature-card:hover {
+    transform: translateY(-6px);
+    background: #e9f2ff;
+    box-shadow: 0 10px 25px rgba(0, 123, 255, 0.15);
+}
+
+.feature-card h5 {
+    font-size: 1.2rem;
+    margin-bottom: 0.8rem;
+}
+
+@media (max-width: 768px) {
+    .features {
+        margin-top: 0;
+        padding: 1.5rem;
+    }
+}
