@@ -47,3 +47,10 @@ def delete_post(request, pk):
         messages.success(request, 'Post deleted successfully!')
         return redirect('blog_list')
     return render(request, 'blog/blog_confirm_delete.html', {'post': post})
+
+from django.shortcuts import get_object_or_404, render
+from .models import BlogPost
+
+def blog_detail(request, pk):
+    post = get_object_or_404(BlogPost, pk=pk)
+    return render(request, 'blog/blog_detail.html', {'post': post})

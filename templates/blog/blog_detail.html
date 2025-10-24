@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+  <div class="card shadow-lg border-0 rounded-4">
+    {% if post.image %}
+      <img src="{{ post.image.url }}" class="card-img-top rounded-top-4" alt="{{ post.title }}">
+    {% endif %}
+    <div class="card-body">
+      <h2 class="card-title text-primary mb-3">{{ post.title }}</h2>
+      <p class="text-muted mb-4">By {{ post.author.username }} · {{ post.created_at|date:"F j, Y" }}</p>
+      <p class="card-text" style="white-space: pre-line;">{{ post.content }}</p>
+      <a href="{% url 'blog:blog_list' %}" class="btn btn-primary mt-3">← Back to Blog</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
