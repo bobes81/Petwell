@@ -29,17 +29,17 @@ INSTALLED_APPS = [
     'blog',
     'products',
     'orders',
-    'accounts',  # ✅ make sure folder name matches app name
+    'accounts',  #  make sure folder name matches app name
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # required for serving static files on Heroku
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'allauth.account.middleware.AccountMiddleware',  # ✅ required for Django Allauth
+    'allauth.account.middleware.AccountMiddleware',  # required for Django Allauth
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -78,6 +78,10 @@ DATABASES = {
 # ------------------------------
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Enables WhiteNoise compressed static storage
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 MEDIA_URL = '/media/'
