@@ -29,7 +29,7 @@ INSTALLED_APPS = [
     'blog',
     'products',
     'orders',
-    'accounts',
+    'accounts',  # ✅ make sure folder name matches app name
 ]
 
 MIDDLEWARE = [
@@ -39,7 +39,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'allauth.account.middleware.AccountMiddleware',  # ✅ FIX přidán
+    'allauth.account.middleware.AccountMiddleware',  # ✅ required for Django Allauth
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
