@@ -8,9 +8,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'replace-this-with-a-random-key')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = ['*']
 
-# ------------------------------
 # Core Django settings
-# ------------------------------
 ROOT_URLCONF = 'petwell.urls'
 WSGI_APPLICATION = 'petwell.wsgi.application'
 
@@ -29,17 +27,17 @@ INSTALLED_APPS = [
     'blog',
     'products',
     'orders',
-    'accounts',  #  make sure folder name matches app name
+    'accounts',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # required for serving static files on Heroku
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'allauth.account.middleware.AccountMiddleware',  # required for Django Allauth
+    'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -62,9 +60,7 @@ TEMPLATES = [
 
 SITE_ID = 1
 
-# ------------------------------
 # Database configuration (Heroku PostgreSQL)
-# ------------------------------
 DATABASES = {
     'default': dj_database_url.config(
         default=os.environ.get('DATABASE_URL'),
@@ -73,23 +69,16 @@ DATABASES = {
     )
 }
 
-# ------------------------------
 # Static & Media files
-# ------------------------------
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# Enables WhiteNoise compressed static storage
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [BASE_DIR / 'static']
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 
-# ------------------------------
 # Email settings (SendGrid)
-# ------------------------------
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = 'apikey'
