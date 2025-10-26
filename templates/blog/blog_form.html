@@ -49,7 +49,10 @@
       Maximum file size: <strong>5 MB</strong>.
     </small>
 
-    <button type="submit" class="btn btn-primary mt-3">Publish Post</button>
+    <div class="d-flex justify-content-between align-items-center">
+      <a href="{% url 'blog:blog_list' %}" class="btn btn-secondary mt-3">Cancel</a>
+      <button type="submit" class="btn btn-primary mt-3">Publish Post</button>
+    </div>
   </form>
 </div>
 {% endblock %}
