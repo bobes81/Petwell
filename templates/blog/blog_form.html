@@ -23,6 +23,13 @@
   <form method="POST" enctype="multipart/form-data" class="card p-4 shadow-sm">
     {% csrf_token %}
     {{ form.as_p }}
+
+    <!-- Upload instructions -->
+    <small class="text-muted d-block mb-3">
+      Accepted image formats: <strong>.jpg</strong>, <strong>.jpeg</strong>, <strong>.png</strong><br>
+      Maximum file size: <strong>5 MB</strong>.
+    </small>
+
     <button type="submit" class="btn btn-primary mt-3">Publish Post</button>
   </form>
 </div>
