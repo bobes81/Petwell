@@ -1,4 +1,3 @@
-
 # ------------------------------
 # Updated settings.py
 # ------------------------------
@@ -13,6 +12,7 @@ DEBUG = os.environ.get("DEBUG", "False") == "True"
 ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
+    # Django core
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     "products",
     "orders",
     "accounts",
+    "cart",          # 🟢 newly added
+    "checkout",      # 🟢 newly added
 ]
 
 MIDDLEWARE = [
@@ -115,4 +117,3 @@ ACCOUNT_USERNAME_REQUIRED = True
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
-
