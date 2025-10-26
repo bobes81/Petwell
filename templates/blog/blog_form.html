@@ -3,6 +3,25 @@
 <div class="container mt-5">
   <h2 class="mb-4">Add New Blog Post</h2>
 
+  <!-- Community guidelines (visible to users) -->
+  <div class="alert alert-info" role="alert">
+    <h5 class="alert-heading mb-2">Community guidelines</h5>
+    <p class="mb-1">
+      Please follow these simple rules when posting:
+    </p>
+    <ul class="mb-0">
+      <li>Post only content that you own or have permission to share (no copyright infringement).</li>
+      <li>Do not upload illegal, violent, hateful, sexually explicit, or harassing material.</li>
+      <li>Do not share personal or sensitive information about others.</li>
+      <li>Be respectful — abusive language and doxxing are not allowed.</li>
+      <li>Images should be appropriate for a public website and follow the image requirements below.</li>
+    </ul>
+    <hr>
+    <p class="mb-0 small text-muted">
+      By publishing you confirm you comply with these rules. Repeated violations may result in removal of content or account restrictions.
+    </p>
+  </div>
+
   <!-- Display Django form errors (Bootstrap alerts) -->
   {% if form.errors %}
   <div class="alert alert-danger">
