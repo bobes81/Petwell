@@ -120,3 +120,8 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 ACCOUNT_SIGNUP_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+# Force Cloudinary to use HTTPS
+CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL', '')
+if CLOUDINARY_URL and CLOUDINARY_URL.startswith('cloudinary://'):
+    CLOUDINARY_URL = CLOUDINARY_URL.replace('cloudinary://', 'cloudinarys://')
+    os.environ['CLOUDINARY_URL'] = CLOUDINARY_URL
