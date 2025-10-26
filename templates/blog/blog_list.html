@@ -1,7 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="blog-container container py-5">
+<div class="container py-5">
+
+  <!-- Top bar: Logged user + live clock -->
+  <div class="alert alert-primary d-flex justify-content-between align-items-center shadow-sm" role="alert">
+    <div>
+      Logged in as: <strong>{{ request.user.username }}</strong>
+    </div>
+    <div>
+      <span id="current-time"></span>
+    </div>
+  </div>
+
   <h1 class="text-center mb-5">PetWell Blog</h1>
+
   {% if user.is_authenticated %}
   <div class="text-center mb-4">
     <a href="{% url 'blog:create_post' %}" class="btn btn-success">+ Add new post</a>
@@ -35,4 +47,15 @@
   <p class="text-center text-muted">No blog posts yet.</p>
   {% endif %}
 </div>
+
+<!-- Live clock script -->
+<script>
+  function updateTime() {
+    const now = new Date();
+    const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short' };
+    document.getElementById('current-time').textContent = now.toLocaleTimeString([], options);
+  }
+  updateTime();
+  setInterval(updateTime, 1000);
+</script>
 {% endblock %}
