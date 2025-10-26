@@ -1,14 +1,20 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container mt-5">
+  <div class="alert alert-primary d-flex justify-content-between align-items-center shadow-sm" role="alert">
+    <div>
+      Logged in as: <strong>{{ request.user.username }}</strong>
+    </div>
+    <div>
+      <span id="current-time"></span>
+    </div>
+  </div>
+
   <h2 class="mb-4">Add New Blog Post</h2>
 
-  <!-- Community guidelines (visible to users) -->
+  <!-- Community guidelines -->
   <div class="alert alert-info" role="alert">
     <h5 class="alert-heading mb-2">Community guidelines</h5>
-    <p class="mb-1">
-      Please follow these simple rules when posting:
-    </p>
     <ul class="mb-0">
       <li>Post only content that you own or have permission to share (no copyright infringement).</li>
       <li>Do not upload illegal, violent, hateful, sexually explicit, or harassing material.</li>
@@ -22,7 +28,7 @@
     </p>
   </div>
 
-  <!-- Display Django form errors (Bootstrap alerts) -->
+  <!-- Error messages -->
   {% if form.errors %}
   <div class="alert alert-danger">
     <strong>There was a problem with your submission:</strong>
@@ -39,11 +45,11 @@
   </div>
   {% endif %}
 
+  <!-- Blog post form -->
   <form method="POST" enctype="multipart/form-data" class="card p-4 shadow-sm">
     {% csrf_token %}
     {{ form.as_p }}
 
-    <!-- Upload instructions -->
     <small class="text-muted d-block mb-3">
       Accepted image formats: <strong>.jpg</strong>, <strong>.jpeg</strong>, <strong>.png</strong><br>
       Maximum file size: <strong>5 MB</strong>.
@@ -55,4 +61,15 @@
     </div>
   </form>
 </div>
+
+<!-- Live clock -->
+<script>
+  function updateTime() {
+    const now = new Date();
+    const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short' };
+    document.getElementById('current-time').textContent = now.toLocaleTimeString([], options);
+  }
+  updateTime();
+  setInterval(updateTime, 1000);
+</script>
 {% endblock %}
