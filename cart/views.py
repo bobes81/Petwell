@@ -4,22 +4,24 @@ from products.models import Product
 def view_cart(request):
     """Display the contents of the shopping cart."""
     cart = request.session.get('cart', {})
-    products = []
+    items = []
     total = 0
+
     for item_id, quantity in cart.items():
         product = get_object_or_404(Product, pk=item_id)
-        subtotal = product.price * quantity
-        products.append({'product': product, 'quantity': quantity, 'subtotal': subtotal})
-        total += subtotal
-    context = {'cart_items': products, 'total': total}
-    return render(request, 'cart/cart.html', context)
+        total += product.price * quantity
+        items.append({
+            'product': product,
+            'quantity': quantity,
+            'subtotal': product.price * quantity
+        })
+
+    return render(request, 'cart/cart.html', {'items': items, 'total': total})
 
 def add_to_cart(request, item_id):
-    """Add a product to the cart."""
-    product = get_object_or_404(Product, pk=item_id)
-    quantity = int(request.POST.get('quantity', 1))
+    """Add a product to the shopping cart."""
     cart = request.session.get('cart', {})
-    cart[str(item_id)] = cart.get(str(item_id), 0) + quantity
+    cart[item_id] = cart.get(item_id, 0) + 1
     request.session['cart'] = cart
     return redirect('view_cart')
 
