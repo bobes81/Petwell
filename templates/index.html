@@ -1,83 +1,80 @@
 {% extends "base.html" %}
-{% load static %}
-
-{% block extra_title %}- Welcome{% endblock %}
-
 {% block content %}
-<div style="min-height: calc(100vh - 120px); display: flex; flex-direction: column; justify-content: flex-start;">
 
-  <!-- Hero Section -->
-  <section class="hero text-center" style="padding-top: 1rem; padding-bottom: 0.5rem;">
-    <div class="container">
-      <h1 class="fw-bold display-5 mb-2 text-dark">
-        Caring for Pets, <span class="text-primary">Inspiring People</span>
-      </h1>
-      <p class="lead text-muted mb-3">
-        Explore trusted tips, heartfelt stories, and wellness essentials for your furry friends.
-      </p>
-      <a href="{% url 'products:product_list' %}" class="btn btn-gradient px-4 py-2 fs-5 mt-2">
-        🛍️ Visit Shop
-      </a>
+<!-- Hero Section -->
+<div class="hero-section text-center py-5">
+    <h1 class="fw-bold display-5 mb-3">
+        <span class="text-primary">Caring for Pets</span>, Inspiring People 🐾
+    </h1>
+    <p class="lead text-muted mb-5">
+        Discover trusted tips, heartfelt stories, and essential wellness insights for your furry friends.
+    </p>
+    <a href="{% url 'products:product_list' %}" class="btn btn-primary btn-lg shadow-sm px-4">
+        🛍️ Visit the Shop
+    </a>
+</div>
 
-      <!-- French Bulldog Image -->
-      <div class="text-center mt-4">
-        <img src="https://images.unsplash.com/photo-1602067340370-28e9d01b4a1a?auto=format&fit=crop&w=600&q=80"
-             alt="French Bulldog"
-             class="img-fluid"
-             style="max-width: 260px; opacity: 0.2; border-radius: 20px;">
-      </div>
-    </div>
-  </section>
-
-  <!-- Features Section -->
-  <section class="features container text-center py-3" style="margin-top: -9rem;">
+<!-- Info Cards -->
+<div class="container py-5">
     <div class="row justify-content-center g-4">
-      <div class="col-md-4 col-sm-6">
-        <div class="feature-card p-4 border-0 rounded-4 shadow-lg bg-white">
-          <div class="icon mb-3 fs-2 text-primary">🐶</div>
-          <h5 class="fw-bold text-primary">Wellness Tips</h5>
-          <p class="text-muted mb-0">Learn how to keep your pets happy, healthy, and full of energy every day.</p>
+        <div class="col-12 col-md-4">
+            <div class="info-card h-100 text-center shadow-sm border-0 p-4">
+                <div class="fs-1 mb-3">🐶</div>
+                <h4 class="fw-semibold text-primary">Wellness Tips</h4>
+                <p class="text-muted small mb-0">
+                    Learn how to keep your pets happy, healthy, and full of energy every day.
+                </p>
+            </div>
         </div>
-      </div>
-      <div class="col-md-4 col-sm-6">
-        <div class="feature-card p-4 border-0 rounded-4 shadow-lg bg-white">
-          <div class="icon mb-3 fs-2 text-success">🍎</div>
-          <h5 class="fw-bold text-success">Pet Nutrition</h5>
-          <p class="text-muted mb-0">Discover balanced nutrition advice from experienced veterinarians.</p>
+        <div class="col-12 col-md-4">
+            <div class="info-card h-100 text-center shadow-sm border-0 p-4">
+                <div class="fs-1 mb-3">🍎</div>
+                <h4 class="fw-semibold text-success">Pet Nutrition</h4>
+                <p class="text-muted small mb-0">
+                    Discover balanced nutrition and feeding advice from experienced veterinarians.
+                </p>
+            </div>
         </div>
-      </div>
-      <div class="col-md-4 col-sm-6">
-        <div class="feature-card p-4 border-0 rounded-4 shadow-lg bg-white">
-          <div class="icon mb-3 fs-2 text-danger">💖</div>
-          <h5 class="fw-bold text-danger">Healing Stories</h5>
-          <p class="text-muted mb-0">Real stories of transformation and recovery that inspire love and hope.</p>
+        <div class="col-12 col-md-4">
+            <div class="info-card h-100 text-center shadow-sm border-0 p-4">
+                <div class="fs-1 mb-3">💖</div>
+                <h4 class="fw-semibold text-danger">Healing Stories</h4>
+                <p class="text-muted small mb-0">
+                    Real stories of love, recovery, and transformation that inspire hope.
+                </p>
+            </div>
         </div>
-      </div>
     </div>
-  </section>
+</div>
+
+<!-- Call To Action -->
+<div class="cta-section text-center py-5 mt-5">
+    <h2 class="fw-bold mb-3">Join the PetWell Community 🐕‍🦺</h2>
+    <p class="text-muted mb-4">
+        Stay inspired and receive exclusive updates on pet wellness and healing stories.
+    </p>
+    <a href="{% url 'account_signup' %}" class="btn btn-outline-primary px-4 py-2">
+        ✨ Join Now
+    </a>
 </div>
 
 <style>
-.hero {
-  background: linear-gradient(135deg, #f8fbff, #ffffff);
+.hero-section {
+    background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
 }
-.btn-gradient {
-  background: linear-gradient(135deg, #007bff, #00b4d8);
-  color: white;
-  border: none;
-  border-radius: 30px;
-  transition: all 0.3s ease;
+.info-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px;
+    background: white;
 }
-.btn-gradient:hover {
-  background: linear-gradient(135deg, #0062cc, #0096c7);
-  transform: translateY(-2px);
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
 }
-.feature-card {
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-.feature-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+.cta-section {
+    background: linear-gradient(90deg, #f8f9fa 0%, #ffffff 100%);
+    border-top: 1px solid #eaeaea;
 }
 </style>
+
 {% endblock %}
