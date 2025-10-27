@@ -1,9 +1,7 @@
-/* --- Global Layout Fix --- */
+/* --- PetWell Base Layout (Stable Version) --- */
 html, body {
     height: 100%;
     margin: 0;
-    display: flex;
-    flex-direction: column;
     font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
     background: linear-gradient(135deg, #f5f8fc 0%, #ffffff 100%);
     color: #1a1a1a;
@@ -23,7 +21,6 @@ html, body {
 .hero h1 {
     font-weight: 700;
     color: #003366;
-    font-size: 2.6rem;
 }
 
 .hero h1 span {
@@ -62,28 +59,29 @@ html, body {
     text-align: center;
 }
 
-.feature-card {
-    background: #ffffff;
-    border: 1px solid #d7e5ff;
-    border-radius: 18px;
-    padding: 1.5rem;
+/* --- Cards & Blog Section --- */
+.card {
+    border-radius: 16px !important;
+    border: none;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    background: #ffffff;
 }
 
-.feature-card:hover {
+.card:hover {
     transform: translateY(-5px);
-    background: #f5faff;
-    border-color: #007bff;
-    box-shadow: 0 10px 20px rgba(0, 123, 255, 0.15);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
 }
 
-.feature-card h5 {
-    color: #007bff;
-    font-weight: 600;
+.card-img-top {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-bottom: 2px solid #007bff;
 }
 
-/* --- Blog Section --- */
+/* --- Blog Container --- */
 .blog-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -98,87 +96,38 @@ html, body {
     margin-bottom: 2rem;
 }
 
-/* New Post Button */
-.blog-container .btn-success {
+/* --- Buttons --- */
+.btn-primary {
     background-color: #007bff !important;
-    border-radius: 25px;
-    font-weight: 500;
-    padding: 10px 25px;
-    margin-bottom: 2rem;
-    box-shadow: 0 3px 8px rgba(0, 123, 255, 0.25);
+    border: none !important;
+    border-radius: 25px !important;
+    font-weight: 500 !important;
+    padding: 10px 25px !important;
+    transition: all 0.3s ease;
 }
 
-.blog-container .btn-success:hover {
+.btn-primary:hover {
     background-color: #0056d2 !important;
     transform: scale(1.04);
 }
 
-/* Blog Cards */
-.blog-container .card {
-    border-radius: 16px;
-    border: none;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-    overflow: hidden;
-    background: #ffffff;
-    margin-bottom: 2rem;
+.btn-outline-warning {
+    color: #ffb703 !important;
+    border: 1px solid #ffb703 !important;
 }
 
-.blog-container .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-}
-
-/* Blog Card Image */
-.blog-container .card-img-top {
-    width: 100%;
-    height: 200px; /* Opraveno – přirozená velikost */
-    object-fit: cover;
-    border-bottom: 2px solid #007bff;
-    border-radius: 0;
-}
-
-/* Blog Card Body */
-.blog-container .card-body {
-    text-align: left;
-    padding: 1.5rem;
-}
-
-.blog-container .card-title {
-    font-size: 1.25rem;
-    color: #007bff;
-    font-weight: 600;
-}
-
-.blog-container .card-text {
-    color: #444;
-    margin-bottom: 1rem;
-    line-height: 1.6;
-    font-size: 0.98rem;
-}
-
-.blog-container .text-secondary.small {
-    color: #6c757d;
-    font-size: 0.85rem;
-}
-
-/* Edit & Delete Buttons */
-.blog-container .btn-warning.btn-sm {
+.btn-outline-warning:hover {
     background-color: #ffb703 !important;
-    border: none;
-    border-radius: 8px;
-    font-weight: 500;
     color: #fff !important;
-    padding: 5px 12px;
-    margin-right: 5px;
 }
 
-.blog-container .btn-danger.btn-sm {
+.btn-outline-danger {
+    color: #e63946 !important;
+    border: 1px solid #e63946 !important;
+}
+
+.btn-outline-danger:hover {
     background-color: #e63946 !important;
-    border: none;
-    border-radius: 8px;
-    font-weight: 500;
-    padding: 5px 12px;
     color: #fff !important;
 }
 
@@ -190,23 +139,12 @@ footer {
     padding: 40px 0;
     text-align: center;
     font-size: 0.95rem;
-    letter-spacing: 0.3px;
     border-top: 1px solid #333;
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
 }
 
-footer a {
-    color: #7dcfff;
-    text-decoration: none;
-}
-
-footer a:hover {
-    color: #ffffff;
-}
-
-/* --- Responsive Adjustments --- */
+/* --- Responsive --- */
 @media (max-width: 992px) {
-    .blog-container .card-img-top {
+    .card-img-top {
         height: 180px;
     }
     .hero h1 {
@@ -215,13 +153,10 @@ footer a:hover {
 }
 
 @media (max-width: 576px) {
-    .blog-container h1 {
-        font-size: 1.8rem;
-    }
-    .blog-container .card-img-top {
+    .card-img-top {
         height: 150px;
     }
-    .blog-container .card-body {
+    .card-body {
         padding: 1rem;
     }
 }
