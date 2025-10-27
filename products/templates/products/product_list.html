@@ -24,9 +24,15 @@
                     </div>
                     <div>
                         <p class="mt-3 mb-0 fs-5 fw-bold text-success">£{{ product.price }}</p>
-                        <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary mt-3">
-                            🛒 Add to Cart
-                        </a>
+
+                        <!-- ✅ Updated Add to Cart button (POST method) -->
+                        <form action="{% url 'add_to_cart' product.id %}" method="POST" class="mt-3">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary w-100">
+                                🛒 Add to Cart
+                            </button>
+                        </form>
+
                     </div>
                 </div>
             </div>
@@ -49,5 +55,5 @@
     object-fit: cover;
     height: 250px;
 }
-</style>a
+</style>
 {% endblock %}
