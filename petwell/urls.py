@@ -8,6 +8,4 @@ urlpatterns = [
     path('cart/', include('cart.urls')),
     path('checkout/', include('checkout.urls')),
     path('products/', include('products.urls')),
-    path('robots.txt', include('robots.urls')),
-    path('sitemap.xml', include('sitemap.urls')),
 ]
