@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Thank you for your order, {{ name }}!</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color:#f6f8fb; padding: 20px;">
+    <div style="max-width:600px; margin:auto; background:white; border-radius:8px; padding:20px;">
+        <h2 style="color:#4a90e2; text-align:center;">🐾 Petwell</h2>
+        <p>Dear {{ name }},</p>
+        <p>Thank you for your order! We’re preparing your items and will ship them soon.</p>
+        <p><strong>Shipping address:</strong><br>
+        {{ address|linebreaksbr }}</p>
+        <p><strong>Total:</strong> £{{ total }}</p>
+        <p>If you have any questions, reply to this email and our team will assist you.</p>
+        <hr>
+        <p style="font-size:12px; color:#777; text-align:center;">
+            Petwell Support – petwell.shop.uk@gmail.com<br>
+            © {{ current_year }} Petwell. All rights reserved.
+        </p>
+    </div>
+</body>
+</html>

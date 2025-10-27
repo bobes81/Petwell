@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>New Order Received – Petwell</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color:#fffbe6; padding: 20px;">
+    <div style="max-width:600px; margin:auto; background:white; border:1px solid #ddd; border-radius:8px; padding:20px;">
+        <h2 style="color:#4a90e2;">🐾 New Petwell Order</h2>
+        <p><strong>Customer:</strong> {{ name }}</p>
+        <p><strong>Email:</strong> {{ email }}</p>
+        <p><strong>Address:</strong><br>{{ address|linebreaksbr }}</p>
+        <p><strong>Total:</strong> £{{ total }}</p>
+        <hr>
+        <p style="font-size:12px; color:#777;">Generated automatically by Petwell checkout system.</p>
+    </div>
+</body>
+</html>
