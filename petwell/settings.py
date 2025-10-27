@@ -33,8 +33,8 @@ INSTALLED_APPS = [
     "products",
     "orders",
     "accounts",
-    "cart",          # 🟢 newly added
-    "checkout",      # 🟢 newly added
+    "cart",
+    "checkout",
 ]
 
 MIDDLEWARE = [
@@ -83,7 +83,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# === CLOUDINARY & MEDIA ===
+# === CLOUDINARY & MEDIA (FIXED) ===
 CLOUDINARY_STORAGE = {
     "CLOUD_NAME": os.environ.get("CLOUDINARY_CLOUD_NAME"),
     "API_KEY": os.environ.get("CLOUDINARY_API_KEY"),
@@ -91,8 +91,8 @@ CLOUDINARY_STORAGE = {
 }
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "https://res.cloudinary.com/" + os.environ.get("CLOUDINARY_CLOUD_NAME", "") + "/image/upload/"
+
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
 
 # === EMAIL ===
