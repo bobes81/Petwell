@@ -95,7 +95,13 @@ CLOUDINARY_STORAGE = {
 }
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+# --- FIX Mixed Content (force HTTPS for images) ---
 MEDIA_URL = f"https://res.cloudinary.com/{os.environ.get('CLOUDINARY_CLOUD_NAME', '')}/image/upload/"
+
+# --- Force HTTPS site-wide ---
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
 
