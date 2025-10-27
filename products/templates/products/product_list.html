@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container py-5">
     <h2 class="text-center mb-5 fw-bold text-primary">
-        🐾 PetWell Shop TEST 🧩
+        🐾 PetWell Shop
     </h2>
     <div class="row justify-content-center">
         {% for product in products %}
@@ -15,10 +15,17 @@
                          class="card-img-top img-fluid"
                          alt="No image available">
                 {% endif %}
-                <div class="card-body text-center">
-                    <h5 class="card-title">{{ product.name }}</h5>
-                    <p class="text-success fw-bold">£{{ product.price }}</p>
-                    <button class="btn btn-warning">TEST BUTTON 🧡</button>
+                <div class="card-body text-center d-flex flex-column justify-content-between">
+                    <div>
+                        <h5 class="card-title fw-semibold mb-2">{{ product.name }}</h5>
+                        <p class="card-text text-muted small">{{ product.description }}</p>
+                    </div>
+                    <div>
+                        <p class="mt-3 mb-0 fs-5 fw-bold text-success">£{{ product.price }}</p>
+                        <a href="{% url 'cart:add_to_cart' product.id %}" class="btn btn-primary mt-3">
+                            🛒 Add to Cart
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -27,3 +34,18 @@
         {% endfor %}
     </div>
 </div>
+
+<style>
+.product-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+.card-img-top {
+    object-fit: cover;
+    height: 250px;
+}
+</style>
+{% endblock %}
