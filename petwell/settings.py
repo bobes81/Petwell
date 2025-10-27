@@ -65,7 +65,7 @@ TEMPLATES = [
 
 SITE_ID = 1
 
-# === DATABASES (WORKS LOCALLY + HEROKU) ===
+# === DATABASES (LOCAL + HEROKU) ===
 if os.environ.get("DATABASE_URL"):
     DATABASES = {
         "default": dj_database_url.parse(
@@ -94,17 +94,18 @@ CLOUDINARY_STORAGE = {
 }
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
-MEDIA_URL = "https://res.cloudinary.com/{}/image/upload/".format(os.environ.get("CLOUDINARY_CLOUD_NAME", ""))
+MEDIA_URL = f"https://res.cloudinary.com/{os.environ.get('CLOUDINARY_CLOUD_NAME', '')}/image/upload/"
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
 
+# === EMAIL CONFIGURATION (PETWELL SUPPORT) ===
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.sendgrid.net"
-EMAIL_HOST_USER = "apikey"
-EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = "ivan.kimpl@email.cz"
+EMAIL_HOST_USER = "apikey"  # Do not change this
+EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY")
+DEFAULT_FROM_EMAIL = "Petwell Support <petwell.shop.uk@gmail.com>"
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
