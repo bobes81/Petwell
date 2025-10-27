@@ -1,37 +1,7 @@
-{% extends "base.html" %}
-{% load static %}
-
-{% block extra_title %}- Welcome{% endblock %}
-
+{% extends 'base.html' %}
 {% block content %}
-<!-- Hero Section -->
-<section class="hero d-flex flex-column justify-content-center align-items-center text-center">
-  <h1 class="display-4 fw-bold mb-3 text-dark">Welcome to <span class="text-primary">PetWell</span></h1>
-  <p class="lead text-muted mb-4">Empowering pet lovers through wellness, care, and compassion.</p>
-  <a href="{% url 'blog:blog_list' %}" class="btn btn-primary btn-lg px-5 py-2 rounded-pill shadow-sm">Explore Blog</a>
-</section>
-
-<!-- Features Section -->
-<section class="features container text-center mt-5">
-  <div class="row g-4">
-    <div class="col-md-4">
-      <div class="card border-0 shadow-sm h-100 p-4 rounded-4">
-        <h5 class="fw-bold mb-2">Wellness Tips</h5>
-        <p class="text-muted mb-0">Learn how to keep your pets happy, healthy, and full of energy every day.</p>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card border-0 shadow-sm h-100 p-4 rounded-4">
-        <h5 class="fw-bold mb-2">Pet Nutrition</h5>
-        <p class="text-muted mb-0">Discover balanced nutrition advice from experienced veterinarians.</p>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card border-0 shadow-sm h-100 p-4 rounded-4">
-        <h5 class="fw-bold mb-2">Healing Stories</h5>
-        <p class="text-muted mb-0">Real stories of transformation and recovery that inspire love and hope.</p>
-      </div>
-    </div>
-  </div>
-</section>
+<div class='container text-center py-5'>
+  <h1>Welcome to PetWell</h1>
+  <p>Your trusted pet wellness shop and blog.</p>
+</div>
 {% endblock %}
