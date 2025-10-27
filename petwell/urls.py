@@ -4,16 +4,22 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # --- Main homepage ---
     path('', TemplateView.as_view(template_name='index.html'), name='home'),
+
+    # --- Products ---
     path('products/', include(('products.urls', 'products'), namespace='products')),
+    path('', include('products.urls')),  # ✅ Přidá i ne-namespacovaný odkaz (pro {% url 'product_list' %})
+
+    # --- Blog, Cart, Checkout, Accounts ---
     path('blog/', include(('blog.urls', 'blog'), namespace='blog')),
     path('cart/', include(('cart.urls', 'cart'), namespace='cart')),
     path('checkout/', include(('checkout.urls', 'checkout'), namespace='checkout')),
     path('accounts/', include('allauth.urls')),
 ]
-# --- Robots.txt and Sitemap.xml ---
-from django.views.generic import TemplateView
 
+# --- Robots.txt and Sitemap.xml ---
 urlpatterns += [
     path(
         "robots.txt",
