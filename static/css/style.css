@@ -1,5 +1,89 @@
-/* --- FINAL PETWELL BLOG STYLING --- */
+/* --- Global Layout Fix --- */
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #f5f8fc 0%, #ffffff 100%);
+    color: #1a1a1a;
+}
 
+/* --- Hero Section --- */
+.hero {
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.hero h1 {
+    font-weight: 700;
+    color: #003366;
+    font-size: 2.6rem;
+}
+
+.hero h1 span {
+    color: #007bff;
+}
+
+.hero p {
+    color: #5c6c7a;
+    font-size: 1.1rem;
+    margin-top: 10px;
+}
+
+.hero .btn {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    border-radius: 30px;
+    padding: 10px 30px;
+    font-size: 1.1rem;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+}
+
+.hero .btn:hover {
+    background-color: #0056d2;
+    transform: translateY(-2px);
+}
+
+/* --- Features Section --- */
+.features {
+    margin-top: 60px;
+    padding: 3rem 1rem;
+    background: linear-gradient(180deg, #f9fbff 0%, #ffffff 100%);
+    border-radius: 24px;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.feature-card {
+    background: #ffffff;
+    border: 1px solid #d7e5ff;
+    border-radius: 18px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    background: #f5faff;
+    border-color: #007bff;
+    box-shadow: 0 10px 20px rgba(0, 123, 255, 0.15);
+}
+
+.feature-card h5 {
+    color: #007bff;
+    font-weight: 600;
+}
+
+/* --- Blog Section --- */
 .blog-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -14,7 +98,7 @@
     margin-bottom: 2rem;
 }
 
-/* Button for new post */
+/* New Post Button */
 .blog-container .btn-success {
     background-color: #007bff !important;
     border-radius: 25px;
@@ -29,14 +113,15 @@
     transform: scale(1.04);
 }
 
-/* Blog cards */
+/* Blog Cards */
 .blog-container .card {
-    border-radius: 18px;
+    border-radius: 16px;
     border: none;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease;
     overflow: hidden;
     background: #ffffff;
+    margin-bottom: 2rem;
 }
 
 .blog-container .card:hover {
@@ -44,15 +129,16 @@
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
 }
 
-/* Card image */
+/* Blog Card Image */
 .blog-container .card-img-top {
     width: 100%;
-    height: 280px;
+    height: 200px; /* Opraveno – přirozená velikost */
     object-fit: cover;
     border-bottom: 2px solid #007bff;
+    border-radius: 0;
 }
 
-/* Text inside cards */
+/* Blog Card Body */
 .blog-container .card-body {
     text-align: left;
     padding: 1.5rem;
@@ -76,7 +162,7 @@
     font-size: 0.85rem;
 }
 
-/* Edit & Delete buttons */
+/* Edit & Delete Buttons */
 .blog-container .btn-warning.btn-sm {
     background-color: #ffb703 !important;
     border: none;
@@ -96,13 +182,35 @@
     color: #fff !important;
 }
 
-/* Responsive layout */
+/* --- Footer --- */
+footer {
+    margin-top: 100px;
+    background: linear-gradient(90deg, #1f1f1f 0%, #2b2b2b 100%);
+    color: #ccc;
+    padding: 40px 0;
+    text-align: center;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    border-top: 1px solid #333;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
+}
+
+footer a {
+    color: #7dcfff;
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: #ffffff;
+}
+
+/* --- Responsive Adjustments --- */
 @media (max-width: 992px) {
-    .blog-container {
-        padding: 3rem 1rem;
-    }
     .blog-container .card-img-top {
-        height: 220px;
+        height: 180px;
+    }
+    .hero h1 {
+        font-size: 2rem;
     }
 }
 
@@ -110,8 +218,8 @@
     .blog-container h1 {
         font-size: 1.8rem;
     }
-    .blog-container .card {
-        border-radius: 12px;
+    .blog-container .card-img-top {
+        height: 150px;
     }
     .blog-container .card-body {
         padding: 1rem;
