@@ -12,8 +12,9 @@
     <div class="container-fluid px-4">
         <a class="navbar-brand fw-bold text-primary d-flex align-items-center" href="{% url 'home' %}">
             <img src="https://res.cloudinary.com/dyg3a5k7a/image/upload/v1730044927/petwell_logo.png"
-                 width="34" height="34" class="me-2" alt="PetWell Logo" style="object-fit: contain;">
-            <span style="font-size: 1.3rem;">PetWell</span>
+                 alt="PetWell Logo"
+                 style="height: 36px; width: auto; margin-right: 8px; object-fit: contain; vertical-align: middle;">
+            <span style="font-size: 1.4rem; font-weight: 600;">PetWell</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
@@ -25,7 +26,7 @@
                 <li class="nav-item"><a class="nav-link" href="{% url 'blog:blog_list' %}">Blog</a></li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'cart:view_cart' %}">
-                        Cart 🛒 {% if cart_item_count > 0 %}<strong>({{ cart_item_count }})</strong>{% endif %}
+                        Cart �� {% if cart_item_count > 0 %}<strong>({{ cart_item_count }})</strong>{% endif %}
                     </a>
                 </li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'checkout:checkout' %}">Checkout</a></li>
