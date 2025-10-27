@@ -32,7 +32,7 @@
     </div>
     <div class="text-end mt-4">
         <h4 class="fw-bold">Total: <span class="text-success">£{{ total }}</span></h4>
-        <a href="{% url 'checkout' %}" class="btn btn-primary mt-3">💳 Proceed to Checkout</a>
+        <a href="{% url 'checkout:checkout' %}" class="btn btn-primary mt-3">💳 Proceed to Checkout</a>
     </div>
     {% else %}
     <p class="text-center text-muted fs-5">Your cart is empty 🐾</p>
