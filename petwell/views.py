@@ -1,15 +1,27 @@
 from django.http import HttpResponse
-from django.conf import settings
-import os
 
 def robots_txt(request):
-    path = os.path.join(settings.BASE_DIR, "static", "robots.txt")
-    with open(path, "r") as f:
-        content = f.read()
+    content = """User-agent: *
+Disallow: /admin/
+Allow: /
+
+Sitemap: https://petwell-app-ivo-59ea39e413cf.herokuapp.com/sitemap.xml
+"""
     return HttpResponse(content, content_type="text/plain")
 
 def sitemap_xml(request):
-    path = os.path.join(settings.BASE_DIR, "static", "sitemap.xml")
-    with open(path, "r") as f:
-        content = f.read()
+    content = """<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://petwell-app-ivo-59ea39e413cf.herokuapp.com/</loc>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>https://petwell-app-ivo-59ea39e413cf.herokuapp.com/products/</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+</urlset>
+"""
     return HttpResponse(content, content_type="application/xml")
