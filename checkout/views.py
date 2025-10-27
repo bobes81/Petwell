@@ -17,13 +17,13 @@ def checkout(request):
             full_name=name,
             email=email,
             address=address,
-            total_price=0  # temporary placeholder
+            total_price=0
         )
 
         for item_id, quantity in cart.items():
             product = Product.objects.get(pk=item_id)
-            price = product.price * quantity
-            total += price
+            subtotal = product.price * quantity
+            total += subtotal
             OrderItem.objects.create(
                 order=order,
                 product=product,
@@ -42,9 +42,7 @@ def checkout(request):
             fail_silently=False,
         )
 
-        # Clear the cart after checkout
         request.session['cart'] = {}
-
         return render(request, "checkout/success.html", {"name": name, "email": email})
 
     return render(request, "checkout/checkout.html")
