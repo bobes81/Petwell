@@ -1,24 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container mt-5">
-    <h2 class="text-center mb-4">PetWell Shop</h2>
-    <div class="row">
-        {% for product in products %}
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                {% if product.image %}
-                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
-                {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title">{{ product.name }}</h5>
-                    <p class="card-text">{{ product.description }}</p>
-                    <p><strong>£{{ product.price }}</strong></p>
-                </div>
-            </div>
+<div class="container mt-4">
+  <h2 class="text-center mb-4">PetWell Shop</h2>
+  <div class="row">
+    {% for product in products %}
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-sm">
+        {% if product.image %}
+        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+        {% else %}
+        <img src="https://res.cloudinary.com/demo/image/upload/v1699999999/no-image.png" class="card-img-top" alt="No image available">
+        {% endif %}
+        <div class="card-body text-center">
+          <h5 class="card-title">{{ product.name }}</h5>
+          <p class="card-text">{{ product.description }}</p>
+          <p><strong>£{{ product.price }}</strong></p>
         </div>
-        {% empty %}
-        <p>No products available yet.</p>
-        {% endfor %}
+      </div>
     </div>
+    {% empty %}
+    <p>No products available yet.</p>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}
