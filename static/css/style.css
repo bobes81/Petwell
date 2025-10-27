@@ -1,61 +1,80 @@
 body {
-  background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
   font-family: 'Inter', system-ui, sans-serif;
+  background: #f9fbfd;
   color: #333;
   scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
 }
 
-/* Hero Section */
+/* Hero */
 .hero {
-  min-height: 90vh;
   background: linear-gradient(135deg, #e9f3ff 0%, #ffffff 100%);
-  padding-top: 120px;
+  min-height: 80vh;
+  padding-top: 7rem;
 }
 
+/* Gradient Button */
 .btn-gradient {
   background: linear-gradient(90deg, #0d6efd 0%, #00b4d8 100%);
   border: none;
   color: white !important;
-  border-radius: 30px;
-  font-weight: 500;
+  border-radius: 50px;
   transition: all 0.3s ease;
 }
-
 .btn-gradient:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 16px rgba(13, 110, 253, 0.3);
+  box-shadow: 0 8px 20px rgba(13, 110, 253, 0.35);
 }
 
-/* Feature Cards */
-.feature-card {
+/* Info Cards */
+.info-card {
   background: #ffffff;
   border: 1px solid #e4ecf7;
-  transition: all 0.3s ease-in-out;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.info-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }
 
-.feature-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+/* Mission Section */
+.mission {
+  background: linear-gradient(135deg, #0d6efd 0%, #0077cc 100%);
+  border-top: 1px solid rgba(255,255,255,0.15);
+  border-bottom: 1px solid rgba(255,255,255,0.15);
 }
-
-.icon-circle {
-  font-size: 2rem;
-  background: #f0f7ff;
-  width: 70px;
-  height: 70px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 auto;
-  border-radius: 50%;
+.mission h2 {
+  font-size: 2.2rem;
+  color: #fff;
+}
+.mission p {
+  line-height: 1.7;
+  color: #eef3f9;
 }
 
 /* Footer */
 footer {
-  margin-top: 5rem;
-  padding: 2rem 0;
-  background: #f9fafc;
-  color: #666;
+  background: #f1f4f8;
+  padding: 1.5rem 0;
+  text-align: center;
   font-size: 0.9rem;
+  color: #555;
   border-top: 1px solid #e4ecf7;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  .hero {
+    padding-top: 5rem;
+  }
+  .hero h1 {
+    font-size: 2rem;
+  }
+  .mission p {
+    font-size: 1rem;
+  }
 }
