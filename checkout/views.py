@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
+from django.conf import settings
 from products.models import Product
 from orders.models import Order, OrderItem
 
@@ -37,8 +38,8 @@ def checkout(request):
         send_mail(
             "Your PetWell Order Confirmation",
             f"Thank you, {name}! Your order will be shipped to:\n{address}",
-            "ivan.kimpl@email.cz",
-            [email, "ivan.kimpl@email.cz"],
+            settings.DEFAULT_FROM_EMAIL,  # ✅ použije Petwell Support
+            [email, settings.DEFAULT_FROM_EMAIL],
             fail_silently=False,
         )
 
