@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container py-5">
-    <h2 class="text-center mb-5 fw-bold">🛒 Your Cart</h2>
+    <h2 class="text-center mb-5 fw-bold"><i class="fas fa-shopping-cart"></i> Your Cart</h2>
 
     {% if items %}
-        <table class="table table-striped align-middle text-center shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-bordered text-center align-middle">
             <thead class="table-dark">
                 <tr>
                     <th>Product</th>
@@ -20,38 +21,21 @@
                     <td>{{ item.product.name }}</td>
                     <td>£{{ item.product.price }}</td>
                     <td>{{ item.quantity }}</td>
-                    <td>£{{ item.total }}</td>
+                    <td>£{{ item.subtotal }}</td>
                     <td>
-                        <a href="{% url 'cart:remove_from_cart' item.product.id %}" class="btn btn-outline-danger btn-sm">
-                            ❌ Remove
-                        </a>
+                        <a href="{% url 'cart:remove_from_cart' item.product.id %}" class="btn btn-outline-danger btn-sm">✖ Remove</a>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-
-        <div class="text-end mt-4">
-            <h4 class="fw-bold text-success">Total: £{{ total }}</h4>
-            <a href="{% url 'checkout:checkout' %}" class="btn btn-primary mt-3">
-                💳 Proceed to Checkout
-            </a>
-        </div>
-
+    </div>
+    <div class="text-end mt-4">
+        <h4 class="fw-bold">Total: <span class="text-success">£{{ total }}</span></h4>
+        <a href="{% url 'checkout' %}" class="btn btn-primary mt-3">💳 Proceed to Checkout</a>
+    </div>
     {% else %}
-        <div class="text-center mt-5">
-            <h5 class="text-muted mb-3">Your cart is empty 🐾</h5>
-            <a href="{% url 'products:product_list' %}" class="btn btn-primary">
-                🛍️ Continue Shopping
-            </a>
-        </div>
+    <p class="text-center text-muted fs-5">Your cart is empty 🐾</p>
     {% endif %}
 </div>
-
-<style>
-.table {
-    border-radius: 18px;
-    overflow: hidden;
-}
-</style>
 {% endblock %}
