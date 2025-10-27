@@ -1,36 +1,81 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block content %}
 <div class="container py-5">
-  <h2 class="mb-4">Your Cart</h2>
-  {% if items %}
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>Product</th>
-        <th>Quantity</th>
-        <th>Subtotal</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item in items %}
-      <tr>
-        <td>{{ item.product.name }}</td>
-        <td>{{ item.quantity }}</td>
-        <td>£{{ item.subtotal }}</td>
-        <td>
-          <a href="{% url 'remove_from_cart' item.product.id %}" class="btn btn-sm btn-danger">Remove</a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <div class="text-end">
-    <h4>Total: £{{ total }}</h4>
-    <a href="/checkout/" class="btn btn-primary">Proceed to Checkout</a>
-  </div>
-  {% else %}
-  <p>Your cart is empty.</p>
-  {% endif %}
+    <h2 class="text-center mb-5 fw-bold">🛒 Your Cart</h2>
+
+    {% if items %}
+        <div class="table-responsive shadow-sm rounded-4">
+            <table class="table align-middle text-center">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Product</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Subtotal</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td class="text-start">
+                            <div class="d-flex align-items-center">
+                                {% if item.product.image %}
+                                    <img src="{{ item.product.image.url }}" 
+                                         class="rounded me-3" 
+                                         style="width:60px; height:60px; object-fit:cover;" 
+                                         alt="{{ item.product.name }}">
+                                {% else %}
+                                    <img src="https://res.cloudinary.com/demo/image/upload/v1699999999/no-image.png"
+                                         class="rounded me-3" 
+                                         style="width:60px; height:60px; object-fit:cover;"
+                                         alt="No image">
+                                {% endif %}
+                                <strong>{{ item.product.name }}</strong>
+                            </div>
+                        </td>
+                        <td>{{ item.quantity }}</td>
+                        <td>£{{ item.product.price }}</td>
+                        <td>£{{ item.subtotal }}</td>
+                        <td>
+                            <a href="{% url "remove_from_cart" item.product.id %}" 
+                               class="btn btn-sm btn-outline-danger rounded-pill">
+                                ✖ Remove
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-end mt-4">
+            <h4 class="fw-bold text-success">Total: £{{ total }}</h4>
+            <a href="{% url "checkout" %}" class="btn btn-primary mt-3">
+                💳 Proceed to Checkout
+            </a>
+        </div>
+
+    {% else %}
+        <div class="text-center mt-5">
+            <h5 class="text-muted mb-3">Your cart is empty 🐾</h5>
+            <a href="{% url "products" %}" class="btn btn-primary">
+                🛍️ Continue Shopping
+            </a>
+        </div>
+    {% endif %}
 </div>
+
+<style>
+.table {
+    border-radius: 18px;
+    overflow: hidden;
+}
+.table thead {
+    background-color: #f8fbff;
+}
+.table td, .table th {
+    vertical-align: middle;
+}
+</style>
 {% endblock %}
