@@ -63,7 +63,7 @@
             <li class="nav-item"><a class="nav-link text-danger" href="{% url 'account_logout' %}">Logout</a></li>
           {% else %}
             <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Login</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'account_signup' %}">Sign Up</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'account_signup' %}">Register</a></li>
           {% endif %}
         </ul>
 
@@ -77,7 +77,7 @@
     </div>
   </nav>
 
-  <!-- Main Content -->
+  <!-- Main -->
   <main class="mt-5 pt-5">
     {% block content %}{% endblock %}
   </main>
@@ -89,7 +89,10 @@
   <script>
     function updateClock() {
       const now = new Date();
-      const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', day: '2-digit', month: 'short', year: 'numeric', timeZoneName: 'short' };
+      const options = {
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+        day: '2-digit', month: 'short', year: 'numeric'
+      };
       document.getElementById('clock').textContent = now.toLocaleString([], options);
     }
     updateClock();
