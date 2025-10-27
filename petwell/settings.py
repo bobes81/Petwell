@@ -83,7 +83,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# === CLOUDINARY & MEDIA (FIXED) ===
+# === CLOUDINARY & MEDIA (FINAL FIX) ===
 CLOUDINARY_STORAGE = {
     "CLOUD_NAME": os.environ.get("CLOUDINARY_CLOUD_NAME"),
     "API_KEY": os.environ.get("CLOUDINARY_API_KEY"),
@@ -91,7 +91,7 @@ CLOUDINARY_STORAGE = {
 }
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
-MEDIA_URL = "https://res.cloudinary.com/" + os.environ.get("CLOUDINARY_CLOUD_NAME", "") + "/image/upload/"
+MEDIA_URL = "https://res.cloudinary.com/{}/image/upload/".format(os.environ.get("CLOUDINARY_CLOUD_NAME", ""))
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
 
