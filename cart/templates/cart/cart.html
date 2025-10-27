@@ -5,13 +5,13 @@
 
     {% if items %}
     <div class="table-responsive">
-        <table class="table table-bordered text-center align-middle">
+        <table class="table table-bordered text-center align-middle shadow-sm">
             <thead class="table-dark">
                 <tr>
                     <th>Product</th>
                     <th>Price</th>
                     <th>Quantity</th>
-                    <th>Total</th>
+                    <th>Subtotal</th>
                     <th></th>
                 </tr>
             </thead>
@@ -23,16 +23,22 @@
                     <td>{{ item.quantity }}</td>
                     <td>£{{ item.subtotal }}</td>
                     <td>
-                        <a href="{% url 'cart:remove_from_cart' item.product.id %}" class="btn btn-outline-danger btn-sm">✖ Remove</a>
+                        <a href="{% url 'cart:remove_from_cart' item.product.id %}" class="btn btn-outline-danger btn-sm">
+                            ✖ Remove
+                        </a>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+
     <div class="text-end mt-4">
+        <h5 class="fw-semibold">Items in cart: <span class="text-primary">{{ total_quantity }}</span></h5>
         <h4 class="fw-bold">Total: <span class="text-success">£{{ total }}</span></h4>
-        <a href="{% url 'checkout:checkout' %}" class="btn btn-primary mt-3">💳 Proceed to Checkout</a>
+        <a href="{% url 'checkout:checkout' %}" class="btn btn-primary mt-3">
+            💳 Proceed to Checkout
+        </a>
     </div>
     {% else %}
     <p class="text-center text-muted fs-5">Your cart is empty 🐾</p>
