@@ -1,7 +1,6 @@
 from django.contrib import admin
-from django.urls import path, include, re_path
-from django.views.static import serve
-from django.conf import settings
+from django.urls import path, include
+from .views import robots_txt, sitemap_xml
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -10,6 +9,6 @@ urlpatterns = [
     path("cart/", include("cart.urls")),
     path("checkout/", include("checkout.urls")),
     path("products/", include("products.urls")),
-    re_path(r"^robots\.txt$", serve, {"path": "robots.txt", "document_root": settings.STATIC_ROOT}),
-    re_path(r"^sitemap\.xml$", serve, {"path": "sitemap.xml", "document_root": settings.STATIC_ROOT}),
+    path("robots.txt", robots_txt, name="robots_txt"),
+    path("sitemap.xml", sitemap_xml, name="sitemap_xml"),
 ]
