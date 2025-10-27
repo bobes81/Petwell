@@ -1,99 +1,75 @@
-/* --- PetWell Base Layout (Stable Version) --- */
+/* --- PetWell Stable Layout (Final Tested) --- */
 html, body {
-    height: 100%;
     margin: 0;
+    padding: 0;
     font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
-    background: linear-gradient(135deg, #f5f8fc 0%, #ffffff 100%);
-    color: #1a1a1a;
-}
-
-/* --- Hero Section --- */
-.hero {
-    min-height: 60vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 60px 20px;
-}
-
-.hero h1 {
-    font-weight: 700;
-    color: #003366;
-}
-
-.hero h1 span {
-    color: #007bff;
-}
-
-.hero p {
-    color: #5c6c7a;
-    font-size: 1.1rem;
-    margin-top: 10px;
-}
-
-.hero .btn {
-    background-color: #007bff;
-    border: none;
-    color: white;
-    border-radius: 30px;
-    padding: 10px 30px;
-    font-size: 1.1rem;
-    margin-top: 20px;
-    transition: all 0.3s ease;
-}
-
-.hero .btn:hover {
-    background-color: #0056d2;
-    transform: translateY(-2px);
-}
-
-/* --- Features Section --- */
-.features {
-    margin-top: 60px;
-    padding: 3rem 1rem;
-    background: linear-gradient(180deg, #f9fbff 0%, #ffffff 100%);
-    border-radius: 24px;
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.05);
-    text-align: center;
-}
-
-/* --- Cards & Blog Section --- */
-.card {
-    border-radius: 16px !important;
-    border: none;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-    overflow: hidden;
-    background: #ffffff;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-}
-
-.card-img-top {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    border-bottom: 2px solid #007bff;
+    background: #f9fafc;
+    color: #222;
 }
 
 /* --- Blog Container --- */
 .blog-container {
-    max-width: 1200px;
+    max-width: 1100px;
     margin: 0 auto;
-    padding: 4rem 1rem;
-    text-align: center;
+    padding: 3rem 1rem;
 }
 
 .blog-container h1 {
+    font-size: 2.2rem;
     font-weight: 700;
-    font-size: 2.4rem;
+    text-align: center;
     color: #003366;
     margin-bottom: 2rem;
+}
+
+/* --- Blog Cards --- */
+.blog-container .card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease-in-out;
+    background: #fff;
+}
+
+.blog-container .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* --- Fix giant image sizes --- */
+.blog-container .card-img-top {
+    display: block;
+    width: 100%;
+    max-height: 200px; /* ✅ menší a jednotná výška */
+    object-fit: cover;
+    object-position: center;
+    border-bottom: 2px solid #007bff;
+}
+
+/* --- Card Body --- */
+.blog-container .card-body {
+    padding: 1.25rem;
+}
+
+.blog-container .card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #007bff;
+    margin-bottom: 0.5rem;
+}
+
+.blog-container .card-text {
+    color: #444;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+/* --- Meta info --- */
+.blog-container .text-secondary.small {
+    color: #6c757d;
+    font-size: 0.85rem;
 }
 
 /* --- Buttons --- */
@@ -101,14 +77,13 @@ html, body {
     background-color: #007bff !important;
     border: none !important;
     border-radius: 25px !important;
-    font-weight: 500 !important;
-    padding: 10px 25px !important;
+    padding: 8px 20px !important;
     transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
     background-color: #0056d2 !important;
-    transform: scale(1.04);
+    transform: scale(1.03);
 }
 
 .btn-outline-warning {
@@ -131,32 +106,15 @@ html, body {
     color: #fff !important;
 }
 
-/* --- Footer --- */
-footer {
-    margin-top: 100px;
-    background: linear-gradient(90deg, #1f1f1f 0%, #2b2b2b 100%);
-    color: #ccc;
-    padding: 40px 0;
-    text-align: center;
-    font-size: 0.95rem;
-    border-top: 1px solid #333;
-}
-
-/* --- Responsive --- */
+/* --- Responsive Fixes --- */
 @media (max-width: 992px) {
-    .card-img-top {
-        height: 180px;
-    }
-    .hero h1 {
-        font-size: 2rem;
+    .blog-container .card-img-top {
+        max-height: 160px;
     }
 }
 
 @media (max-width: 576px) {
-    .card-img-top {
-        height: 150px;
-    }
-    .card-body {
-        padding: 1rem;
+    .blog-container .card-img-top {
+        max-height: 130px;
     }
 }
