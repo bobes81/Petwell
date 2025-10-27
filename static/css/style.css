@@ -1,4 +1,4 @@
-/* --- PETWELL RESTORED LAYOUT --- */
+/* --- PETWELL RESTORED ORIGINAL DESIGN --- */
 
 html, body {
     margin: 0;
@@ -10,14 +10,14 @@ html, body {
 
 /* --- Blog Container --- */
 .blog-container {
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 3rem 1rem;
     text-align: center;
 }
 
 .blog-container h1 {
-    font-size: 2.4rem;
+    font-size: 2.6rem;
     font-weight: 700;
     color: #003366;
     margin-bottom: 2rem;
@@ -26,118 +26,42 @@ html, body {
 /* --- Blog Cards --- */
 .blog-container .card {
     border: none;
-    border-radius: 14px;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
     background: #fff;
     transition: all 0.3s ease-in-out;
 }
 
 .blog-container .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
 }
 
-/* --- Card Images --- */
-.blog-container .card-img-top {
-    display: block;
+/* --- Blog Images --- */
+.blog-container img {
     width: 100%;
-    height: 220px !important;   /* ✅ pevná výška pro všechny obrázky */
-    object-fit: cover;          /* ✅ uřízne okraje, aby nebyly zkreslené */
-    object-position: center;
-    border-bottom: 2px solid #007bff;
+    height: 260px;
+    object-fit: cover;
 }
 
-/* --- Card Body --- */
+/* --- Card Text --- */
 .blog-container .card-body {
-    text-align: left;
-    padding: 1.5rem;
+    padding: 1.4rem;
 }
 
 .blog-container .card-title {
-    font-size: 1.25rem;
-    color: #007bff;
+    font-size: 1.3rem;
+    color: #004080;
     font-weight: 600;
 }
 
 .blog-container .card-text {
-    color: #444;
-    margin-bottom: 1rem;
-    line-height: 1.6;
-    font-size: 0.98rem;
+    color: #555;
+    font-size: 0.95rem;
 }
 
-.blog-container .text-secondary.small {
-    color: #6c757d;
-    font-size: 0.85rem;
+.blog-container .btn {
+    border-radius: 50px;
+    font-size: 0.9rem;
 }
-
-/* --- Buttons --- */
-.btn-primary {
-    background-color: #007bff !important;
-    border: none !important;
-    border-radius: 25px !important;
-    padding: 8px 20px !important;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.btn-primary:hover {
-    background-color: #0056d2 !important;
-    transform: scale(1.03);
-}
-
-.btn-outline-warning {
-    color: #ffb703 !important;
-    border: 1px solid #ffb703 !important;
-}
-
-.btn-outline-warning:hover {
-    background-color: #ffb703 !important;
-    color: #fff !important;
-}
-
-.btn-outline-danger {
-    color: #e63946 !important;
-    border: 1px solid #e63946 !important;
-}
-
-.btn-outline-danger:hover {
-    background-color: #e63946 !important;
-    color: #fff !important;
-}
-
-/* --- Responsive Layout Fixes --- */
-@media (max-width: 992px) {
-    .blog-container .card-img-top {
-        height: 180px !important;
-    }
-}
-
-@media (max-width: 576px) {
-    .blog-container .card-img-top {
-        height: 150px !important;
-    }
-}
-/* --- Product Images Fix --- */
-.product-card img,
-.card img,
-.blog-container img {
-    width: 100%;
-    max-width: 280px;
-    height: auto;
-    border-radius: 10px;
-    object-fit: cover;
-    margin: 0 auto;
-    display: block;
-}
-
-/* --- Grid Fix for Products --- */
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
-    justify-items: center;
-    align-items: start;
-}
-
