@@ -1,0 +1,119 @@
+/* --- FINAL PETWELL BLOG STYLING --- */
+
+.blog-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 1rem;
+    text-align: center;
+}
+
+.blog-container h1 {
+    font-weight: 700;
+    font-size: 2.4rem;
+    color: #003366;
+    margin-bottom: 2rem;
+}
+
+/* Button for new post */
+.blog-container .btn-success {
+    background-color: #007bff !important;
+    border-radius: 25px;
+    font-weight: 500;
+    padding: 10px 25px;
+    margin-bottom: 2rem;
+    box-shadow: 0 3px 8px rgba(0, 123, 255, 0.25);
+}
+
+.blog-container .btn-success:hover {
+    background-color: #0056d2 !important;
+    transform: scale(1.04);
+}
+
+/* Blog cards */
+.blog-container .card {
+    border-radius: 18px;
+    border: none;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+.blog-container .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* Card image */
+.blog-container .card-img-top {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    border-bottom: 2px solid #007bff;
+}
+
+/* Text inside cards */
+.blog-container .card-body {
+    text-align: left;
+    padding: 1.5rem;
+}
+
+.blog-container .card-title {
+    font-size: 1.25rem;
+    color: #007bff;
+    font-weight: 600;
+}
+
+.blog-container .card-text {
+    color: #444;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    font-size: 0.98rem;
+}
+
+.blog-container .text-secondary.small {
+    color: #6c757d;
+    font-size: 0.85rem;
+}
+
+/* Edit & Delete buttons */
+.blog-container .btn-warning.btn-sm {
+    background-color: #ffb703 !important;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    color: #fff !important;
+    padding: 5px 12px;
+    margin-right: 5px;
+}
+
+.blog-container .btn-danger.btn-sm {
+    background-color: #e63946 !important;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    padding: 5px 12px;
+    color: #fff !important;
+}
+
+/* Responsive layout */
+@media (max-width: 992px) {
+    .blog-container {
+        padding: 3rem 1rem;
+    }
+    .blog-container .card-img-top {
+        height: 220px;
+    }
+}
+
+@media (max-width: 576px) {
+    .blog-container h1 {
+        font-size: 1.8rem;
+    }
+    .blog-container .card {
+        border-radius: 12px;
+    }
+    .blog-container .card-body {
+        padding: 1rem;
+    }
+}
