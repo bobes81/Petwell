@@ -1,23 +1,24 @@
+from decimal import Decimal
 from django.shortcuts import render, redirect, get_object_or_404
 from products.models import Product
 
 def view_cart(request):
-    """Display all cart items and total."""
+    """Display all items in the cart."""
     cart = request.session.get('cart', {})
     items = []
-    total = 0
+    total = Decimal('0.00')
     total_quantity = 0
 
     for product_id, quantity in cart.items():
         product = get_object_or_404(Product, id=product_id)
         subtotal = product.price * quantity
+        total += subtotal
+        total_quantity += quantity
         items.append({
             'product': product,
             'quantity': quantity,
-            'subtotal': subtotal
+            'subtotal': round(subtotal, 2),
         })
-        total += subtotal
-        total_quantity += quantity
 
     context = {
         'items': items,
@@ -30,7 +31,11 @@ def view_cart(request):
 def add_to_cart(request, product_id):
     """Add one product to cart."""
     cart = request.session.get('cart', {})
-    cart[str(product_id)] = cart.get(str(product_id), 0) + 1
+    product_id = str(product_id)
+    if product_id in cart:
+        cart[product_id] += 1
+    else:
+        cart[product_id] = 1
     request.session['cart'] = cart
     return redirect('cart:view_cart')
 
@@ -38,7 +43,8 @@ def add_to_cart(request, product_id):
 def remove_from_cart(request, product_id):
     """Remove product from cart."""
     cart = request.session.get('cart', {})
-    if str(product_id) in cart:
-        del cart[str(product_id)]
-        request.session['cart'] = cart
+    product_id = str(product_id)
+    if product_id in cart:
+        del cart[product_id]
+    request.session['cart'] = cart
     return redirect('cart:view_cart')
