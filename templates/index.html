@@ -5,9 +5,9 @@
 
 {% block content %}
 
-<!-- Hero -->
-<section class="hero text-center d-flex flex-column justify-content-center align-items-center">
-  <div class="container py-5">
+<!-- Hero Section -->
+<section class="hero text-center d-flex flex-column justify-content-center align-items-center" style="padding-top: 5rem; padding-bottom: 3rem;">
+  <div class="container">
     <h1 class="fw-bold display-4 mb-3 text-dark">
       Caring for Pets, <span class="text-primary">Inspiring People</span>
     </h1>
@@ -20,52 +20,52 @@
   </div>
 </section>
 
-<!-- Core Sections -->
-<section class="info-blocks container text-center my-5">
-  <div class="row g-4 justify-content-center">
+<!-- Features Section -->
+<section class="features container text-center my-4 py-3">
+  <div class="row justify-content-center g-4">
     <div class="col-md-4">
-      <div class="info-card shadow-sm p-4 rounded-4 h-100">
-        <i class="bi bi-heart-pulse fs-1 text-primary mb-3"></i>
-        <h4 class="fw-bold text-primary mb-2">Wellness & Care</h4>
-        <p class="text-muted">
-          Learn from veterinarians and trainers how to keep your pets strong, healthy, and joyful.
-        </p>
-        <a href="{% url 'blog:blog_list' %}" class="btn btn-outline-primary mt-3">Read Blog</a>
+      <div class="feature-card p-4 border border-primary bg-light rounded-4 shadow-sm">
+        <h5 class="fw-bold text-primary">Wellness Tips</h5>
+        <p class="text-muted mb-0">Learn how to keep your pets happy, healthy, and full of energy every day.</p>
       </div>
     </div>
     <div class="col-md-4">
-      <div class="info-card shadow-sm p-4 rounded-4 h-100">
-        <i class="bi bi-bag-heart fs-1 text-success mb-3"></i>
-        <h4 class="fw-bold text-success mb-2">Shop with Purpose</h4>
-        <p class="text-muted">
-          Explore natural supplements, healthy treats, and eco-friendly products designed with love.
-        </p>
-        <a href="{% url 'products:product_list' %}" class="btn btn-outline-success mt-3">Shop Now</a>
+      <div class="feature-card p-4 border border-primary bg-light rounded-4 shadow-sm">
+        <h5 class="fw-bold text-primary">Pet Nutrition</h5>
+        <p class="text-muted mb-0">Discover balanced nutrition advice from experienced veterinarians.</p>
       </div>
     </div>
     <div class="col-md-4">
-      <div class="info-card shadow-sm p-4 rounded-4 h-100">
-        <i class="bi bi-stars fs-1 text-warning mb-3"></i>
-        <h4 class="fw-bold text-warning mb-2">Healing Stories</h4>
-        <p class="text-muted">
-          Discover touching journeys of rescued animals and people who found hope through compassion.
-        </p>
-        <a href="{% url 'blog:blog_list' %}" class="btn btn-outline-warning mt-3">Read Stories</a>
+      <div class="feature-card p-4 border border-primary bg-light rounded-4 shadow-sm">
+        <h5 class="fw-bold text-primary">Healing Stories</h5>
+        <p class="text-muted mb-0">Real stories of transformation and recovery that inspire love and hope.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- About / Mission -->
-<section class="mission text-center text-light py-5 mt-5">
-  <div class="container">
-    <h2 class="fw-bold mb-4">Why PetWell?</h2>
-    <p class="mx-auto fs-5" style="max-width: 700px;">
-      PetWell was created for those who see animals as family.  
-      Our mission is to bring wellness, empathy, and understanding into every home.  
-      Whether you're reading, shopping, or sharing — you're part of the PetWell family.
-    </p>
-  </div>
-</section>
+<style>
+.hero {
+  background: linear-gradient(135deg, #f8fbff, #ffffff);
+}
+.btn-gradient {
+  background: linear-gradient(135deg, #007bff, #00b4d8);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+}
+.btn-gradient:hover {
+  background: linear-gradient(135deg, #0062cc, #0096c7);
+  transform: translateY(-2px);
+}
+.feature-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+</style>
 
 {% endblock %}
