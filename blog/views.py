@@ -77,3 +77,15 @@ def delete_post(request, pk):
 def blog_detail(request, pk):
     post = get_object_or_404(BlogPost, pk=pk)
     return render(request, 'blog/blog_detail.html', {'post': post, 'user': request.user})
+# --- Newsletter Subscribe View ---
+from .forms import NewsletterForm
+def subscribe(request):
+    if request.method == 'POST':
+        form = NewsletterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Thank you for joining the PetWell community!')
+            return redirect(request.META.get('HTTP_REFERER', 'home'))
+        else:
+            messages.error(request, 'Invalid email. Please try again.')
+    return redirect('home')

@@ -41,3 +41,10 @@ class BlogPost(models.Model):
         except Exception as outer_error:
             print(f"⚠️ BlogPost delete error handled safely: {outer_error}")
         super().delete(*args, **kwargs)
+# --- Newsletter Subscription Model ---
+class Subscriber(models.Model):
+    email = models.EmailField(unique=True)
+    subscribed_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email

@@ -33,3 +33,17 @@ class BlogPostForm(forms.ModelForm):
             if image.size > MAX_UPLOAD_SIZE:
                 raise ValidationError("Image size cannot exceed 5 MB.")
         return image
+
+# --- Newsletter Subscription Form ---
+from .models import Subscriber
+class NewsletterForm(forms.ModelForm):
+    class Meta:
+        model = Subscriber
+        fields = ['email']
+        widgets = {
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter your email',
+                'aria-label': 'Email',
+            })
+        }
