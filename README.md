@@ -67,7 +67,7 @@ PetWell delivers a complete e-commerce experience with clean architecture and mo
 ## Shop
 
 <p align="center">
-  <img src="https://github.com/bobes81/Petwell/blob/main/static/images/shop.png?raw=true" 
+  <img src="https://github.com/bobes81/Petwell/blob/main/static/images/shop.jpeg?raw=true" 
        alt="PetWell Homepage Preview" width="600"/>
 </p>
 
