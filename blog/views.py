@@ -1,3 +1,4 @@
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -37,15 +38,17 @@ def edit_post(request, pk):
         form = BlogPostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             try:
-                if 'image' not in request.FILES:
-                    form.instance.image = post.image  # keep original Cloudinary image
+                
+                if not request.FILES.get('image'):
+                    form.instance.image = post.image
                 form.save()
                 messages.success(request, 'Post updated successfully!')
                 return redirect('blog:blog_list')
             except Exception as e:
                 messages.error(request, f"Edit failed: {e}")
                 return redirect('blog:blog_list')
-        messages.error(request, 'Please correct the errors below.')
+        else:
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = BlogPostForm(instance=post)
 
@@ -58,17 +61,14 @@ def delete_post(request, pk):
     if request.user != post.author and not request.user.is_superuser:
         return HttpResponseForbidden("You are not allowed to delete this post.")
 
-    if request.method == 'POST':
-        post.delete()
-        messages.success(request, 'Post deleted successfully!')
-        return redirect('blog:blog_list')
-    else:
-        # handle accidental GET (like clicking link instead of form)
-        post.delete()
-        messages.success(request, 'Post deleted successfully!')
-        return redirect('blog:blog_list')
+    
+    post.delete()
+    messages.success(request, 'Post deleted successfully!')
+    return redirect('blog:blog_list')
 
 
 def blog_detail(request, pk):
     post = get_object_or_404(BlogPost, pk=pk)
     return render(request, 'blog/blog_detail.html', {'post': post, 'user': request.user})
+
+
