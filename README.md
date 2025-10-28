@@ -1,4 +1,4 @@
-cat > README.md << 'EOF'
+
 # 🐾 PetWell — E-commerce Platform for Pet Wellness
 
 <p align="center">
