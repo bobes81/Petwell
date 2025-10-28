@@ -1,11 +1,9 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import BlogPost, Subscriber
+from .models import BlogPost
 
-# Allowed formats and max size (5 MB)
 ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 MAX_UPLOAD_SIZE = 5 * 1024 * 1024  # 5 MB
-
 
 class BlogPostForm(forms.ModelForm):
     class Meta:
@@ -31,17 +29,3 @@ class BlogPostForm(forms.ModelForm):
             if image.size > MAX_UPLOAD_SIZE:
                 raise ValidationError("Image size cannot exceed 5 MB.")
         return image
-
-
-# --- Newsletter Subscription Form ---
-class NewsletterForm(forms.ModelForm):
-    class Meta:
-        model = Subscriber
-        fields = ['email']
-        widgets = {
-            'email': forms.EmailInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Enter your email',
-                'aria-label': 'Email',
-            })
-        }
