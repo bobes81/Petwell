@@ -70,7 +70,23 @@
 <footer class="text-center py-4 mt-5 text-muted small border-top bg-light">
   <div class="container">
       <p class="mb-2">© 2025 PetWell | Created by <strong>Ivan Kimpl</strong></p>
-      <p class="text-muted small mt-2">🐾 Newsletter feature coming soon.</p>
+
+      <form method="POST" action="{% url 'blog:subscribe' %}" class="d-flex justify-content-center mb-3">
+          {% csrf_token %}
+          <input type="email" name="email" class="form-control w-25 me-2" placeholder="Join our newsletter" required>
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+      </form>
+
+      <div>
+          <a href="https://www.facebook.com/petwellshop" target="_blank" rel="noopener noreferrer" class="text-primary mx-2">
+              <i class="bi bi-facebook fs-4"></i>
+          </a>
+          <a href="https://www.instagram.com/petwellshop" target="_blank" rel="noopener noreferrer" class="text-danger mx-2">
+              <i class="bi bi-instagram fs-4"></i>
+          </a>
+      </div>
+  </div>
+</footer>
 
       <div>
           <a href="https://www.facebook.com/petwellshop" target="_blank" rel="noopener noreferrer" class="text-primary mx-2">
