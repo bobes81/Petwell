@@ -11,3 +11,15 @@ urlpatterns = [
     path('post/<int:pk>/delete/', views.delete_post, name='delete_post'),
     path('subscribe/', views.subscribe, name='subscribe'),
 ]
+from django.shortcuts import redirect
+from django.contrib import messages
+from .models import Subscriber
+
+def subscribe(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        if email:
+            Subscriber.objects.get_or_create(email=email)
+            messages.success(request, "Thank you for subscribing!")
+        return redirect("home")
+    return redirect("home")
