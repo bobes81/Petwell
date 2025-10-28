@@ -3,7 +3,7 @@ cat > README.md <<'EOF'
 
 <p align="center">
   <img src="https://github.com/bobes81/Petwell/blob/main/static/images/main-picture.png?raw=true" 
-       alt="PetWell Homepage Preview" width="750"/>
+       alt="PetWell Homepage Preview" width="250"/>
 </p>
 
 Petwell
@@ -40,7 +40,7 @@ PetWell delivers a complete e-commerce experience with clean architecture and mo
 
 <p align="center">
   <img src="https://github.com/bobes81/Petwell/blob/main/static/images/main-picture.png?raw=true" 
-       alt="PetWell Homepage Preview" width="750"/>
+       alt="PetWell Homepage Preview" width="150"/>
 </p>
 
 
@@ -50,7 +50,7 @@ PetWell delivers a complete e-commerce experience with clean architecture and mo
 
 <p align="center">
   <img src="https://github.com/bobes81/Petwell/blob/main/static/images/cart.jpg?raw=true" 
-       alt="PetWell Homepage Preview" width="750"/>
+       alt="PetWell Homepage Preview" width="150"/>
 </p>
 
 ---
@@ -59,7 +59,7 @@ PetWell delivers a complete e-commerce experience with clean architecture and mo
 
 <p align="center">
   <img src="https://github.com/bobes81/Petwell/blob/main/static/images/checkout.jpg?raw=true" 
-       alt="PetWell Homepage Preview" width="750"/>
+       alt="PetWell Homepage Preview" width="150"/>
 </p>
 
 ---
@@ -68,7 +68,7 @@ PetWell delivers a complete e-commerce experience with clean architecture and mo
 
 <p align="center">
   <img src="https://github.com/bobes81/Petwell/blob/main/static/images/shop.png?raw=true" 
-       alt="PetWell Homepage Preview" width="750"/>
+       alt="PetWell Homepage Preview" width="150"/>
 </p>
 
 ---
@@ -77,7 +77,7 @@ PetWell delivers a complete e-commerce experience with clean architecture and mo
 
 <p align="center">
   <img src="https://github.com/bobes81/Petwell/blob/main/static/images/404.jpg?raw=true" 
-       alt="PetWell Homepage Preview" width="750"/>
+       alt="PetWell Homepage Preview" width="150"/>
 ---
 ## 🧭 Agile Methodology
 
