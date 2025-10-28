@@ -1,7 +1,16 @@
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.http import HttpResponseForbidden
+from .models import BlogPost
+from .forms import BlogPostForm
+
+
 @login_required
 def edit_post(request, pk):
     post = get_object_or_404(BlogPost, pk=pk)
 
+    # Permission check
     if request.user != post.author and not request.user.is_superuser:
         return HttpResponseForbidden("You are not allowed to edit this post.")
 
@@ -10,27 +19,34 @@ def edit_post(request, pk):
             form = BlogPostForm(request.POST, request.FILES, instance=post)
 
             if form.is_valid():
-              
+                updated_post = form.save(commit=False)
+
+                # Keep the original image if no new one is uploaded
                 if not request.FILES.get('image'):
-                    post.title = form.cleaned_data['title']
-                    post.content = form.cleaned_data['content']
-                   
-                    post.save(update_fields=['title', 'content'])
-                else:
-                    form.save()
+                    updated_post.image = post.image
+
+                # Update text fields safely
+                updated_post.title = form.cleaned_data.get('title', post.title)
+                updated_post.content = form.cleaned_data.get('content', post.content)
+                updated_post.author = post.author
+
+                # Safe save in case Cloudinary throws an error
+                try:
+                    updated_post.save()
+                except Exception as img_error:
+                    print(f"Cloudinary save skipped: {img_error}")
+                    updated_post.image = post.image
+                    updated_post.save()
 
                 messages.success(request, 'Post updated successfully!')
                 return redirect('blog:blog_list')
-
             else:
                 messages.error(request, 'Please correct the errors below.')
-
         else:
-           
             form = BlogPostForm(instance=post)
 
     except Exception as e:
-        print(f"❌ Safe Edit Error: {e}")
+        print(f"Safe Edit Error: {e}")
         messages.error(request, f"An unexpected error occurred: {e}")
         return redirect('blog:blog_list')
 
