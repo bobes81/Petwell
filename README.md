@@ -6,116 +6,176 @@ cat > README.md <<'EOF'
        alt="PetWell Homepage Preview" width="750"/>
 </p>
 
-Petwell
-
-**PetWell** is a full-stack Django e-commerce platform dedicated to promoting pet wellness, compassion, and mindful care. It unites shopping, storytelling, and education into one user-friendly environment. The website provides access to carefully curated wellness products, as well as inspiring blog posts that help users care for their pets with love and awareness. This project was developed as **Portfolio Project 5** within the *Code Institute Full Stack Software Development Diploma*. The focus was on demonstrating advanced Django e-commerce concepts, Agile methodology, cloud deployment, and integration with third-party services. PetWell serves both as a functional store and as a compassionate initiative to inspire a kinder, more informed approach to animal care. It represents a balanced mix of professional coding, UX design, and meaningful storytelling.  
+**PetWell** is a full-stack Django e-commerce platform dedicated to promoting pet wellness, compassion, and mindful care. It combines shopping, storytelling, and education in one place. Developed as **Portfolio Project 5** for the *Code Institute Full Stack Software Development Diploma*, it demonstrates advanced Django e-commerce principles, Agile methodology, cloud deployment, and professional design integration.  
 
 ---
 
 ## 🌟 Overview
 
-The **PetWell platform** was created to provide a smooth and enjoyable online shopping experience while promoting a deeper understanding of pet wellness. It combines e-commerce features such as browsing, product management, and secure checkout with educational content presented in a friendly, approachable tone. The project aims to showcase Django’s scalability and modular structure through multiple apps — including products, checkout, cart, and blog — all integrated into a cohesive system. The front-end was designed with Bootstrap 5 to ensure seamless responsiveness across devices and maintain a clean, modern look. The application emphasizes accessibility, performance, and a compassionate tone throughout the interface. Beyond technical delivery, PetWell also strives to embody emotional resonance by connecting users with meaningful stories about pets and their well-being. The website’s dual nature — commerce and compassion — reflects an understanding that modern technology can be used not just for sales, but also for spreading empathy and kindness.
+The **PetWell platform** was designed to create a calming and inspiring experience for pet owners who value wellness and mindful living. It offers an intuitive user journey that connects emotional storytelling with the practicality of an e-commerce platform.  
+The site’s modular Django architecture integrates seamlessly across multiple apps — including Shop, Blog, Cart, and Checkout — each working together within a unified system.  
+Every part of PetWell reflects balance between empathy and efficiency, combining modern web development with compassionate design philosophy.  
 
 ---
 
 ## 💡 User Experience (UX)
 
-The UX design process focused on creating a calm, trustworthy atmosphere while maintaining professional usability standards. Every page was designed to provide clarity, purpose, and warmth — ensuring that users felt welcome from the first visit. Navigation follows a minimalistic approach, with intuitive labeling and an easily accessible cart visible on all pages. Key UX goals included reducing cognitive load, ensuring users could complete purchases in minimal clicks, and maintaining visual consistency. The design approach was informed by user empathy — understanding that pet owners often seek emotional reassurance alongside practical information. Clear feedback mechanisms (such as success messages, toasts, and alerts) were implemented to enhance interactivity and satisfaction. The checkout flow was refined to minimize friction and provide clear validation messages. Testing focused heavily on accessibility, ensuring color contrast and font readability met WCAG guidelines. Overall, the UX represents a balance of functional e-commerce efficiency and emotional comfort, mirroring the project’s ethos of care and connection.  
+User experience was central to PetWell’s development. The navigation is simple and logical, ensuring that users can easily find what they need without distraction.  
+Each page provides emotional warmth through a clean, minimalist layout and consistent use of friendly colors and typography.  
+Accessibility was tested to meet WCAG standards, ensuring all users can enjoy the experience.  
+Forms include real-time validation and gentle feedback messages. Mobile responsiveness was ensured using Bootstrap’s flexible grid system.  
+The UX demonstrates professional attention to user empathy and digital well-being.
 
 ---
 
 ## 🎨 Design
 
-The **visual design** of PetWell is guided by simplicity, trust, and harmony. A clean white and blue color palette was chosen to evoke calmness and reliability while keeping the interface visually light. Typography uses the Bootstrap default sans-serif stack to ensure clarity and cross-device consistency. Icons from the Bootstrap Icons library complement the interface with intuitive visual cues that support usability without cluttering the layout. Layout spacing follows a modular 8px grid system, giving the site a structured yet breathable appearance. Images are hosted on **Cloudinary**, ensuring optimized loading speeds and automatic compression for enhanced performance. The design philosophy emphasizes the emotional tone of wellness — using softness and balance in visuals to reflect empathy. Hover effects and transitions were added to provide subtle interactivity and a sense of liveliness. Special care was given to mobile-first design principles to ensure usability on iPhones, tablets, and smaller screens. Alt text was added to all key images, ensuring accessibility for assistive technologies. The design as a whole communicates professionalism with warmth — a digital reflection of the love people share with their pets.  
+The PetWell design uses a **white and blue palette (#EAF3FF)** that symbolizes calmness and trust.  
+Typography was chosen to enhance readability and approachability, while icons from Bootstrap provide intuitive visual cues.  
+Images are optimized through **Cloudinary** for fast load times. The aesthetic is inspired by mindfulness and the emotional connection between humans and animals.  
+Subtle hover effects and smooth transitions make the interface feel alive yet peaceful.  
+The design supports the project’s goal of creating technology that heals, comforts, and inspires.  
+
+---
+
+## 📣 Facebook Business Mockup
+
+A Facebook Business Page mockup was designed in **Canva** to simulate PetWell’s digital branding.  
+It demonstrates how the platform’s tone, colors, and values translate to a professional online identity.  
+The banner features a soft blue background (#EAF3FF), the PetWell logo, and the tagline:  
+> “Because every wag, purr, and tail deserves wellness.”  
+The layout evokes harmony, simplicity, and compassion — qualities at the heart of the PetWell brand.  
+This mockup fulfills Code Institute’s requirement for social media marketing presence.  
+
+<p align="center">
+  <img src="https://github.com/bobes81/Petwell/blob/main/static/images/facebook-mockup-petwell.png?raw=true" 
+       alt="PetWell Facebook Business Page Mockup" width="700"/>
+</p>
 
 ---
 
 ## ⚙️ Features
 
-PetWell delivers a complete e-commerce experience with clean architecture and modular scalability. Users can explore an organized catalog of products, view detailed pages with images and descriptions, and add or remove items from the cart dynamically. Each product can be managed via Django’s admin interface, allowing admins to create, edit, and delete entries effortlessly. The cart maintains session-based persistence, ensuring items remain stored as users browse. Checkout functionality connects seamlessly to Stripe-ready architecture, ensuring security and scalability for future payment integrations. A contextual success-message system provides real-time confirmation of user actions such as login, registration, and purchases. SEO features include descriptive meta tags, a sitemap.xml file, and a robots.txt for better visibility in search engines. Custom 404 and 500 error pages were created to maintain consistent branding and user experience even during unexpected issues. The site also includes a wellness blog that integrates storytelling and education alongside shopping, supporting PetWell’s philosophy of compassion through knowledge.  
+PetWell includes a full suite of e-commerce functionalities with modular Django apps:  
+- **Shop:** Browse curated pet wellness products.  
+- **Blog:** Learn about nutrition, healing, and real pet stories.  
+- **Cart:** Add or remove items dynamically with session persistence.  
+- **Checkout:** Complete orders with a secure flow ready for Stripe integration.  
+- **Admin Panel:** Manage products, orders, and posts with ease.  
+- **Custom Error Pages:** Maintain branding and tone consistency.  
+
+Every feature is designed to reflect PetWell’s compassionate identity and technical precision.  
 
 ---
 
-## Blog
+## 🛍️ Blog
+
+The **Blog** page integrates storytelling and education.  
+Each article provides practical advice, emotional insight, or personal reflections about pet care and wellness.  
+Blog posts can be added, edited, or deleted via the Django admin panel, ensuring full content control.  
+Pagination supports smooth navigation even with a large number of posts.  
+SEO-friendly meta descriptions and clean URLs improve discoverability.  
+This feature transforms PetWell into a holistic platform — not just a store, but a source of inspiration.  
 
 <p align="center">
-  <img src="https://github.com/bobes81/Petwell/blob/main/static/images/main-picture.png?raw=true" 
-       alt="PetWell Homepage Preview" width="600"/>
+  <img src="https://github.com/bobes81/Petwell/blob/main/static/images/blog.jpg?raw=true" 
+       alt="PetWell Blog Page" width="600"/>
 </p>
-
 
 ---
 
-## Cart
+## 🛒 Cart
+
+The **Cart** feature ensures a smooth and reliable shopping experience.  
+It uses Django’s session-based storage, allowing products to remain even if users navigate away from the page.  
+Quantities can be updated dynamically, and total prices adjust automatically.  
+The interface focuses on simplicity, clarity, and accessibility.  
+Each item is displayed with product details, images, and subtotal information.  
+This section showcases backend precision combined with user-centered design.  
 
 <p align="center">
   <img src="https://github.com/bobes81/Petwell/blob/main/static/images/cart.jpg?raw=true" 
-       alt="PetWell Homepage Preview" width="600"/>
+       alt="PetWell Cart Page" width="600"/>
 </p>
 
 ---
 
-## Checkout
+## 💳 Checkout
+
+The **Checkout** system simulates a secure, Stripe-ready order process.  
+Users can confirm their orders, enter details, and view a success message once completed.  
+Validation ensures all required fields are filled before submission.  
+Admins can review order records from the Django backend.  
+The page was designed to make the process stress-free and intuitive, reflecting PetWell’s ethos of care and trust.  
 
 <p align="center">
   <img src="https://github.com/bobes81/Petwell/blob/main/static/images/checkout.jpg?raw=true" 
-       alt="PetWell Homepage Preview" width="600"/>
+       alt="PetWell Checkout Page" width="600"/>
 </p>
 
 ---
 
-## Shop
+## 🏬 Shop
+
+The **Shop** serves as the main e-commerce hub of PetWell.  
+Users can browse, filter, and view detailed descriptions of products designed for pet health and happiness.  
+Each product features images, ingredients, and pricing.  
+The layout was built for readability and accessibility.  
+Cloudinary integration ensures that images load fast, even on slower connections.  
+SEO-optimized slugs enhance Google visibility.  
+The shop is fully manageable through Django’s admin interface.  
 
 <p align="center">
   <img src="https://github.com/bobes81/Petwell/blob/main/static/images/shop.jpeg?raw=true" 
-       alt="PetWell Homepage Preview" width="600"/>
+       alt="PetWell Shop Page" width="600"/>
 </p>
-
 
 ---
 
-## 404.html
+## 🚫 404 Page
+
+The **404 Page** transforms a potential error into a gentle, branded experience.  
+Instead of a generic message, users are greeted with humor and kindness:  
+> “Looks like this paw wandered off — let’s guide you home.”  
+The page includes navigation back to the home page and uses brand-consistent colors.  
+It ensures that even unexpected experiences reflect PetWell’s tone of empathy and calmness.  
 
 <p align="center">
   <img src="https://github.com/bobes81/Petwell/blob/main/static/images/404.jpg?raw=true" 
-       alt="PetWell Homepage Preview" width="600"/>
+       alt="PetWell 404 Page" width="600"/>
+</p>
 
-  ---
+---
 
 ## 🧭 Agile Methodology
 
-The entire project was built using **Agile methodology**, ensuring continuous progress tracking, adaptability, and reflection throughout development. The process was organized into **Epics** and **User Stories**, each corresponding to a major feature group or system module. A **GitHub Projects Kanban board** served as the backbone of workflow management, with issues categorized as “To Do,” “In Progress,” and “Done.” This allowed for daily visual tracking of tasks and sprint progress. Each user story included acceptance criteria, linked commits, and labels for priority (High / Medium / Low). Weekly mini-sprints concluded with reflections, focusing on what was achieved, what could improve, and how time was spent.  
-
-### 🔹 Agile Implementation Details
-Epics were divided as follows:
-- **EPIC 1:** Shop and product management (core e-commerce functionality)
-- **EPIC 2:** Blog system (educational storytelling and engagement)
-- **EPIC 3:** Checkout flow and Stripe readiness (security, transactions, UX)
-- **EPIC 4:** UX, SEO, and deployment refinements (meta data, 404, responsiveness)
-
-### 📋 Example User Stories
+PetWell was built using an Agile framework with a GitHub Projects Kanban board.  
+Work was divided into Epics and User Stories with acceptance criteria, priorities, and linked commits.  
+This method allowed structured development, iterative testing, and continuous improvement.  
 
 | ID | User Story | Epic | Status |
 |----|-------------|------|--------|
-| 1 | As a user, I want to browse pet wellness products so that I can find items for my dog | Shop | ✅ Done |
-| 2 | As an admin, I want to create and manage blog posts so that I can share advice | Blog | ✅ Done |
-| 3 | As a user, I want to see my cart updates dynamically so that I know my total cost | Shop | ✅ Done |
-| 4 | As a user, I want to checkout securely so that my payment is safe | Checkout | ✅ Done |
-| 5 | As a visitor, I want to read about animal wellness so that I can learn compassion | Blog | ✅ Done |
+| 1 | Browse products | Shop | ✅ Done |
+| 2 | Create blog posts | Blog | ✅ Done |
+| 3 | Update cart dynamically | Cart | ✅ Done |
+| 4 | Checkout securely | Checkout | ✅ Done |
+| 5 | Read pet wellness tips | Blog | ✅ Done |
+
+This approach mirrors professional workflows and ensures full traceability of progress.  
 
 ---
 
 ## 🔮 Future Features
 
-PetWell is designed with future scalability in mind. Planned improvements include:
-- **Stripe live integration** for real transactions  
-- **User order history and tracking**  
-- **Pet profile customization**, allowing users to personalize the experience  
-- **Product reviews and ratings system**  
-- **Newsletter integration** for pet wellness tips  
-- **AI-powered product recommendations** based on pet type and needs  
+Planned enhancements include:  
+- Live Stripe payment integration  
+- Customer order tracking  
+- Product reviews and star ratings  
+- Personalized pet profiles  
+- AI-driven product recommendations  
+- Subscription wellness boxes  
 
-These enhancements will further strengthen the link between e-commerce and emotional engagement, expanding the project’s educational and interactive scope.
+These features will elevate PetWell into a fully functional, scalable e-commerce solution.  
 
 ---
 
@@ -125,78 +185,91 @@ These enhancements will further strengthen the link between e-commerce and emoti
   <img src="https://github.com/bobes81/Petwell/blob/main/static/images/ERD-petwell.png?raw=true" 
        alt="Entity Relationship Diagram for PetWell" width="650"/>
 </p>
+
+The ERD shows relationships among key models — Products, Blog, and Orders — highlighting Django’s relational power and maintainable data design.
+
 ---
 
 ## 🧠 Manual Testing Summary
 
+Extensive testing ensured functionality and stability across browsers.  
 | Feature | Test | Expected Result | Status |
 |----------|------|-----------------|--------|
-| Add to Cart | Click add button | Item appears in cart | ✅ Pass |
-| Edit Blog Post | Submit valid data | Post updates successfully | ✅ Pass |
-| Delete Blog Post | Confirm deletion | Post removed from list | ✅ Pass |
-| Checkout | Submit form | Redirect to success page | ✅ Pass |
-| Login | Enter valid credentials | Redirect to home | ✅ Pass |
-| 404 Page | Visit invalid URL | Custom error page displays | ✅ Pass |
+| Add to Cart | Click Add | Item appears in cart | ✅ Pass |
+| Edit Blog Post | Submit valid data | Updates successfully | ✅ Pass |
+| Delete Blog Post | Confirm deletion | Post removed | ✅ Pass |
+| Checkout | Submit order | Redirect to success | ✅ Pass |
+| Login | Valid credentials | Redirect to Home | ✅ Pass |
+| 404 | Invalid route | Custom error shows | ✅ Pass |
+
+Manual tests were combined with PEP8 and W3C validations to ensure high code quality.  
 
 ---
 
 ## 🔐 Security Features
 
-PetWell adheres to Django’s built-in security model, ensuring data safety and privacy:
+Security follows Django best practices:  
 - `DEBUG = False` in production  
-- Secure `SECRET_KEY` stored in environment variables  
-- HTTPS enforced by Heroku  
-- CSRF tokens for all POST forms  
-- User authentication and authorization controls  
-- Only superusers or post authors can delete or edit blog content  
-- Sensitive configuration (e.g., Stripe keys, database credentials) stored in **Heroku Config Vars**
+- Secure keys stored in environment variables  
+- HTTPS enforced via Heroku  
+- CSRF tokens on all forms  
+- Role-based user permissions  
+- Hidden API credentials in Config Vars  
+
+This setup ensures data integrity, privacy, and safe deployment.  
 
 ---
 
 ## 🌍 Marketing & SEO Strategy
 
-The platform is SEO-ready and includes:
-- Descriptive **meta tags** and **Open Graph data** for better social previews  
-- **robots.txt** and **sitemap.xml** to improve Google indexing  
-- Semantic HTML structure for accessibility and visibility  
-- A **mockup Facebook Business Page** to simulate social media integration  
-- Cloudinary image optimization for performance  
-- Consistent page titles, descriptions, and alt text  
-
-These techniques ensure that PetWell ranks efficiently in search engines and maintains professional visibility in a real-world deployment scenario.
-
----
-
-## 🧪 Testing
-
-(Already detailed above)
+PetWell is fully SEO-optimized, with structured meta tags, robots.txt, and sitemap.xml.  
+Each image includes descriptive alt text to boost accessibility and ranking.  
+The Facebook mockup provides a professional brand identity example.  
+Semantic HTML and consistent page structure enhance discoverability and trust.  
+All content was written in a tone that builds emotional connection, which also improves retention and shareability.  
 
 ---
 
 ## 🚀 Deployment
 
-(Already detailed above)
+PetWell was deployed to **Heroku** using GitHub CI/CD integration.  
+Whitenoise manages static files, and Cloudinary handles media.  
+PostgreSQL is used for production; SQLite supports local development.  
+All secret keys and credentials are safely stored in Heroku Config Vars.  
+Deployment was verified across browsers and devices for reliability.  
 
 ---
 
 ## 🧰 Technologies Used
 
-(Already detailed above)
+**Backend:** Django, Python, Gunicorn  
+**Frontend:** HTML5, CSS3, Bootstrap 5, JavaScript  
+**Database:** PostgreSQL  
+**Media Hosting:** Cloudinary  
+**Static Files:** Whitenoise  
+**Auth:** Django-Allauth  
+**Version Control:** Git & GitHub  
+**Deployment:** Heroku  
+**Testing:** W3C Validator, PEP8, JSHint  
 
 ---
 
 ## 🙏 Credits
 
-(Already detailed above)
+Thanks to **Code Institute** for their support and educational materials.  
+Icons from **Bootstrap Icons**, design templates from **Canva**, and images from **Cloudinary**.  
+Special appreciation to the Code Institute community for continuous feedback.  
 
 ---
 
 ## 💖 Acknowledgements
 
-(Already detailed above)
+Created by **Ivan Kimpl** with love and dedication to all living beings.  
+PetWell is more than a project — it’s a message of empathy, kindness, and connection.  
+May it remind us that caring for animals means caring for life itself. 🐾  
 
 EOF
 
 git add README.md
-git commit -m "Add final README with Future Features, User Stories, ERD, Security, and SEO sections for merit/distinction criteria"
-git push
+git commit -m "Add final README with all section texts and visual image links"
+git push origin main
