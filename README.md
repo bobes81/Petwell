@@ -259,10 +259,10 @@ Deployment was verified across browsers and devices for reliability.
 Thanks to **Code Institute** for their support and educational materials.  
 Icons from **Bootstrap Icons**, design templates from **Canva**, and images from **Cloudinary**.  
 Special appreciation to the Code Institute community for continuous feedback.  
-
+Thanks To AI chatGPT who helped me to check the code while building this project.
 ---
 
-## 💖 Acknowledgements
+##  Acknowledgements
 
 Created by **Ivan Kimpl** with love and dedication to all living beings.  
 PetWell is more than a project — it’s a message of empathy, kindness, and connection.  
