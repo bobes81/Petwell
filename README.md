@@ -259,7 +259,7 @@ Deployment was verified across browsers and devices for reliability.
 Thanks to **Code Institute** for their support and educational materials.  
 Icons from **Bootstrap Icons**, design templates from **Canva**, and images from **Cloudinary**.  
 Special appreciation to the Code Institute community for continuous feedback.  
-Thanks To AI chatGPT who helped me to check the code while building this project.
+Thanks To AI chatGPT who helped me for check the code while building this project.
 ---
 
 ##  Acknowledgements
