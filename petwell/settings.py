@@ -6,7 +6,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "replace-this-with-a-random-key")
 DEBUG = os.environ.get("DEBUG", "False") == "True"
-ALLOWED_HOSTS = ["petwell-app-ivo.herokuapp.com", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = [
+    "petwell-app-ivo.herokuapp.com",
+    "www.petwell-app-ivo.herokuapp.com",
+    "petwell-app-ivo-59ea39e413cf.herokuapp.com",
+    "localhost",
+    "127.0.0.1",
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
