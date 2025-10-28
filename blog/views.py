@@ -1,104 +1,20 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.http import HttpResponseForbidden
+from .forms import NewsletterForm
 from .models import BlogPost
-from .forms import BlogPostForm
-
 
 def blog_list(request):
-    posts = BlogPost.objects.all().order_by('-created_at')
-    return render(request, 'blog/blog_list.html', {'posts': posts, 'user': request.user})
+    posts = BlogPost.objects.all()
+    return render(request, 'blog/blog_list.html', {'posts': posts})
 
-
-@login_required
-def create_post(request):
-    if request.method == 'POST':
-        form = BlogPostForm(request.POST, request.FILES)
+def subscribe(request):
+    """Handles newsletter subscription form."""
+    if request.method == "POST":
+        form = NewsletterForm(request.POST)
         if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.save()
-            messages.success(request, 'New blog post created successfully!')
-            return redirect('blog:blog_list')
-        messages.error(request, 'Please correct the errors below.')
+            form.save()
+            messages.success(request, "Thank you for subscribing to our newsletter!")
+            return redirect("home")
     else:
-        form = BlogPostForm()
-    return render(request, 'blog/blog_form.html', {'form': form})
-
-
-@login_required
-def edit_post(request, pk):
-    post = get_object_or_404(BlogPost, pk=pk)
-
-    if request.user != post.author and not request.user.is_superuser:
-        return HttpResponseForbidden("You are not allowed to edit this post.")
-
-    try:
-        if request.method == 'POST':
-            form = BlogPostForm(request.POST, request.FILES, instance=post)
-            if form.is_valid():
-                updated_post = form.save(commit=False)
-                if not request.FILES.get('image'):
-                    updated_post.image = post.image
-                updated_post.title = form.cleaned_data.get('title', post.title)
-                updated_post.content = form.cleaned_data.get('content', post.content)
-                updated_post.author = post.author
-                try:
-                    updated_post.save()
-                except Exception as img_error:
-                    print(f"Cloudinary save skipped: {img_error}")
-                    updated_post.image = post.image
-                    updated_post.save()
-                messages.success(request, 'Post updated successfully!')
-                return redirect('blog:blog_list')
-            else:
-                messages.error(request, 'Please correct the errors below.')
-        else:
-            form = BlogPostForm(instance=post)
-    except Exception as e:
-        print(f"Safe Edit Error: {e}")
-        messages.error(request, f"An unexpected error occurred: {e}")
-        return redirect('blog:blog_list')
-
-    return render(request, 'blog/blog_form.html', {'form': form, 'post': post})
-
-
-@login_required
-def delete_post(request, pk):
-    post = get_object_or_404(BlogPost, pk=pk)
-    if request.user != post.author and not request.user.is_superuser:
-        return HttpResponseForbidden("You are not allowed to delete this post.")
-    post.delete()
-    messages.success(request, 'Post deleted successfully!')
-    return redirect('blog:blog_list')
-
-
-def blog_detail(request, pk):
-    post = get_object_or_404(BlogPost, pk=pk)
-    return render(request, 'blog/blog_detail.html', {'post': post, 'user': request.user})
-# --- Newsletter Subscribe View ---
-from .forms import NewsletterForm
-def subscribe(request):
-    if request.method == 'POST':
-        form = NewsletterForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Thank you for joining the PetWell community!')
-            return redirect(request.META.get('HTTP_REFERER', 'home'))
-        else:
-            messages.error(request, 'Invalid email. Please try again.')
-    return redirect('home')
-
-# --- Newsletter Subscribe View ---
-from .forms import NewsletterForm
-def subscribe(request):
-    if request.method == 'POST':
-        form = NewsletterForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Thank you for joining the PetWell community!')
-            return redirect(request.META.get('HTTP_REFERER', 'home'))
-        else:
-            messages.error(request, 'Invalid email. Please try again.')
-    return redirect('home')
+        form = NewsletterForm()
+    return render(request, "newsletter.html", {"form": form})
