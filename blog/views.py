@@ -14,7 +14,7 @@ def edit_post(request, pk):
                 if not request.FILES.get('image'):
                     post.title = form.cleaned_data['title']
                     post.content = form.cleaned_data['content']
-                    # neaktualizuje Cloudinary pole
+                   
                     post.save(update_fields=['title', 'content'])
                 else:
                     form.save()
