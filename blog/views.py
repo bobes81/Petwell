@@ -38,10 +38,13 @@ def edit_post(request, pk):
         form = BlogPostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             try:
-                
+                # If no new image uploaded, keep the existing Cloudinary one
+                image_before = post.image
+                updated_post = form.save(commit=False)
                 if not request.FILES.get('image'):
-                    form.instance.image = post.image
-                form.save()
+                    updated_post.image = image_before
+                updated_post.author = post.author
+                updated_post.save()
                 messages.success(request, 'Post updated successfully!')
                 return redirect('blog:blog_list')
             except Exception as e:
@@ -51,7 +54,6 @@ def edit_post(request, pk):
             messages.error(request, 'Please correct the errors below.')
     else:
         form = BlogPostForm(instance=post)
-
     return render(request, 'blog/blog_form.html', {'form': form, 'post': post})
 
 
@@ -60,8 +62,6 @@ def delete_post(request, pk):
     post = get_object_or_404(BlogPost, pk=pk)
     if request.user != post.author and not request.user.is_superuser:
         return HttpResponseForbidden("You are not allowed to delete this post.")
-
-    
     post.delete()
     messages.success(request, 'Post deleted successfully!')
     return redirect('blog:blog_list')
@@ -70,5 +70,3 @@ def delete_post(request, pk):
 def blog_detail(request, pk):
     post = get_object_or_404(BlogPost, pk=pk)
     return render(request, 'blog/blog_detail.html', {'post': post, 'user': request.user})
-
-
