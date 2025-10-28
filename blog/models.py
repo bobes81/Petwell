@@ -16,10 +16,18 @@ class BlogPost(models.Model):
         return self.title
 
     def delete(self, *args, **kwargs):
-        """Safe delete to prevent Cloudinary errors when image no longer exists."""
+        """
+        Safe delete override that prevents Cloudinary errors
+        even if the image no longer exists or Cloudinary connection fails.
+        """
         try:
-            if self.image and hasattr(self.image, 'public_id') and self.image.public_id:
-                self.image.delete()  # safely remove from Cloudinary
-        except Exception as e:
-            print(f"⚠️ Skipping Cloudinary delete error: {e}")
+            if self.image and hasattr(self.image, 'public_id'):
+                public_id = getattr(self.image, 'public_id', None)
+                if public_id:
+                    try:
+                        self.image.delete()  # attempt Cloudinary removal
+                    except Exception as inner_error:
+                        print(f"⚠️ Cloudinary image delete skipped: {inner_error}")
+        except Exception as outer_error:
+            print(f"⚠️ BlogPost delete error handled safely: {outer_error}")
         super().delete(*args, **kwargs)
