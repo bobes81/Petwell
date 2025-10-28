@@ -3,7 +3,7 @@ cat > README.md <<'EOF'
 
 <p align="center">
   <img src="https://github.com/bobes81/Petwell/blob/main/static/images/main-picture.png?raw=true" 
-       alt="PetWell Homepage Preview" width="250"/>
+       alt="PetWell Homepage Preview" width="750"/>
 </p>
 
 Petwell
@@ -40,7 +40,7 @@ PetWell delivers a complete e-commerce experience with clean architecture and mo
 
 <p align="center">
   <img src="https://github.com/bobes81/Petwell/blob/main/static/images/main-picture.png?raw=true" 
-       alt="PetWell Homepage Preview" width="150"/>
+       alt="PetWell Homepage Preview" width="600"/>
 </p>
 
 
@@ -50,7 +50,7 @@ PetWell delivers a complete e-commerce experience with clean architecture and mo
 
 <p align="center">
   <img src="https://github.com/bobes81/Petwell/blob/main/static/images/cart.jpg?raw=true" 
-       alt="PetWell Homepage Preview" width="150"/>
+       alt="PetWell Homepage Preview" width="600"/>
 </p>
 
 ---
@@ -59,7 +59,7 @@ PetWell delivers a complete e-commerce experience with clean architecture and mo
 
 <p align="center">
   <img src="https://github.com/bobes81/Petwell/blob/main/static/images/checkout.jpg?raw=true" 
-       alt="PetWell Homepage Preview" width="150"/>
+       alt="PetWell Homepage Preview" width="600"/>
 </p>
 
 ---
@@ -68,8 +68,9 @@ PetWell delivers a complete e-commerce experience with clean architecture and mo
 
 <p align="center">
   <img src="https://github.com/bobes81/Petwell/blob/main/static/images/shop.png?raw=true" 
-       alt="PetWell Homepage Preview" width="150"/>
+       alt="PetWell Homepage Preview" width="600"/>
 </p>
+
 
 ---
 
@@ -77,8 +78,10 @@ PetWell delivers a complete e-commerce experience with clean architecture and mo
 
 <p align="center">
   <img src="https://github.com/bobes81/Petwell/blob/main/static/images/404.jpg?raw=true" 
-       alt="PetWell Homepage Preview" width="150"/>
----
+       alt="PetWell Homepage Preview" width="600"/>
+
+  ---
+
 ## 🧭 Agile Methodology
 
 The entire project was built using **Agile methodology**, ensuring continuous progress tracking, adaptability, and reflection throughout development. The process was organized into **Epics** and **User Stories**, each corresponding to a major feature group or system module. A **GitHub Projects Kanban board** served as the backbone of workflow management, with issues categorized as “To Do,” “In Progress,” and “Done.” This allowed for daily visual tracking of tasks and sprint progress. Each user story included acceptance criteria, linked commits, and labels for priority (High / Medium / Low). Weekly mini-sprints concluded with reflections, focusing on what was achieved, what could improve, and how time was spent.  
