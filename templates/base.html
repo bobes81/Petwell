@@ -12,7 +12,7 @@
     <div class="container-fluid px-4">
         <a class="navbar-brand d-flex align-items-center fw-bold text-primary" href="{% url 'home' %}">
             <img src="https://res.cloudinary.com/dyg3a5k7a/image/upload/v1730044927/petwell_logo.png"
-                 alt="PetWell Logo"
+                 alt="PetWell"
                  style="height: 34px; width: auto; margin-right: 8px; object-fit: contain;">
             <span>PetWell</span>
         </a>
@@ -26,7 +26,7 @@
                 <li class="nav-item"><a class="nav-link" href="{% url 'blog:blog_list' %}">Blog</a></li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'cart:view_cart' %}">
-                        Cart 🛒 {% if cart_item_count > 0 %}<strong>({{ cart_item_count }})</strong>{% endif %}
+                        🛒 Cart {% if cart_item_count > 0 %}<strong>({{ cart_item_count }})</strong>{% endif %}
                     </a>
                 </li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'checkout:checkout' %}">Checkout</a></li>
