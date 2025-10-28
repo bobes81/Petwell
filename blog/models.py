@@ -14,3 +14,12 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
+
+    def delete(self, *args, **kwargs):
+        """Safe delete to prevent Cloudinary errors when image no longer exists."""
+        try:
+            if self.image and hasattr(self.image, 'public_id') and self.image.public_id:
+                self.image.delete()  # safely remove from Cloudinary
+        except Exception as e:
+            print(f"⚠️ Skipping Cloudinary delete error: {e}")
+        super().delete(*args, **kwargs)
