@@ -2,7 +2,7 @@ cat > README.md <<'EOF'
 # 🐾 PetWell — E-commerce Platform for Pet Wellness
 
 <p align="center">
-  <img src="https://github.com/bobes81/Petwell/blob/main/static/images/main-picutre.png?raw=true" 
+  <img src="https://github.com/bobes81/Petwell/blob/main/static/images/main-picture.png?raw=true" 
        alt="PetWell Homepage Preview" width="750"/>
 </p>
 
