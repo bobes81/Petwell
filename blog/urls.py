@@ -10,3 +10,11 @@ urlpatterns = [
     path('post/<int:pk>/edit/', views.edit_post, name='edit_post'),
     path('post/<int:pk>/delete/', views.delete_post, name='delete_post'),
 ]
+
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('subscribe/', views.subscribe, name='subscribe'),
+]
+
