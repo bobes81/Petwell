@@ -2,7 +2,7 @@ cat > README.md <<'EOF'
 # 🐾 PetWell — E-commerce Platform for Pet Wellness
 
 <p align="center">
-  <img src="https://github.com/bobes81/Petwell/blog/main/static/images/main-picutre.png?raw=true" 
+  <img src="https://github.com/bobes81/Petwell/blob/main/static/images/main-picutre.png?raw=true" 
        alt="PetWell Homepage Preview" width="750"/>
 </p>
 
@@ -76,7 +76,7 @@ These enhancements will further strengthen the link between e-commerce and emoti
 ## 🧩 Data Model (ERD)
 
 <p align="center">
-  <img src="https://github.com/bobes81/Petwell/blog/main/static/images/ERD-petwell.png?raw=true" 
+  <img src="https://github.com/bobes81/Petwell/blob/main/static/images/ERD-petwell.png?raw=true" 
        alt="Entity Relationship Diagram for PetWell" width="650"/>
 </p>
 ---
