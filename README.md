@@ -1,3 +1,4 @@
+cat > README.md << 'EOF'
 # 🐾 PetWell — E-commerce Platform for Pet Wellness
 
 <p align="center">
@@ -30,36 +31,51 @@ Subtle transitions and soft typography create a mindful aesthetic reflecting the
 
 ---
 
-## 📣 Facebook Business Mockup
-A Facebook Business Page mockup (made in Canva) demonstrates digital marketing tone and visual identity.  
-
-> “Because every wag, purr, and tail deserves wellness.”
+## 🛍️ Shop
+The **Shop app** displays a curated catalog of pet wellness products.  
+Products can be filtered, sorted, and viewed in detail. Each item includes Cloudinary-hosted images and descriptions.  
+Admins can add, edit, and delete products via Django Admin or form interface.
 
 <p align="center">
-  <img src="https://github.com/bobes81/Petwell/blob/main/static/images/facebook-mockup-petwell.png?raw=true" 
-       alt="PetWell Facebook Business Page Mockup" width="700"/>
+  <img src="https://github.com/bobes81/Petwell/blob/main/static/images/shop-preview.png?raw=true" 
+       alt="PetWell Shop Page" width="700"/>
 </p>
 
 ---
 
-## ⚙️ Features
-- **Shop:** Browse curated pet wellness products  
-- **Blog:** Read, create, edit, and delete posts  
-- **Cart:** Persistent shopping cart using Django sessions  
-- **Checkout:** Stripe-ready secure order process  
-- **Newsletter:** Subscribe via email for updates  
-- **Custom 404 Page:** Branded and friendly user experience  
+## 🧺 Cart
+The **Cart app** provides dynamic cart functionality with real-time item counts and total updates.  
+Items persist in session storage, allowing users to browse without losing selections.  
+Quantity adjustment, remove item, and clear cart options are available.
+
+<p align="center">
+  <img src="https://github.com/bobes81/Petwell/blob/main/static/images/cart-preview.png?raw=true" 
+       alt="PetWell Cart Page" width="700"/>
+</p>
 
 ---
 
-## 🛍️ Blog
-CRUD functionality for posts, including Cloudinary image upload and safe edit validation.  
-Front-end forms allow creation and editing without admin access.  
-Pagination and SEO-optimized URLs improve usability and discoverability.
+## 💳 Checkout
+The **Checkout app** integrates a Stripe payment system for secure transactions.  
+Orders are stored in the database with validation and email confirmation.  
+Once completed, users are redirected to an order success page.
 
 <p align="center">
-  <img src="https://github.com/bobes81/Petwell/blob/main/static/images/main-picture.png?raw=true" 
-       alt="PetWell Homepage Preview" width="750"/>
+  <img src="https://github.com/bobes81/Petwell/blob/main/static/images/checkout-preview.png?raw=true" 
+       alt="PetWell Checkout Page" width="700"/>
+</p>
+
+---
+
+## 🧠 Blog
+The **Blog app** offers full CRUD functionality — create, read, update, and delete posts.  
+Each post supports Cloudinary image uploads and validation to ensure safe and optimized content.  
+This section promotes education, empathy, and emotional connection between owners and pets.
+
+<p align="center">
+  <img src="https://github.com/bobes81/Petwell/blob/main/static/images/blog-preview.png?raw=true" 
+       alt="PetWell Blog Page" width="700"/>
+</p>
 
 ---
 
@@ -81,8 +97,6 @@ Agile workflow tracked via GitHub Project board:
 | 3 | Update cart dynamically | Cart | ✅ Done |
 | 4 | Checkout securely | Checkout | ✅ Done |
 | 5 | Newsletter signup | Marketing | ✅ Done |
-
-This ensures full traceability, iterative development, and professional project management.
 
 ---
 
@@ -153,13 +167,13 @@ Special gratitude to **ChatGPT (Alex)** for assistance with debugging, documenta
 
 ---
 
-##  Acknowledgements
+## ❤️ Acknowledgements
 Created by **Ivan Kimpl** with love and dedication to all living beings.  
 PetWell is more than code — it’s a message of compassion, balance, and light.  
 “Caring for pets means caring for life itself.” 🐾
-
 EOF
 
 git add README.md
-git commit -m "Add final README with all section texts and visual image links"
+git commit -m "Add final README including Shop, Cart, Checkout, Blog sections with visuals"
 git push origin main
+git push heroku main --force
