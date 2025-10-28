@@ -10,7 +10,6 @@ urlpatterns = [
 
     # --- Products ---
     path('products/', include(('products.urls', 'products'), namespace='products')),
-    path('', include('products.urls')),  # ✅ Přidá i ne-namespacovaný odkaz (pro {% url 'product_list' %})
 
     # --- Blog, Cart, Checkout, Accounts ---
     path('blog/', include(('blog.urls', 'blog'), namespace='blog')),
