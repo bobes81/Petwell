@@ -49,12 +49,30 @@ def edit_post(request, pk):
 @login_required
 def delete_post(request, pk):
     post = get_object_or_404(BlogPost, pk=pk)
+
+    # 🔒 Allow only author or admin to delete
     if request.user != post.author and not request.user.is_superuser:
         return HttpResponseForbidden("You are not allowed to delete this post.")
+
     if request.method == 'POST':
-        post.delete()
-        messages.success(request, 'Post deleted successfully!')
+        # 🧹 Try to delete associated image safely
+        if hasattr(post, 'image') and post.image:
+            try:
+                image_field = getattr(post, 'image')
+                if hasattr(image_field, 'delete'):
+                    image_field.delete(save=False)
+            except Exception as e:
+                print(f"⚠️ Error deleting image from Cloudinary: {e}")
+
+        # 🗑️ Delete the blog post safely
+        try:
+            post.delete()
+            messages.success(request, 'Post deleted successfully!')
+        except Exception as e:
+            messages.error(request, f"An unexpected error occurred while deleting the post: {e}")
+
         return redirect('blog:blog_list')
+
     return render(request, 'blog/blog_confirm_delete.html', {'post': post})
 
 
