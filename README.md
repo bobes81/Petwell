@@ -57,6 +57,10 @@ CRUD functionality for posts, including Cloudinary image upload and safe edit va
 Front-end forms allow creation and editing without admin access.  
 Pagination and SEO-optimized URLs improve usability and discoverability.
 
+<p align="center">
+  <img src="https://github.com/bobes81/Petwell/blob/main/static/images/main-picture.png?raw=true" 
+       alt="PetWell Homepage Preview" width="750"/>
+
 ---
 
 ## 💌 Newsletter Signup
