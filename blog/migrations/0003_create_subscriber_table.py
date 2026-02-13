@@ -1,19 +1,13 @@
-from django.db import migrations, models
+from django.db import migrations
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('blog', '0002_create_subscriber_table'),
+        ("blog", "0002_create_subscriber_table"),
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='Subscriber',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('email', models.EmailField(max_length=254, unique=True)),
-                ('subscribed_at', models.DateTimeField(auto_now_add=True)),
-            ],
-        ),
+        # This migration is intentionally left empty.
+        # Subscriber table is already created in 0002_create_subscriber_table.
     ]
