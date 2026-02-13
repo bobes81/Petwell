@@ -11,7 +11,10 @@ def run():
 
     cat_objs = {}
     for name, friendly in categories:
-        obj, _ = Category.objects.get_or_create(name=name, defaults={"friendly_name": friendly})
+        obj, _ = Category.objects.get_or_create(
+            name=name,
+            defaults={"friendly_name": friendly},
+        )
         cat_objs[name] = obj
 
     items = [
