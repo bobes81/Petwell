@@ -14,10 +14,10 @@
   <img src="https://img.shields.io/badge/License-MIT-lightgrey"/>
 </p>
 
-**PetWell** is a full-stack Django e-commerce platform promoting holistic pet wellness and mindful living.  
-Developed as **Portfolio Project 5** for the *Code Institute Full Stack Software Development Diploma*, it demonstrates advanced Django e-commerce architecture, Stripe integration, newsletter automation, Agile methodology, and deployment to Heroku.  
-The goal is to create a trusted digital sanctuary where users can shop, learn, and connect through compassion and responsible pet care.
+**PetWell** PetWell is a full-stack Django e-commerce platform focused on holistic pet wellness and mindful living.
+It showcases a scalable e-commerce architecture built with Django, featuring secure Stripe payment integration, newsletter automation, structured Agile development workflow, and cloud deployment.
 
+The platform is designed to provide a seamless and trustworthy online experience where customers can explore products, access educational content, and engage with a brand built on compassion and responsible pet care.
 ---
 
 ## 🌟 Overview
@@ -220,8 +220,7 @@ Deployment verified via build logs, Stripe test mode, and manual user testing.
 ---
 
 ##  Acknowledgements
-
-Special thanks to ChatGPT for continuous technical, creative, and emotional support throughout development.  
+  
 PetWell is dedicated to compassion — not just for pets, but for all living beings.  
 
 > “Caring for pets means caring for life itself.” 🐾
