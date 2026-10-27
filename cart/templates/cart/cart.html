@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container py-5">
-    <h2 class="text-center mb-5 fw-bold"><i class="fas fa-shopping-cart"></i> Your Cart</h2>
+    <h2 class="text-center mb-5 fw-bold">Your Cart</h2>
 
     {% if items %}
     <div class="table-responsive">
@@ -23,9 +23,9 @@
                     <td>{{ item.quantity }}</td>
                     <td>£{{ item.subtotal }}</td>
                     <td>
-                        <a href="{% url 'cart:remove_from_cart' item.product.id %}" class="btn btn-outline-danger btn-sm">
-                            ✖ Remove
-                        </a>
+                        <form method="post" action="{% url 'cart:remove_from_cart' item.product.id %}">{% csrf_token %}
+                          <button class="btn btn-outline-danger btn-sm" type="submit">Remove {{ item.product.name }}</button>
+                        </form>
                     </td>
                 </tr>
                 {% endfor %}

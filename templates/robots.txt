@@ -1,5 +1,9 @@
 User-agent: *
 Disallow: /admin/
+Disallow: /accounts/
+Disallow: /checkout/
+Disallow: /cart/
+Disallow: /orders/
 Allow: /
 
-Sitemap: https://petwell-app-ivo-59ea39e413cf.herokuapp.com/sitemap.xml
+Sitemap: {{ site_url }}/sitemap.xml

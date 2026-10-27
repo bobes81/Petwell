@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container py-5 text-center">
-  <h2 class="fw-bold mb-4">✅ Thank you for your order, {{ name }}!</h2>
-  <p class="lead mb-3">A confirmation email has been sent to <strong>{{ email }}</strong>.</p>
-  <p>Your items will be on their way shortly 🐾</p>
-  <a href="/products/" class="btn btn-primary mt-4">🛍️ Continue Shopping</a>
-</div>
+{% if order.status == 'paid' %}
+<h1>Payment confirmed</h1><p>Thank you, {{ order.full_name }}. Your order is paid.</p>
+{% else %}
+<h1>Awaiting payment confirmation</h1>
+<p>Your order is not yet marked as paid. Stripe confirmation can take a moment. Your cart is kept until payment is confirmed.</p>
+<a class="btn btn-primary" href="{% url 'checkout:success' order.public_id %}">Check payment status</a>
+{% endif %}
+<p>Order reference: {{ order.public_id }} · Total £{{ order.total_price }}</p>
+<a href="{% url 'products:product_list' %}">Continue shopping</a>
 {% endblock %}

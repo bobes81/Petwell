@@ -10,7 +10,7 @@
     </div>
   </div>
 
-  <h2 class="mb-4">Add New Blog Post</h2>
+  <h2 class="mb-4">{% if edit %}Edit Blog Post{% else %}Add New Blog Post{% endif %}</h2>
 
   <!-- Community guidelines -->
   <div class="alert alert-info" role="alert">
@@ -51,13 +51,13 @@
     {{ form.as_p }}
 
     <small class="text-muted d-block mb-3">
-      Accepted image formats: <strong>.jpg</strong>, <strong>.jpeg</strong>, <strong>.png</strong><br>
+      Accepted image formats: <strong>.jpg</strong>, <strong>.jpeg</strong>, <strong>.png</strong>, <strong>.webp</strong><br>
       Maximum file size: <strong>5 MB</strong>.
     </small>
 
     <div class="d-flex justify-content-between align-items-center">
       <a href="{% url 'blog:blog_list' %}" class="btn btn-secondary mt-3">Cancel</a>
-      <button type="submit" class="btn btn-primary mt-3">Publish Post</button>
+      <button type="submit" class="btn btn-primary mt-3">{% if edit %}Save changes{% else %}Publish Post{% endif %}</button>
     </div>
   </form>
 </div>

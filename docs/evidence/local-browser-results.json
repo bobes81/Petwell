@@ -1,0 +1,125 @@
+[
+  {
+    "viewport": "mobile",
+    "page": "/",
+    "overflow": false,
+    "bootstrap": "flex",
+    "brokenImages": []
+  },
+  {
+    "viewport": "mobile",
+    "page": "/products/",
+    "overflow": false,
+    "bootstrap": "flex",
+    "brokenImages": []
+  },
+  {
+    "viewport": "mobile",
+    "page": "/blog/",
+    "overflow": false,
+    "bootstrap": "flex",
+    "brokenImages": []
+  },
+  {
+    "viewport": "mobile",
+    "page": "/cart/",
+    "overflow": false,
+    "bootstrap": "flex",
+    "brokenImages": []
+  },
+  {
+    "viewport": "mobile",
+    "page": "/checkout/",
+    "overflow": false,
+    "bootstrap": "flex",
+    "brokenImages": []
+  },
+  {
+    "viewport": "mobile",
+    "flow": "CSRF-protected cart → populated checkout → missing-key error; cart retained",
+    "passed": true,
+    "jsErrors": []
+  },
+  {
+    "viewport": "tablet",
+    "page": "/",
+    "overflow": false,
+    "bootstrap": "flex",
+    "brokenImages": []
+  },
+  {
+    "viewport": "tablet",
+    "page": "/products/",
+    "overflow": false,
+    "bootstrap": "flex",
+    "brokenImages": []
+  },
+  {
+    "viewport": "tablet",
+    "page": "/blog/",
+    "overflow": false,
+    "bootstrap": "flex",
+    "brokenImages": []
+  },
+  {
+    "viewport": "tablet",
+    "page": "/cart/",
+    "overflow": false,
+    "bootstrap": "flex",
+    "brokenImages": []
+  },
+  {
+    "viewport": "tablet",
+    "page": "/checkout/",
+    "overflow": false,
+    "bootstrap": "flex",
+    "brokenImages": []
+  },
+  {
+    "viewport": "tablet",
+    "flow": "CSRF-protected cart → populated checkout → missing-key error; cart retained",
+    "passed": true,
+    "jsErrors": []
+  },
+  {
+    "viewport": "desktop",
+    "page": "/",
+    "overflow": false,
+    "bootstrap": "flex",
+    "brokenImages": []
+  },
+  {
+    "viewport": "desktop",
+    "page": "/products/",
+    "overflow": false,
+    "bootstrap": "flex",
+    "brokenImages": []
+  },
+  {
+    "viewport": "desktop",
+    "page": "/blog/",
+    "overflow": false,
+    "bootstrap": "flex",
+    "brokenImages": []
+  },
+  {
+    "viewport": "desktop",
+    "page": "/cart/",
+    "overflow": false,
+    "bootstrap": "flex",
+    "brokenImages": []
+  },
+  {
+    "viewport": "desktop",
+    "page": "/checkout/",
+    "overflow": false,
+    "bootstrap": "flex",
+    "brokenImages": []
+  },
+  {
+    "viewport": "desktop",
+    "flow": "CSRF-protected cart → populated checkout → missing-key error; cart retained",
+    "passed": true,
+    "jsErrors": []
+  }
+]

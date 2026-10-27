@@ -1,1 +1,1 @@
-web: gunicorn petwell.wsgi
+web: gunicorn petwell.wsgi:application

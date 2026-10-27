@@ -23,6 +23,7 @@
 
     <form method="post" action="{% url 'account_login' %}">
       {% csrf_token %}
+      {% if redirect_field_value %}<input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">{% endif %}
       <div class="mb-3">
         <label for="id_login" class="form-label">Username</label>
         {{ form.login|add_class:"form-control rounded-pill shadow-sm" }}

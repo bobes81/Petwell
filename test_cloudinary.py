@@ -1,17 +1,27 @@
+"""Optional manual Cloudinary diagnostic. Never runs during test discovery."""
 
-import os
-import cloudinary
-from cloudinary.uploader import upload
+if __name__ == "__main__":
+    import os
 
-cloudinary.config(
-    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
-    api_key=os.getenv("CLOUDINARY_API_KEY"),
-    api_secret=os.getenv("CLOUDINARY_API_SECRET")
-)
+    import cloudinary
 
-try:
-    result = upload("https://upload.wikimedia.org/wikipedia/commons/a/a3/June_odd-eyed-cat.jpg")
-    print("✅ Upload successful:", result.get("secure_url"))
-except Exception as e:
-    print("❌ Upload failed:", e)
-
+    if not all(
+        os.environ.get(name)
+        for name in (
+            "CLOUDINARY_CLOUD_NAME",
+            "CLOUDINARY_API_KEY",
+            "CLOUDINARY_API_SECRET",
+        )
+    ):
+        raise SystemExit(
+            "Configure Cloudinary variables before running this optional diagnostic."
+        )
+    cloudinary.config(
+        cloud_name=os.environ["CLOUDINARY_CLOUD_NAME"],
+        api_key=os.environ["CLOUDINARY_API_KEY"],
+        api_secret=os.environ["CLOUDINARY_API_SECRET"],
+        secure=True,
+    )
+    raise SystemExit(
+        "Use the authenticated blog image form to validate uploads with your own image. No upload performed."
+    )

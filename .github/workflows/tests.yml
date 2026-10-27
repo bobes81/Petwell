@@ -1,0 +1,15 @@
+name: Django tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - run: python manage.py check --settings=petwell.test_settings
+      - run: python manage.py makemigrations --check --dry-run --settings=petwell.test_settings
+      - run: python manage.py test --settings=petwell.test_settings

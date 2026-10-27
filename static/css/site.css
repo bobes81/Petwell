@@ -1,0 +1,6 @@
+.newsletter-form input { flex: 1 1 16rem; max-width: 28rem; }
+.card-img-top { max-height: 22rem; object-fit: cover; }
+img { max-width: 100%; height: auto; }
+.card-body, main { overflow-wrap: anywhere; }
+input, textarea { max-width: 100%; }
+:focus-visible { outline: 3px solid #164e99; outline-offset: 3px; }

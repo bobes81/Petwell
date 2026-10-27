@@ -1,0 +1,16 @@
+Creating test database for alias 'default'...
+................................Stripe checkout creation failed for order fb1a08c3-34d3-48f5-b677-e808cf5e4314
+....Payment details mismatch for order 3f36e8a7-1e9e-4d10-b6d8-59f86505697b
+Payment details mismatch for order 3f36e8a7-1e9e-4d10-b6d8-59f86505697b
+Payment details mismatch for order 3f36e8a7-1e9e-4d10-b6d8-59f86505697b
+Payment details mismatch for order 3f36e8a7-1e9e-4d10-b6d8-59f86505697b
+Payment details mismatch for order 3f36e8a7-1e9e-4d10-b6d8-59f86505697b
+Payment details mismatch for order 3f36e8a7-1e9e-4d10-b6d8-59f86505697b
+..........
+----------------------------------------------------------------------
+Ran 46 tests in 1.700s
+
+OK
+Destroying test database for alias 'default'...
+Found 46 test(s).
+System check identified no issues (0 silenced).

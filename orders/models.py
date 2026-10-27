@@ -1,5 +1,8 @@
-from django.db import models
+import uuid
+
 from django.contrib.auth.models import User
+from django.db import models
+
 from products.models import Product
 
 
@@ -7,15 +10,32 @@ class Order(models.Model):
     """
     Represents a customer's order with contact and total details.
     """
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+
+    user = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True
+    )
     full_name = models.CharField(max_length=100)
     email = models.EmailField()
     address = models.TextField()
-    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    total_price = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0
+    )
+    public_id = models.UUIDField(
+        default=uuid.uuid4, unique=True, editable=False
+    )
+    status = models.CharField(
+        max_length=12,
+        choices=[("pending", "Pending payment"), ("paid", "Paid")],
+        default="pending",
+    )
+    stripe_session_id = models.CharField(
+        max_length=255, blank=True, unique=True, null=True
+    )
+    paid_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-created_at']
+        ordering = ["-created_at"]
 
     def __str__(self):
         return f"Order #{self.id} - {self.full_name}"
@@ -25,8 +45,11 @@ class OrderItem(models.Model):
     """
     Represents individual product items within an order.
     """
-    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+    order = models.ForeignKey(
+        Order, related_name="items", on_delete=models.CASCADE
+    )
+    product = models.ForeignKey(Product, on_delete=models.PROTECT)
     quantity = models.PositiveIntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2)
 

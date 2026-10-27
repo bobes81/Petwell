@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 <div class="blog-container container py-5">
   <h1 class="text-center mb-5">PetWell Blog</h1>
@@ -14,9 +15,9 @@
     <div class="col-md-6 col-lg-4 mb-4">
       <div class="card h-100 shadow-sm border-primary rounded-4">
         {% if post.image %}
-        <img src="{{ post.image.url }}" class="card-img-top rounded-top-4" alt="{{ post.title }}">
+        <img onerror="this.onerror=null;this.src='{% static 'images/placeholder.svg' %}'" src="{{ post.image.url }}" class="card-img-top rounded-top-4" alt="{{ post.title }}">
         {% else %}
-        <img src="https://via.placeholder.com/600x400.png?text=PetWell+Blog" class="card-img-top rounded-top-4" alt="default image">
+        <img src="{% static 'images/placeholder.svg' %}" class="card-img-top rounded-top-4" alt="default image">
         {% endif %}
         <div class="card-body">
           <h5 class="card-title text-primary">{{ post.title }}</h5>
