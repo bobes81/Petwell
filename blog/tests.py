@@ -218,3 +218,72 @@ class BlogTests(TestCase):
         self.assertContains(response, "Image upload is unavailable")
         self.post.refresh_from_db()
         self.assertEqual(self.post.title, "Original")
+
+    def test_missing_cloud_name_uses_placeholder_on_shop_and_blog(self):
+        import cloudinary
+
+        from products.models import Product
+
+        Product.objects.create(
+            name="Stored product", price="7.25", image="stored-product-image"
+        )
+        pages = (
+            reverse("blog:blog_list"),
+            reverse("blog:blog_detail", args=[self.post.pk]),
+            reverse("products:product_list"),
+        )
+        with patch.object(cloudinary.config(), "cloud_name", None):
+            for page in pages:
+                with self.subTest(page=page):
+                    self.assertContains(
+                        self.client.get(page), "/static/images/placeholder.svg"
+                    )
+
+    def test_author_can_edit_retained_image_without_cloud_name(self):
+        import cloudinary
+
+        self.client.force_login(self.author)
+        with patch.object(cloudinary.config(), "cloud_name", None):
+            with patch("cloudinary.uploader.upload_resource") as upload:
+                response = self.client.get(self.edit)
+                self.assertContains(response, "image-clear")
+                self.assertContains(response, "/static/images/placeholder.svg")
+                response = self.client.post(
+                    self.edit,
+                    {"title": "Text edit", "content": "Retain stored image"},
+                )
+                self.assertRedirects(
+                    response,
+                    reverse("blog:blog_detail", args=[self.post.pk]),
+                )
+            upload.assert_not_called()
+        self.post.refresh_from_db()
+        self.assertEqual(self.post.title, "Text edit")
+        self.assertEqual(self.post.image.public_id, "sample")
+
+    def test_author_can_clear_image_without_cloud_name(self):
+        import cloudinary
+
+        self.client.force_login(self.author)
+        with patch.object(cloudinary.config(), "cloud_name", None):
+            response = self.client.post(
+                self.edit,
+                {"title": "No image", "content": "Text", "image-clear": "on"},
+            )
+            self.assertEqual(response.status_code, 302)
+        self.post.refresh_from_db()
+        self.assertFalse(self.post.image)
+
+    def test_newsletter_rejects_valid_email_exceeding_database_length(self):
+        from django.core.validators import validate_email
+
+        email = (
+            "a" * 64 + "@" + ".".join(["b" * 63, "c" * 63, "d" * 63, "e" * 60])
+        )
+        validate_email(email)
+        self.assertGreater(len(email), 254)
+        self.assertRedirects(
+            self.client.post(reverse("blog:subscribe"), {"email": email}),
+            reverse("home"),
+        )
+        self.assertFalse(Subscriber.objects.exists())

@@ -11,28 +11,28 @@ python manage.py makemigrations --check --dry-run --settings=petwell.test_settin
 python -m pip check
 ```
 
-**Result: 46 tests passed; zero failed, skipped or expected failures.** Django system checks reported no issues and no missing migrations were detected. Installed dependency requirements are consistent. The test database is in-memory SQLite and emails are in memory. Stripe session creation and Cloudinary uploads are mocked; webhook signatures use real HMAC signing and Stripe's signature verifier with an offline fixture secret.
+**PR #8 review result: 63 tests passed; zero failed, skipped or expected failures.** The original 46 tests also passed before the review; added regressions exposed previously untested bugs before fixing them. Django system checks reported no issues and no missing migrations were detected. Installed dependency requirements are consistent. The test database is in-memory SQLite and emails are in memory. Stripe session creation and Cloudinary uploads are mocked; webhook signatures use real HMAC signing and Stripe's signature verifier with an offline fixture secret.
 
 | Area | Automated coverage |
 | --- | --- |
 | Checkout validation | Invalid email, empty/stale/invalid cart, negative/boolean/string/over-limit quantities, missing Stripe key, accidental live-key configuration |
-| Order creation | Database prices override tampered totals; pending status; item quantity/price snapshots; repeat submit reuses order/idempotency key; recoverable Stripe failure |
-| Payment confirmation | Valid signed event; signature rejection; malformed payload; amount/currency/order/client-reference/mode mismatch; unpaid/unrelated events; async success; unknown Session ID requests retry |
-| Cart clearing | Return URL alone cannot confirm/clear; only paid purchases removed; duplicate webhook/return safe; new cart quantities preserved; next cart visit clears after delayed webhook |
+| Order creation | Database prices override tampered totals; pending status; item quantity/price snapshots; open-session reuse; frozen lost-response retry after renamed/reordered products; expiry renewal; complete-session waiting; missing webhook configuration; recoverable Stripe failure |
+| Payment confirmation | Valid signed event; signature rejection; malformed payload; amount/currency/order/client-reference/mode mismatch; unpaid/unrelated events; async success; unknown Session ID requests retry; expired signature and signed malformed payload rejection; explicit test/live-mode flag required |
+| Cart clearing | Return URL alone cannot confirm/clear; only paid purchases removed; duplicate webhook/return safe; new cart quantities preserved; next cart visit clears after delayed webhook; removed/re-added lines retained |
 | Privacy/CSRF | Another browser cannot read a guest confirmation; checkout and cart require CSRF; only the signed webhook is exempt |
 | Blog CRUD and permissions | Anonymous redirect; non-author direct GET/POST denied; author/staff edit/delete; GET deletion is non-destructive; server assigns author; invalid edit preserves original |
-| Images | Existing Cloudinary image retained; explicit removal; valid image accepted/upload adapter saved; spoofed/non-image/GIF/oversized uploads rejected; failed upload reports error without changing stored post |
-| Newsletter | POST only; valid/normalised email; duplicate protection |
+| Images | Existing Cloudinary image retained; explicit removal; valid image accepted/upload adapter saved; spoofed/non-image/GIF/oversized uploads rejected; failed upload reports error without changing stored post; missing Cloudinary name uses placeholders and permits text edit/clear |
+| Newsletter | POST only; valid/normalised email; duplicate protection; 254-character model length enforced |
 | Accounts | Signup/login with updated allauth; weak password rejected |
 | Custom functionality | Own order history; other user's order/reorder denied; login required; paid-only POST reorder using current prices; historical total retained |
-| Data migration | Two existing pre-Stripe orders receive distinct UUIDs and remain pending; purchased products protected from deletion |
+| Data migration | Two existing pre-Stripe orders receive distinct UUIDs and remain pending; purchased products protected from deletion; admin order deletion denied |
 | Pages/SEO | Public page responses; internal navigation links; referenced local images exist; custom 404; robots and valid XML sitemap point to Render, include public blog detail and omit checkout |
 
 The [actual final test output](evidence/django-tests.txt) and [direct-dependency advisory metadata](evidence/direct-dependency-advisories.json) are retained with this revision.
 
 Test warnings that deliberately log a simulated Stripe connection failure or mismatched event are expected negative-path checks, not failed payments. No test sends a Stripe API request. The old `test_cloudinary.py` import-time network upload was removed; test discovery no longer has that side effect.
 
-GitHub Actions workflow `.github/workflows/tests.yml` runs the isolated system/migration checks and tests on pushes and pull requests. It has been added but has not been executed on GitHub from this local branch.
+GitHub Actions workflow `.github/workflows/tests.yml` runs the isolated system/migration checks and tests on pushes and pull requests. The original workflow passed on PR #8. This review adds production-settings and manifest/static collection checks with an ephemeral CI-only secret; current commit results must be checked on the PR.
 
 ## Build and deployment checks
 
@@ -41,7 +41,7 @@ bash build.sh
 python manage.py check --deploy --fail-level WARNING --settings=petwell.settings
 ```
 
-The build was executed locally with the project virtualenv, local SQLite and development settings; dependency install, manifest/static collection and migrations succeeded. A first attempt correctly failed because the vendored Bootstrap bundle referenced an absent source map. The complete matching maps are now included; Bootstrap assets were verified against the npm tarball's SHA-512 integrity metadata and the build was rerun.
+The build was rerun during PR #8 review with the project virtualenv, local SQLite and development settings; dependency install, manifest/static collection and migrations succeeded. A first attempt correctly failed because the vendored Bootstrap bundle referenced an absent source map. The complete matching maps are now included; Bootstrap assets were verified against the npm tarball's SHA-512 integrity metadata and the build was rerun.
 
 Deployment check outcomes are intentionally separate:
 
@@ -94,3 +94,10 @@ Record date, browser/device, result, evidence file and any issue for each row. D
 | Marketing | Verify published Facebook page and genuine posts, then add real URLs/evidence; a legacy mockup is not proof | TODO |
 
 Known scope: no refunds, inventory, shipping/tax calculations, guest order claiming or automatic paid-order emails. Assess those limits against your product catalogue and supplied assessment feedback. Do not use real cards for acceptance testing.
+
+
+## PR #8 review additions
+
+The baseline 46 tests passed. Two new offline regressions then **failed on the original PR code**: a renamed product changed an idempotent Stripe retry payload, and delayed confirmation removed a newly re-added cart line. Both now pass with the fixes. Other added tests cover expiry/recovery, no duplicate session when completion awaits a webhook, missing webhook configuration, stale signatures, signed malformed events, the safe legacy-attempt upgrade path, order admin deletion, missing Cloudinary configuration and overlong newsletter emails.
+
+The saved local screenshots above are from the initial implementation. They were not recaptured for this review and do not prove the deployed site or Stripe integrations work. See [PR8_REVIEW.md](PR8_REVIEW.md) for findings and merge prerequisites.

@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static petwell_media %}
 {% block content %}
 <div class="container py-5">
   <div class="card shadow-lg border-0 rounded-4">
     {% if post.image %}
-      <img onerror="this.onerror=null;this.src='{% static 'images/placeholder.svg' %}'" src="{{ post.image.url }}" class="card-img-top rounded-top-4" alt="{{ post.title }}">
+      <img onerror="this.onerror=null;this.src='{% static 'images/placeholder.svg' %}'" src="{{ post.image|image_url }}" class="card-img-top rounded-top-4" alt="{{ post.title }}">
     {% endif %}
     <div class="card-body">
       <h2 class="card-title text-primary mb-3">{{ post.title }}</h2>

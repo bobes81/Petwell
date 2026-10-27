@@ -1,14 +1,12 @@
 from cloudinary.exceptions import Error as CloudinaryError
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ValidationError
-from django.core.validators import validate_email
 from django.db import transaction
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
-from .forms import BlogPostForm
+from .forms import BlogPostForm, NewsletterForm
 from .models import BlogPost, Subscriber
 
 
@@ -89,21 +87,18 @@ def delete_post(request, pk):
 
 @require_POST
 def subscribe(request):
-    if request.method == "POST":
-        email = request.POST.get("email", "").strip().lower()
-        try:
-            validate_email(email)
-        except ValidationError:
-            messages.error(request, "Please enter a valid email address.")
-            return redirect("home")
-
-        if Subscriber.objects.filter(email=email).exists():
-            messages.info(request, "This email is already subscribed.")
-        else:
-            Subscriber.objects.get_or_create(email=email)
-            messages.success(
-                request, "Thank you for subscribing to our newsletter!"
-            )
-
+    form = NewsletterForm(request.POST)
+    if not form.is_valid():
+        messages.error(request, "Please enter a valid email address.")
         return redirect("home")
+
+    _, created = Subscriber.objects.get_or_create(
+        email=form.cleaned_data["email"]
+    )
+    if created:
+        messages.success(
+            request, "Thank you for subscribing to our newsletter!"
+        )
+    else:
+        messages.info(request, "This email is already subscribed.")
     return redirect("home")

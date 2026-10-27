@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
+from .cart import cart_line_tokens, clear_paid_purchases
 from .models import Order
 
 
@@ -17,6 +18,7 @@ def history(request):
 @login_required
 @require_POST
 def reorder(request, public_id):
+    clear_paid_purchases(request)
     order = get_object_or_404(
         Order, public_id=public_id, user=request.user, status="paid"
     )
@@ -26,6 +28,7 @@ def reorder(request, public_id):
             key = str(item.product_id)
             cart[key] = min(cart.get(key, 0) + item.quantity, 99)
     request.session["cart"] = cart
+    cart_line_tokens(request)
     messages.success(
         request,
         "Available items added to your cart at current prices. "

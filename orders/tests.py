@@ -71,7 +71,12 @@ class OrderHistoryTests(TestCase):
 class ExistingOrdersMigrationTests(TransactionTestCase):
     def test_multiple_legacy_orders_get_distinct_ids_and_remain_unpaid(self):
         before = [("orders", "0001_initial")]
-        after = [("orders", "0003_alter_orderitem_product")]
+        after = [
+            (
+                "orders",
+                "0004_order_cart_line_tokens_order_stripe_checkout_payload",
+            )
+        ]
         executor = MigrationExecutor(connection)
         executor.migrate(before)
         try:
@@ -99,3 +104,26 @@ class ExistingOrdersMigrationTests(TransactionTestCase):
             )
         finally:
             MigrationExecutor(connection).migrate(after)
+
+
+class OrderAdminProtectionTests(TestCase):
+    def test_payment_order_cannot_be_deleted_even_by_superuser(self):
+        user = get_user_model().objects.create_superuser(
+            "admin",
+            email="admin@example.test",
+            password="LocalAdminPass492!",
+        )
+        order = Order.objects.create(
+            full_name="Buyer",
+            email="buyer@example.test",
+            address="Test",
+            stripe_session_id="cs_payable",
+            total_price="14.50",
+        )
+        self.client.force_login(user)
+        url = reverse("admin:orders_order_delete", args=[order.pk])
+        self.assertEqual(self.client.get(url).status_code, 403)
+        self.assertEqual(
+            self.client.post(url, {"post": "yes"}).status_code, 403
+        )
+        self.assertTrue(Order.objects.filter(pk=order.pk).exists())

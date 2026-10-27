@@ -1,0 +1,70 @@
+{
+  "date": "2026-10-27",
+  "scope": "Local Gunicorn + WhiteNoise, production-style settings, ephemeral strong secret, SQLite, trusted-proxy HTTPS header. Not an actual Render/TLS/database/integration validation.",
+  "results": [
+    {
+      "path": "/",
+      "status": 200,
+      "hsts": true
+    },
+    {
+      "path": "/products/",
+      "status": 200,
+      "hsts": true
+    },
+    {
+      "path": "/blog/",
+      "status": 200,
+      "hsts": true
+    },
+    {
+      "path": "/cart/",
+      "status": 200,
+      "hsts": true
+    },
+    {
+      "path": "/checkout/",
+      "status": 200,
+      "hsts": true
+    },
+    {
+      "path": "/accounts/login/",
+      "status": 200,
+      "hsts": true
+    },
+    {
+      "path": "/robots.txt",
+      "status": 200,
+      "hsts": true
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200,
+      "hsts": true
+    },
+    {
+      "asset": "/static/css/site.00317bbc67ab.css",
+      "status": 200
+    },
+    {
+      "asset": "/static/vendor/bootstrap/bootstrap.min.deb991cdf0ea.css",
+      "status": 200
+    },
+    {
+      "asset": "/static/images/favicon.41aa651d54d0.ico",
+      "status": 200
+    },
+    {
+      "asset": "/static/vendor/bootstrap/bootstrap.bundle.min.c3d406f6f981.js",
+      "status": 200
+    },
+    {
+      "check": "HTTP redirect to HTTPS",
+      "status": 301
+    },
+    {
+      "check": "Webhook refuses unconfigured signing secret",
+      "status": 503
+    }
+  ]
+}

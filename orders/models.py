@@ -31,6 +31,8 @@ class Order(models.Model):
     stripe_session_id = models.CharField(
         max_length=255, blank=True, unique=True, null=True
     )
+    stripe_checkout_payload = models.JSONField(default=dict, editable=False)
+    cart_line_tokens = models.JSONField(default=dict, editable=False)
     paid_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

@@ -26,7 +26,7 @@ Resubmission deadline: **31 October 2026, 12:00 UK time (GMT)**. The focus is a 
 
 The existing models are `Product`, `Order`, `OrderItem`, `BlogPost` and `Subscriber`, alongside Django/allauth users; see the [current schema diagram](docs/MODELS.md). Order history and **Buy again** extend these models into a customer-facing repeat-purchase workflow. Historical totals and item prices remain unchanged; reordered products use current prices. Only the purchaser can access/reorder their paid orders. Guest orders remain tied to their browser session and are not automatically claimed by email.
 
-`Order` now has a unique public UUID, pending/paid status, unique Stripe Checkout Session ID and payment timestamp. `OrderItem` protects referenced products from deletion so historical purchases are preserved. Existing pre-Stripe orders migrate to **pending** because there is no payment evidence for them. Do not manually relabel them as paid.
+`Order` now has a unique public UUID, pending/paid status, unique Stripe Checkout Session ID and payment timestamp, plus the frozen Stripe creation payload and cart-line identities (neither contains credentials). `OrderItem` protects referenced products from deletion so historical purchases are preserved. Existing pre-Stripe orders migrate to **pending** because there is no payment evidence for them. Do not manually relabel them as paid.
 
 ## Technology
 
@@ -90,13 +90,13 @@ Hosted Stripe Checkout does not require a publishable key or Stripe.js in this a
 ## Checkout and payment lifecycle
 
 1. Validate customer name/email/address and each cart quantity/product. Read all prices from the database; ignore client-supplied totals.
-2. Save a pending order and item-price snapshot atomically. Repeated submissions of the same pending order reuse the Stripe idempotency key.
+2. Save a pending order and item-price snapshot atomically. The complete Stripe creation payload is saved before the API request. Lost-response retries reuse the exact payload and idempotency key, including product labels and line order. Existing sessions are retrieved: open sessions are reused, completed sessions wait for their webhook, and confirmed expired sessions get a new order/key while the old mapping remains intact.
 3. Create a card-only, GBP Stripe Checkout Session and redirect to Stripe. No card data passes through PetWell.
 4. Only a correctly signed `checkout.session.completed` or `checkout.session.async_payment_succeeded` event can set `paid`. Its Session ID, order UUID, client reference, total, currency, payment mode, paid status and live/test mode must match. Duplicate events do not change the original `paid_at` timestamp.
 5. The return page displays pending until that confirmation arrives. It cannot mark an order paid, even if its URL is copied. Guest confirmation requires the original checkout browser session.
-6. On the return page or next cart/checkout visit, subtract purchased quantities once. Additional cart quantities are kept. A webhook cannot directly change a browser's session cookie; cart reconciliation occurs on a subsequent browser request.
+6. On the return page or next cart/checkout visit, subtract purchased quantities once. Additional cart quantities are kept. Each cart line has an identity that changes when removed and re-added, so delayed confirmation cannot remove a newly added line. A webhook cannot directly change a browser's session cookie; cart reconciliation occurs on a subsequent browser request.
 
-Cancellation, failed cards and Stripe connection errors keep the cart. Pending orders are not fulfilled and may remain in history after abandoned payment. A delayed webhook is retried by Stripe; a session not yet stored locally returns 503 to request retry. Do not fulfill orders based on a browser screenshot or return URL.
+Checkout is disabled until both the Stripe API key and webhook signing secret are configured. Cancellation, failed cards and Stripe connection errors keep the cart. Pending orders are not fulfilled and may remain in history after abandoned payment. A delayed webhook is retried by Stripe; a session not yet stored locally returns 503 to request retry. Do not fulfill orders based on a browser screenshot or return URL.
 
 The in-app paid result and account history are payment confirmation. Automatic order-confirmation email dispatch is deliberately not part of the webhook: SMTP availability cannot determine whether an order is paid. Welcome/password-reset email can use SendGrid when configured. Newsletter subscriptions are stored; no campaign automation is implemented. Refunds, tax/shipping rules, inventory and fulfilment automation are outside this revision.
 
@@ -112,7 +112,7 @@ The in-app paid result and account history are payment confirmation. Automatic o
 6. Create an admin user securely using `python manage.py createsuperuser`. Add real product data/images and review current prices. Optionally set the Django Sites record to the Render hostname for account email links.
 7. Configure the Stripe sandbox endpoint below. Run the manual acceptance matrix in [docs/TESTING.md](docs/TESTING.md) and capture genuine results before submission.
 
-HTTPS redirection, secure cookies, HSTS and the trusted proxy header are enabled outside DEBUG. `SITE_URL` must be HTTPS in production. WhiteNoise uses Django 5's `STORAGES` configuration. Password validators and explicit allowed hosts are enabled. The protected payment fields in admin cannot be manually marked paid.
+HTTPS redirection, secure cookies, HSTS and the trusted proxy header are enabled outside DEBUG. `SITE_URL` must be HTTPS in production. WhiteNoise uses Django 5's `STORAGES` configuration. Password validators and explicit allowed hosts are enabled. The protected payment fields in admin cannot be manually marked paid, and order deletion is disabled to preserve payment and fulfilment records.
 
 ## Stripe configuration and test-only acceptance
 
@@ -149,7 +149,7 @@ Planned marketing: maintain an authentic Facebook business page, publish real pr
 ## Known issues and submission work remaining
 
 - End-to-end Stripe sandbox payments, Render webhook delivery, real Cloudinary uploads and SendGrid email require owner configuration and manual validation; no external integration pass is claimed yet.
-- Existing orders without Stripe evidence stay pending. Never fulfil/relabel them based on historical assumptions.
+- Existing orders without Stripe evidence stay pending. Never fulfil/relabel them based on historical assumptions. Pre-fix attempts with no Session ID or saved payload get a fresh order/key. For legacy orders without cart-line identities, automatic cart subtraction is skipped to preserve potentially new items; review/clear that cart manually.
 - Paid order history protects referenced products from deletion; edit a product instead of deleting it when it appears in an order.
 - Card-only GBP checkout has no stock control, shipping charges, taxes, refunds or automated fulfilment. Review whether your actual product catalogue is suitable for this scope.
 - Guests must retain the checkout browser session to view confirmation. Guest purchases are not attached to an account by matching email.

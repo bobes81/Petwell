@@ -28,12 +28,24 @@ class CheckoutTests(TestCase):
             "address": "1 Test Road",
         }
         self.url = reverse("checkout:checkout")
+        retrieve = patch(
+            "checkout.views.stripe.checkout.Session.retrieve",
+            return_value=SimpleNamespace(
+                id="cs_test_123",
+                status="open",
+                url="https://checkout.stripe.com/test",
+            ),
+        )
+        self.retrieve = retrieve.start()
+        self.addCleanup(retrieve.stop)
 
     def create_order(self):
         with patch(
             "checkout.views.stripe.checkout.Session.create",
             return_value=SimpleNamespace(
-                id="cs_test_123", url="https://checkout.stripe.com/test"
+                id="cs_test_123",
+                status="open",
+                url="https://checkout.stripe.com/test",
             ),
         ) as create:
             response = self.client.post(self.url, self.data)
@@ -58,9 +70,9 @@ class CheckoutTests(TestCase):
             "data": {"object": obj},
         }
 
-    def webhook(self, event, secret="whsec_offline"):
+    def webhook(self, event, secret="whsec_offline", timestamp=None):
         payload = json.dumps(event).encode()
-        timestamp = str(int(time.time()))
+        timestamp = str(int(time.time()) if timestamp is None else timestamp)
         signature = hmac.new(
             secret.encode(),
             timestamp.encode() + b"." + payload,
@@ -95,7 +107,12 @@ class CheckoutTests(TestCase):
         order, first = self.create_order()
         again, second = self.create_order()
         self.assertEqual(order.pk, again.pk)
-        self.assertEqual(first.call_args.kwargs, second.call_args.kwargs)
+        self.assertTrue(first.called)
+        second.assert_not_called()
+        self.retrieve.assert_called_once_with(
+            order.stripe_session_id,
+            api_key="sk_test_offline",
+        )
 
     def test_invalid_form_does_not_create_order(self):
         self.data["email"] = "invalid"
@@ -290,3 +307,248 @@ class CheckoutTests(TestCase):
         self.assertEqual(self.webhook(event).status_code, 200)
         order.refresh_from_db()
         self.assertEqual(order.status, "paid")
+
+    def test_lost_session_response_retry_uses_frozen_product_name(self):
+        with patch(
+            "checkout.views.stripe.checkout.Session.create",
+            side_effect=stripe.APIConnectionError("lost response"),
+        ) as first:
+            self.client.post(self.url, self.data)
+        order = Order.objects.get()
+        self.product.name = "Renamed balm"
+        self.product.save()
+        with patch(
+            "checkout.views.stripe.checkout.Session.create",
+            return_value=SimpleNamespace(
+                id="cs_recovered",
+                status="open",
+                url="https://checkout.stripe.com/recovered",
+            ),
+        ) as retry:
+            self.assertEqual(
+                self.client.post(self.url, self.data).status_code, 302
+            )
+        self.assertEqual(Order.objects.get().pk, order.pk)
+        self.assertEqual(first.call_args.kwargs, retry.call_args.kwargs)
+
+    def test_delayed_payment_does_not_remove_newly_readded_product(self):
+        order, _ = self.create_order()
+        self.client.post(
+            reverse("cart:remove_from_cart", args=[self.product.pk])
+        )
+        self.client.post(reverse("cart:add_to_cart", args=[self.product.pk]))
+        self.webhook(self.event(order))
+        self.client.get(reverse("cart:view_cart"))
+        self.assertEqual(
+            self.client.session["cart"], {str(self.product.pk): 1}
+        )
+
+    @override_settings(STRIPE_WEBHOOK_SECRET="")
+    def test_missing_webhook_configuration_blocks_checkout(self):
+        with patch("checkout.views.stripe.checkout.Session.create") as create:
+            self.assertContains(
+                self.client.post(self.url, self.data),
+                "temporarily unavailable",
+            )
+            create.assert_not_called()
+        self.assertFalse(Order.objects.exists())
+
+    def test_expired_session_renews_order_without_overwriting_old_mapping(
+        self,
+    ):
+        old, _ = self.create_order()
+        self.retrieve.return_value = SimpleNamespace(
+            id=old.stripe_session_id,
+            status="expired",
+            url=None,
+        )
+        with patch(
+            "checkout.views.stripe.checkout.Session.create",
+            return_value=SimpleNamespace(
+                id="cs_new",
+                status="open",
+                url="https://checkout.stripe.com/new",
+            ),
+        ) as create:
+            response = self.client.post(self.url, self.data)
+        self.assertEqual(response.url, "https://checkout.stripe.com/new")
+        self.assertEqual(Order.objects.count(), 2)
+        new = Order.objects.exclude(pk=old.pk).get()
+        self.assertEqual(
+            create.call_args.kwargs["idempotency_key"],
+            f"order-{new.public_id}",
+        )
+        self.assertNotEqual(old.public_id, new.public_id)
+        old.refresh_from_db()
+        self.assertEqual(old.stripe_session_id, "cs_test_123")
+        self.assertEqual(old.status, "pending")
+
+    def test_cached_expired_create_response_is_renewed_after_lost_response(
+        self,
+    ):
+        with patch(
+            "checkout.views.stripe.checkout.Session.create",
+            side_effect=stripe.APIConnectionError("lost"),
+        ):
+            self.client.post(self.url, self.data)
+        old = Order.objects.get()
+        with patch(
+            "checkout.views.stripe.checkout.Session.create",
+            side_effect=[
+                SimpleNamespace(id="cs_expired", status="expired", url=None),
+                SimpleNamespace(
+                    id="cs_new",
+                    status="open",
+                    url="https://checkout.stripe.com/new",
+                ),
+            ],
+        ) as create:
+            response = self.client.post(self.url, self.data)
+        self.assertEqual(response.url, "https://checkout.stripe.com/new")
+        self.assertEqual(Order.objects.count(), 2)
+        self.assertEqual(
+            create.call_args_list[0].kwargs["idempotency_key"],
+            f"order-{old.public_id}",
+        )
+        self.assertNotEqual(
+            create.call_args_list[0].kwargs["idempotency_key"],
+            create.call_args_list[1].kwargs["idempotency_key"],
+        )
+        old.refresh_from_db()
+        self.assertEqual(old.stripe_session_id, "cs_expired")
+
+    def test_completed_session_waits_for_webhook_without_new_payment(self):
+        order, _ = self.create_order()
+        self.retrieve.return_value = SimpleNamespace(
+            id=order.stripe_session_id,
+            status="complete",
+            payment_status="paid",
+            url=None,
+        )
+        with patch("checkout.views.stripe.checkout.Session.create") as create:
+            response = self.client.post(self.url, self.data)
+        self.assertEqual(
+            response.url, reverse("checkout:success", args=[order.public_id])
+        )
+        create.assert_not_called()
+        self.assertEqual(Order.objects.count(), 1)
+        order.refresh_from_db()
+        self.assertEqual(order.status, "pending")
+        self.assertTrue(self.client.session["cart"])
+
+    def test_session_retrieval_error_preserves_existing_attempt(self):
+        order, _ = self.create_order()
+        self.retrieve.side_effect = stripe.APIConnectionError("offline")
+        with patch("checkout.views.stripe.checkout.Session.create") as create:
+            self.assertContains(
+                self.client.post(self.url, self.data),
+                "could not start payment",
+            )
+        create.assert_not_called()
+        order.refresh_from_db()
+        self.assertEqual(order.stripe_session_id, "cs_test_123")
+        self.assertEqual(order.status, "pending")
+        self.assertEqual(Order.objects.count(), 1)
+        self.assertTrue(self.client.session["cart"])
+
+    def test_retry_after_cart_key_reordering_uses_original_payload(self):
+        other = Product.objects.create(name="Chew", price="3.00")
+        session = self.client.session
+        session["cart"][str(other.pk)] = 1
+        session.save()
+        with patch(
+            "checkout.views.stripe.checkout.Session.create",
+            side_effect=stripe.APIConnectionError("lost"),
+        ) as first:
+            self.client.post(self.url, self.data)
+        session = self.client.session
+        session["cart"] = dict(reversed(list(session["cart"].items())))
+        session.save()
+        with patch(
+            "checkout.views.stripe.checkout.Session.create",
+            return_value=SimpleNamespace(
+                id="cs_recovered",
+                status="open",
+                url="https://checkout.stripe.com/recovered",
+            ),
+        ) as retry:
+            self.assertEqual(
+                self.client.post(self.url, self.data).status_code, 302
+            )
+        self.assertEqual(first.call_args.kwargs, retry.call_args.kwargs)
+        self.assertEqual(Order.objects.count(), 1)
+
+    def test_legacy_attempt_without_payload_gets_fresh_order_and_key(self):
+        from orders.models import OrderItem
+
+        legacy = Order.objects.create(
+            full_name=self.data["name"],
+            email=self.data["email"],
+            address=self.data["address"],
+            total_price="14.50",
+        )
+        OrderItem.objects.create(
+            order=legacy,
+            product=self.product,
+            quantity=2,
+            price=self.product.price,
+        )
+        session = self.client.session
+        session["pending_order"] = str(legacy.public_id)
+        session.save()
+        with patch(
+            "checkout.views.stripe.checkout.Session.create",
+            return_value=SimpleNamespace(
+                id="cs_fresh",
+                status="open",
+                url="https://checkout.stripe.com/new",
+            ),
+        ) as create:
+            self.assertEqual(
+                self.client.post(self.url, self.data).status_code, 302
+            )
+        self.assertEqual(Order.objects.count(), 2)
+        self.assertNotEqual(
+            create.call_args.kwargs["idempotency_key"],
+            f"order-{legacy.public_id}",
+        )
+        legacy.refresh_from_db()
+        self.assertIsNone(legacy.stripe_session_id)
+
+    def test_expired_signature_is_rejected(self):
+        order, _ = self.create_order()
+        response = self.webhook(
+            self.event(order), timestamp=int(time.time()) - 1000
+        )
+        self.assertEqual(response.status_code, 400)
+        order.refresh_from_db()
+        self.assertEqual(order.status, "pending")
+
+    def test_signed_malformed_event_is_rejected_without_server_error(self):
+        for event in (
+            [],
+            None,
+            {},
+            {"type": None},
+            {"type": "checkout.session.completed"},
+            {
+                "type": "checkout.session.completed",
+                "data": {"object": "not-a-session"},
+            },
+        ):
+            with self.subTest(event=event):
+                self.assertEqual(self.webhook(event).status_code, 400)
+
+    def test_missing_live_mode_or_order_metadata_cannot_confirm_payment(self):
+        order, _ = self.create_order()
+        for change in (
+            {"livemode": None},
+            {"metadata": None},
+            {"metadata": []},
+        ):
+            with self.subTest(change=change):
+                self.assertEqual(
+                    self.webhook(self.event(order, **change)).status_code, 400
+                )
+        order.refresh_from_db()
+        self.assertEqual(order.status, "pending")

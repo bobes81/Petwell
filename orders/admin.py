@@ -36,9 +36,15 @@ class OrderAdmin(admin.ModelAdmin):
         "paid_at",
         "total_price",
         "user",
+        "stripe_checkout_payload",
+        "cart_line_tokens",
     )
 
     def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        # A payable Session or paid order must keep its webhook/history record.
         return False
 
 
