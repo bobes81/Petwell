@@ -4,3 +4,33 @@ img { max-width: 100%; height: auto; }
 .card-body, main { overflow-wrap: anywhere; }
 input, textarea { max-width: 100%; }
 :focus-visible { outline: 3px solid #164e99; outline-offset: 3px; }
+
+
+.hero-section {
+    background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+}
+.info-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px;
+    background: white;
+}
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+.cta-section {
+    background: linear-gradient(90deg, #f8f9fa 0%, #ffffff 100%);
+    border-top: 1px solid #eaeaea;
+}
+
+.product-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+.product-card .card-img-top {
+    object-fit: cover;
+    height: 250px;
+}

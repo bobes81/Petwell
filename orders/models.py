@@ -60,3 +60,18 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} × {self.product.name}"
+
+
+class CheckoutState(models.Model):
+    """Serialize payment attempts for one browser's persisted session."""
+
+    session_digest = models.CharField(max_length=64, primary_key=True)
+    active_order = models.ForeignKey(
+        Order,
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name="checkout_states",
+    )
+    processing_token = models.UUIDField(null=True, editable=False)
+    processing_until = models.DateTimeField(null=True, editable=False)

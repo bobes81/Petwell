@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container py-5">
-    <h2 class="text-center mb-5 fw-bold">Your Cart</h2>
+    <h1 class="h2 text-center mb-5 fw-bold">Your Cart</h1>
 
     {% if items %}
     <div class="table-responsive">
@@ -34,8 +34,8 @@
     </div>
 
     <div class="text-end mt-4">
-        <h5 class="fw-semibold">Items in cart: <span class="text-primary">{{ total_quantity }}</span></h5>
-        <h4 class="fw-bold">Total: <span class="text-success">£{{ total }}</span></h4>
+        <h2 class="h5 fw-semibold">Items in cart: <span class="text-primary">{{ total_quantity }}</span></h2>
+        <h2 class="h4 fw-bold">Total: <span class="text-success">£{{ total }}</span></h2>
         <a href="{% url 'checkout:checkout' %}" class="btn btn-primary mt-3">
             💳 Proceed to Checkout
         </a>

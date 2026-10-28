@@ -1,0 +1,84 @@
+{
+  "checked_on": "2026-10-28",
+  "scope": "Local Gunicorn/WhiteNoise, SQLite, ephemeral strong secret and trusted-proxy HTTPS header; not actual Render, PostgreSQL, external TLS or service integration.",
+  "results": [
+    {
+      "path": "/",
+      "status": 200,
+      "hsts": true
+    },
+    {
+      "path": "/products/",
+      "status": 200,
+      "hsts": true
+    },
+    {
+      "path": "/blog/",
+      "status": 200,
+      "hsts": true
+    },
+    {
+      "path": "/cart/",
+      "status": 200,
+      "hsts": true
+    },
+    {
+      "path": "/checkout/",
+      "status": 200,
+      "hsts": true
+    },
+    {
+      "path": "/accounts/login/",
+      "status": 200,
+      "hsts": true
+    },
+    {
+      "path": "/robots.txt",
+      "status": 200,
+      "hsts": true
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200,
+      "hsts": true
+    },
+    {
+      "asset": "/static/css/site.0e09398054f7.css",
+      "status": 200
+    },
+    {
+      "asset": "/static/vendor/bootstrap/bootstrap.min.deb991cdf0ea.css",
+      "status": 200
+    },
+    {
+      "asset": "/static/images/favicon.41aa651d54d0.ico",
+      "status": 200
+    },
+    {
+      "asset": "/static/vendor/bootstrap/bootstrap.bundle.min.c3d406f6f981.js",
+      "status": 200
+    },
+    {
+      "static_crawler_copy": "/static/robots.txt",
+      "status": 200,
+      "retired_host_absent": true
+    },
+    {
+      "static_crawler_copy": "/static/sitemap.xml",
+      "status": 200,
+      "retired_host_absent": true
+    },
+    {
+      "private_profile_login_redirect": true,
+      "status": 302
+    },
+    {
+      "https_redirect": true,
+      "status": 301
+    },
+    {
+      "unconfigured_webhook_fails_closed": true,
+      "status": 503
+    }
+  ]
+}

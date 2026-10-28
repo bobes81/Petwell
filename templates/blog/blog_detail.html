@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% load static petwell_media %}
+{% block title %}{{ post.title }} | PetWell Blog{% endblock %}
+{% block meta_description %}{{ post.content|striptags|truncatechars:155 }}{% endblock %}
 {% block content %}
 <div class="container py-5">
   <div class="card shadow-lg border-0 rounded-4">
@@ -7,7 +9,7 @@
       <img onerror="this.onerror=null;this.src='{% static 'images/placeholder.svg' %}'" src="{{ post.image|image_url }}" class="card-img-top rounded-top-4" alt="{{ post.title }}">
     {% endif %}
     <div class="card-body">
-      <h2 class="card-title text-primary mb-3">{{ post.title }}</h2>
+      <h1 class="h2 card-title text-primary mb-3">{{ post.title }}</h1>
       <p class="text-muted mb-4">By {{ post.author.username }} · {{ post.created_at|date:"F j, Y" }}</p>
       <p class="card-text" style="white-space: pre-line;">{{ post.content }}</p>
       {% if user == post.author or user.is_staff %}

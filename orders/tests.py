@@ -74,7 +74,7 @@ class ExistingOrdersMigrationTests(TransactionTestCase):
         after = [
             (
                 "orders",
-                "0004_order_cart_line_tokens_order_stripe_checkout_payload",
+                "0005_checkoutstate",
             )
         ]
         executor = MigrationExecutor(connection)

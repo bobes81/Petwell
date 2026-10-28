@@ -18,6 +18,7 @@ def public_sitemap(request):
 
 
 urlpatterns = [
+    path("pets/", include("accounts.urls")),
     path("orders/", include("orders.urls")),
     path("admin/", admin.site.urls),
     # --- Main homepage ---

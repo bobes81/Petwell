@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% load static petwell_media %}
+{% block title %}Shop pet wellness essentials | PetWell{% endblock %}
+{% block meta_description %}Browse PetWell pet wellness essentials with clear GBP prices. Add products to your cart and continue to secure Stripe checkout.{% endblock %}
 {% block content %}
 <div class="container py-5">
-    <h2 class="text-center mb-5 fw-bold text-primary">
+    <h1 class="h2 text-center mb-5 fw-bold text-primary">
         🐾 PetWell Shop
-    </h2>
+    </h1>
     <div class="row justify-content-center">
         {% for product in products %}
         <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 d-flex">
@@ -18,7 +20,7 @@
                 {% endif %}
                 <div class="card-body text-center d-flex flex-column justify-content-between">
                     <div>
-                        <h5 class="card-title fw-semibold mb-2">{{ product.name }}</h5>
+                        <h2 class="h5 card-title fw-semibold mb-2">{{ product.name }}</h2>
                         <p class="card-text text-muted small">{{ product.description }}</p>
                     </div>
                     <div>
@@ -36,17 +38,4 @@
     </div>
 </div>
 
-<style>
-.product-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.product-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-}
-.card-img-top {
-    object-fit: cover;
-    height: 250px;
-}
-</style>
 {% endblock %}

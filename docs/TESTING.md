@@ -1,103 +1,104 @@
-# Test record and remaining acceptance checks
+# Test record — 28 October 2026
 
-Date: **27 October 2026**, local isolated cloud development environment. This record is for the resubmission branch, not a production test report. Rerun against the final submitted commit. No production deployment, real card charge or external upload was performed.
+This record covers the current `fix/pp5-resubmission` work following `166334a`. It is not a production or external-service test report. The earlier 63-test baseline passed before this review; new tests were added for uncovered defects and the additional pet-profile feature. No failing assertion was disabled to obtain a pass.
 
-## Automated Django tests
+## Automated checks actually run
 
 ```bash
-python manage.py test --settings=petwell.test_settings
+python manage.py test --settings=petwell.test_settings --verbosity=2
 python manage.py check --settings=petwell.test_settings
 python manage.py makemigrations --check --dry-run --settings=petwell.test_settings
 python -m pip check
 ```
 
-**PR #8 review result: 63 tests passed; zero failed, skipped or expected failures.** The original 46 tests also passed before the review; added regressions exposed previously untested bugs before fixing them. Django system checks reported no issues and no missing migrations were detected. Installed dependency requirements are consistent. The test database is in-memory SQLite and emails are in memory. Stripe session creation and Cloudinary uploads are mocked; webhook signatures use real HMAC signing and Stripe's signature verifier with an offline fixture secret.
+**SQLite result: 108 discovered/executed tests — 107 passed, 1 explicitly skipped, 0 failures.** The skip is the PostgreSQL-only two-worker concurrency test. Deterministic stale-session, busy-lease, lease recovery/takeover, immutable-payload and payment-state tests run locally. Do not describe the SQLite run as proof of simultaneous PostgreSQL workers.
 
-| Area | Automated coverage |
+The test database is isolated and email is in memory. Stripe create/retrieve/expire and Cloudinary uploads are mocked; actual HMAC verification runs against signed fixture payloads. No test processes a payment, uploads an external image or delivers an email. [Actual local test output](evidence/django-tests.txt).
+
+System checks, migration consistency and installed dependency checks passed. Selected Python error/import lint and whitespace checks passed. The repository changes were reviewed for English content, common real credential patterns, private-correspondence copying and broken relative documentation links; no matching accidental credentials/private text were found. Test passwords and the disposable CI PostgreSQL password are explicitly synthetic fixtures, not deployment credentials.
+
+| Area | Meaningful regression coverage |
 | --- | --- |
-| Checkout validation | Invalid email, empty/stale/invalid cart, negative/boolean/string/over-limit quantities, missing Stripe key, accidental live-key configuration |
-| Order creation | Database prices override tampered totals; pending status; item quantity/price snapshots; open-session reuse; frozen lost-response retry after renamed/reordered products; expiry renewal; complete-session waiting; missing webhook configuration; recoverable Stripe failure |
-| Payment confirmation | Valid signed event; signature rejection; malformed payload; amount/currency/order/client-reference/mode mismatch; unpaid/unrelated events; async success; unknown Session ID requests retry; expired signature and signed malformed payload rejection; explicit test/live-mode flag required |
-| Cart clearing | Return URL alone cannot confirm/clear; only paid purchases removed; duplicate webhook/return safe; new cart quantities preserved; next cart visit clears after delayed webhook; removed/re-added lines retained |
-| Privacy/CSRF | Another browser cannot read a guest confirmation; checkout and cart require CSRF; only the signed webhook is exempt |
-| Blog CRUD and permissions | Anonymous redirect; non-author direct GET/POST denied; author/staff edit/delete; GET deletion is non-destructive; server assigns author; invalid edit preserves original |
-| Images | Existing Cloudinary image retained; explicit removal; valid image accepted/upload adapter saved; spoofed/non-image/GIF/oversized uploads rejected; failed upload reports error without changing stored post; missing Cloudinary name uses placeholders and permits text edit/clear |
-| Newsletter | POST only; valid/normalised email; duplicate protection; 254-character model length enforced |
-| Accounts | Signup/login with updated allauth; weak password rejected |
-| Custom functionality | Own order history; other user's order/reorder denied; login required; paid-only POST reorder using current prices; historical total retained |
-| Data migration | Two existing pre-Stripe orders receive distinct UUIDs and remain pending; purchased products protected from deletion; admin order deletion denied |
-| Pages/SEO | Public page responses; internal navigation links; referenced local images exist; custom 404; robots and valid XML sitemap point to Render, include public blog detail and omit checkout |
+| PetProfile | Complete owner-only CRUD; owner assigned server-side; no access by another member/staff; CSRF; supported species/focus; required/overlong validation; escaped text; focus reminder |
+| Blog | Author/staff CRUD; anonymous login requirement; direct non-owner GET/POST denial; GET delete confirmation; retained/cleared/new/invalid/oversized image; upload failure and absent Cloudinary configuration |
+| Accounts | Signup/login, strong password checks, internal `next` retained across auth links, external redirects rejected, invalid/expired/sessionless/used reset links, successful reset via local email fixture |
+| Payment creation | Database prices, bounded cart quantities, required API/signing keys, test/live mismatch rejection, frozen retries after lost responses/product rename/cart reordering |
+| Payment lifecycle | Open/complete/expired Session states, expiry races/failure, changed data cannot bypass completed checkout, no replacement before old payable Session is closed, recoverable errors |
+| Checkout coordination | Durable active-order pointer; preloaded stale worker requests deduplicated; busy lease refuses a second attempt; stale holder cannot overwrite/release a newer lease; interrupted holder releases safely |
+| Signed webhooks | Valid signature and exact amount/currency/order/reference/mode; invalid/stale signature and malformed signed structures; duplicates; unpaid/unrelated events; late mapping retry; no return-URL payment confirmation |
+| Cart/orders | Clear once only after confirmation; keep newly re-added lines/additional quantities; own history only; owner-only POST reorder at current prices; historical totals preserved; protected product/order deletion |
+| SEO/markup | Render crawler URLs, public blog entries, private-page noindex and no canonical, trusted configured canonical host without query parameters, escaped metadata, public/form links and fallback images, complete heading outline and no body style blocks |
+| Migrations | Distinct legacy UUIDs and pending status, safe migration round-trip to current orders schema; new pet/coordinator migrations detected and applied locally |
 
-The [actual final test output](evidence/django-tests.txt) and [direct-dependency advisory metadata](evidence/direct-dependency-advisories.json) are retained with this revision.
+## Local browser/manual acceptance actually performed
 
-Test warnings that deliberately log a simulated Stripe connection failure or mismatched event are expected negative-path checks, not failed payments. No test sends a Stripe API request. The old `test_cloudinary.py` import-time network upload was removed; test discovery no longer has that side effect.
+Headless system Chromium through Playwright, desktop **1440×1000** and mobile **390×844**, isolated temporary SQLite, synthetic users/content. The final browser rerun followed the heading/CSS fixes and passed **10 grouped flows, 16 screenshots**, with zero external requests, JavaScript exceptions, detected horizontal overflow or broken images in the checked states.
 
-GitHub Actions workflow `.github/workflows/tests.yml` runs the isolated system/migration checks and tests on pushes and pull requests. The original workflow passed on PR #8. This review adds production-settings and manifest/static collection checks with an ephemeral CI-only secret; current commit results must be checked on the PR.
+[Machine-readable browser results](evidence/28oct-browser-results.json) provide the steps and screenshot captions.
 
-## Build and deployment checks
+| Feature | Steps and expected result | Actual local result |
+| --- | --- | --- |
+| Navigation/layout | Open home/shop, expand mobile nav; inspect gradients/cards/image sizing and overflow after CSS relocation | Passed at both widths; original styling retained, no body style tags |
+| Blog create/edit/delete | Login as author, create a story, edit text without a new image, submit invalid image, recover, confirm then delete | Passed; validation recovers without a server error |
+| Blog authorisation | Anonymous access; another member's direct form GET/POST; staff edit-form access | Login redirect / 403 / authorised staff form respectively |
+| My pets | Add name/species/focus/notes; view reminder; edit focus; GET delete confirmation; POST delete | Passed; displayed data/reminder changes and profile deletes only after POST |
+| Pet validation/privacy | Native 500-character limit; deliberately submit 501 characters; correct the form; try another owner and staff GET/POST | Error displayed and recovery passed; private records return 404 |
+| Order history/reorder | Compare two accounts, attempt foreign reorder and GET mutation, reorder own fixture | Own records only; 404/405; current £7.25×2=£14.50 while historical £12.00 stays unchanged |
+| Checkout without keys | Add a product through CSRF form, enter valid delivery data, submit | Clear unavailable-payment message; cart preserved; no Stripe Session created |
+| Account recovery/navigation | Invalid reset link; switch login/signup with internal destination | Recovery explanation/new-link action and retained destination passed |
+
+The order-history rows/screenshots use **manually seeded synthetic PAID fixtures**. They prove display/privacy/reordering, **not Stripe confirmation or a real transaction**. No actual private customer data is used.
+
+Selected genuine local captures:
+
+- [Mobile pet profile](evidence/28oct-mobile-pet-profile.png) and [server validation](evidence/28oct-mobile-pet-notes-validation.png)
+- [Desktop blog edit](evidence/28oct-desktop-blog-edited.png)
+- [Mobile checkout with absent keys](evidence/28oct-mobile-checkout-unconfigured.png)
+- [Invalid reset recovery](evidence/28oct-desktop-invalid-reset.png)
+- [Desktop homepage](evidence/28oct-desktop-home.png) and [mobile shop](evidence/28oct-mobile-shop.png)
+- [Order-history fixture, not payment evidence](evidence/28oct-desktop-own-orders-synthetic.png)
+
+## Genuine validator results
+
+Nu Html Checker **26.10.12 (973e40b)** ran locally, not through an external validation website:
+
+- **19 HTML documents, zero errors/warnings**: 17 actual rendered application pages, the new Facebook proposal and retrospective wireframes. Includes authenticated forms and deliberately invalid pet-form/reset states. [Report](evidence/28oct-nu-html-validation.json), [raw checker output](evidence/28oct-nu-html-raw.json).
+- **2 project CSS files, zero messages**: `static/css/site.css`, `static/css/style.css`. Vendored Bootstrap is excluded from this project-authored CSS claim. [Report](evidence/28oct-nu-css-validation.json), [raw output](evidence/28oct-nu-css-raw.json).
+
+An initial Nu run found body style blocks and skipped heading levels; those were fixed and a regression test was added. Browser reruns confirmed the moved/scoped CSS kept home/shop appearance.
+
+An earlier `html-validate 10.3.0` recommended-style audit failed on inline style attributes and whitespace left by template rendering. Its rules were not disabled and this **is not claimed as passing**: [style-audit outcome](evidence/28oct-html-style-audit.json). It is separate from HTML/CSS conformance; the independent Nu rerun passed. No Lighthouse, full WCAG, other-browser or deployed-validator pass is claimed.
+
+To reproduce conformance validation, install Node/npm and Java, capture **rendered** pages from a running local fixture site, keep raw HTML/CSRF values outside Git, then run:
 
 ```bash
-bash build.sh
-python manage.py check --deploy --fail-level WARNING --settings=petwell.settings
+npx --yes --package vnu-jar@26.10.12 vnu --format json /path/to/rendered/*.html docs/marketing/facebook-mockup.html docs/design/wireframes.html
+npx --yes --package vnu-jar@26.10.12 vnu --format json --css static/css/site.css static/css/style.css
 ```
 
-The build was rerun during PR #8 review with the project virtualenv, local SQLite and development settings; dependency install, manifest/static collection and migrations succeeded. A first attempt correctly failed because the vendored Bootstrap bundle referenced an absent source map. The complete matching maps are now included; Bootstrap assets were verified against the npm tarball's SHA-512 integrity metadata and the build was rerun.
+Django source templates must not be submitted as if their tags were rendered HTML. These optional validation tools are not application runtime dependencies.
 
-Deployment check outcomes are intentionally separate:
+## Build and deployment-readiness checks
 
-- Repository default with no deployment secret: **failed with `security.W009`**, warning about the development fallback `SECRET_KEY`. This is an outstanding configuration requirement, not a reason to silence the check.
-- Production-style settings (`DEBUG=False`, Render host/URL, an ephemeral privately generated strong secret): **passed with no issues**. This does not validate the actual Render environment, database credentials, webhook endpoint, SMTP or Cloudinary account.
-- Actual Render `check --deploy`: **not run**; owner must run it after secure configuration and approved deployment.
+`bash build.sh` was rerun locally with the project virtualenv, SQLite and development settings. Dependency installation, manifest/static collection and migrations including `accounts.0001` and `orders.0005` succeeded. Production-style `check --deploy --fail-level WARNING` passed with a newly generated ephemeral strong secret and configured Render host; the default development fallback secret correctly fails deployment checking.
 
-Direct dependency pins were checked against PyPI's version-specific published advisory metadata. Eight affected pins (Django, certifi, allauth, idna, Pillow, requests, sqlparse and urllib3) were updated to compatible versions with no active advisories listed at the time of the check. Django remains on 5.2 LTS. This is a point-in-time check of direct requirements, not a comprehensive audit of the operating system, build tools, CDN code or all possible vulnerabilities. Recheck before deployment.
+Local Gunicorn/WhiteNoise smoke checks passed for public routes, private pet login redirect, collected static assets/crawler copies, correct sitemap host, HTTPS redirect/HSTS, and refusal of an unconfigured webhook: [results](evidence/28oct-production-smoke.json). The test uses a trusted-proxy HTTPS header and SQLite. It does **not** verify actual Render/PostgreSQL, external TLS, persistent storage or external services.
 
-## Local Chromium layout checks
+CI now has SQLite checks/build settings and a disposable PostgreSQL 16 job. PostgreSQL uses the explicit test-only `TEST_DATABASE_URL` and `petwell.postgres_test_settings`, never production `DATABASE_URL`. The threaded overlapping-worker test is enabled only there. Check the latest PR head's actual job status; do not infer its result from local SQLite. No private credentials or new production services are configured by CI.
 
-Local browser checks use headless system Chromium via Playwright at **390×844**, **768×1024** and **1440×900**. They cover homepage, shop, blog, cart and checkout; mobile navigation; local image loading; horizontal overflow; CSRF-protected cart addition and the populated checkout form's missing-key error. No card data or external Stripe session is involved. Screenshots are local-development evidence, not proof of deployment or real integrations.
+## Remaining external/deployed acceptance — not yet passed here
 
-The initial check exposed reliance on external Bootstrap assets: Chromium could not validate that CDN connection in this environment, leaving the mobile menu inactive. The fix serves licensed, integrity-verified Bootstrap assets from the app; certificate verification was not disabled. See the final browser results linked below for the rerun outcome.
+The cloud runtime has no Stripe, Cloudinary, SMTP, production database or strong deployment-secret bindings. Read-only access to the Render host and direct GitHub API returned network-proxy denial; this is not a diagnosis that the deployed app is down. Native Git and public GitHub HTML remain reachable. A saved API-domain draft does not itself update the runtime policy.
 
-**Final local rerun: passed.** Fifteen page/viewport checks and three cart-to-checkout form flows passed. No horizontal overflow, broken images or JavaScript exceptions were detected in those checked states. Mobile/tablet menu expansion worked. The checkout correctly reported unavailable payments without configured keys and retained the cart. A first automation attempt used an incorrect exact label selector; the selector was corrected to the rendered field ID before the final run.
-
-Actual local artifacts (27 October 2026, seeded development products; not deployed evidence):
-
-- [Machine-readable browser results](evidence/local-browser-results.json)
-- [Mobile shop](evidence/local-mobile-shop.png)
-- [Desktop homepage](evidence/local-desktop-home.png)
-- [Mobile checkout with missing-key error](evidence/local-mobile-checkout.png)
-
-These screenshots do not show a Stripe success, a real marketing page or a production deployment. The remaining deployed acceptance matrix is still outstanding.
-
-## Manual acceptance matrix — not yet passed on Render
-
-Record date, browser/device, result, evidence file and any issue for each row. Do not mark a row passed because its automated counterpart passes.
-
-| Check | Steps / expected result | Actual result |
+| Check | Expected result | Current status |
 | --- | --- | --- |
-| Render startup | Review build/migration logs and `check --deploy`; PostgreSQL retains data across restart | TODO |
-| Stripe test success | Complete a real hosted **sandbox** checkout; dashboard event reaches exact endpoint; matching order becomes paid only afterward | TODO |
-| Card decline | Use Stripe's documented decline test card; no paid order, cart retained | TODO |
-| Cancellation | Cancel hosted checkout; return to editable cart; pending order remains unpaid | TODO |
-| Delayed/repeated webhook | Retry actual event in dashboard; one paid order/timestamp; refresh/next cart visit clears purchased quantities once | TODO |
-| Return URL tampering | Different browser cannot read confirmation; pending return never means paid | TODO |
-| Real Cloudinary images | Upload a small owned JPEG/PNG/WEBP; edit text without new image; remove/replace image; invalid file shows error; old post remains intact on upload outage | TODO |
-| Blog access | Two accounts plus staff; direct edit/delete URL and POST attempts denied for non-owner; author/staff succeeds | TODO |
-| Accounts | Register, login/logout, reset password with a verified SMTP sender; test invalid/weak credentials | TODO |
-| My orders / Buy again | Account A sees A only; B cannot reorder A; update product price and reorder a paid order; cart uses new price, history retains old total | TODO |
-| Newsletter | Valid and duplicate subscriptions; invalid email; no false campaign-delivery claim | TODO |
-| Responsive navigation | Real mobile/tablet/desktop; keyboard and zoom; populated cart table; long blog titles/content; form errors; no inaccessible controls | TODO |
-| SEO | Render robots and XML sitemap use Render host; public post entries resolve; no private/account checkout entries | TODO |
-| Links and media | Check all navigation, product images and blog images on Render, including existing Cloudinary content and missing-image fallback | TODO |
-| HTML/CSS validators | Validate representative rendered pages and CSS; keep actual reports, list remaining issues | TODO |
-| Accessibility | Keyboard-only journey, focus visibility, labels, alt text, contrast and real Lighthouse report | TODO |
-| Cross-browser | Chrome/Firefox/Safari or available equivalent; record actual versions and devices | TODO |
-| Marketing | Verify published Facebook page and genuine posts, then add real URLs/evidence; a legacy mockup is not proof | TODO |
+| Render configuration/migrations | Strong secret, DEBUG off, correct URL/hosts, persistent PostgreSQL, backups, all migrations, actual deploy checks | Owner configuration and approved deployment review required |
+| Actual Stripe sandbox payment | Genuine hosted test checkout, matching signed endpoint event, pending→paid, correct cart reconciliation | Not run; credentials and approved deployment absent |
+| Real decline/cancellation/duplicate/retry | Correct unpaid/cart handling and one confirmed order | Offline logic tested; actual sandbox delivery pending |
+| Cloudinary | Correct authorised images, real upload/replace/clear and outage recovery | Offline adapter/fallbacks tested; external upload pending |
+| SMTP/reset delivery | Verified sender and actual received reset email | Local email/token flow tested; real delivery pending |
+| Product photos | Correct catalogue item, authorised image/source record | Owner-supplied genuine photos/rights still missing |
+| Deployed browser/accessibility | Repeat matrix on actual released site; keyboard/contrast/zoom and other browsers | Local Chromium/markup checks completed; deployed/cross-browser checks pending |
+| Marketing/design | Clearly labelled mockup or genuine page evidence, accurate original/retrospective design provenance | New mockup and retrospective diagrams rendered locally; no live campaign/page claimed |
 
-Known scope: no refunds, inventory, shipping/tax calculations, guest order claiming or automatic paid-order emails. Assess those limits against your product catalogue and supplied assessment feedback. Do not use real cards for acceptance testing.
-
-
-## PR #8 review additions
-
-The baseline 46 tests passed. Two new offline regressions then **failed on the original PR code**: a renamed product changed an idempotent Stripe retry payload, and delayed confirmation removed a newly re-added cart line. Both now pass with the fixes. Other added tests cover expiry/recovery, no duplicate session when completion awaits a webhook, missing webhook configuration, stale signatures, signed malformed events, the safe legacy-attempt upgrade path, order admin deletion, missing Cloudinary configuration and overlong newsletter emails.
-
-The saved local screenshots above are from the initial implementation. They were not recaptured for this review and do not prove the deployed site or Stripe integrations work. See [PR8_REVIEW.md](PR8_REVIEW.md) for findings and merge prerequisites.
+See [ASSESSMENT_REVIEW.md](ASSESSMENT_REVIEW.md), [PR8_REVIEW.md](PR8_REVIEW.md) and [EVIDENCE.md](EVIDENCE.md). Do not mark pending integrations or original planning evidence as passed.

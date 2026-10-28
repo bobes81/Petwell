@@ -1,0 +1,10 @@
+{
+  "checked_on": "2026-10-28",
+  "tool": "Nu Html Checker CSS mode",
+  "version": "26.10.12 (973e40b)",
+  "scope": "Project-authored static/css/site.css and static/css/style.css; excludes vendored Bootstrap",
+  "files_checked": 2,
+  "messages": [],
+  "command": "vnu --format json --css static/css/site.css static/css/style.css",
+  "exit_code": 0
+}

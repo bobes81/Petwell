@@ -12,9 +12,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from orders.cart import cart_line_tokens, clear_paid_purchases
-from orders.models import Order, OrderItem
+from orders.models import CheckoutState, Order, OrderItem
 from products.models import Product
 
+from .coordination import CheckoutBusy, checkout_lease, session_digest
 from .forms import CheckoutForm
 
 logger = logging.getLogger(__name__)
@@ -74,6 +75,132 @@ def session_payload(order, items):
     }
 
 
+def expire_checkout_session(session, lease):
+    """Do not replace a payable attempt until Stripe confirms its end state."""
+    lease.assert_current()
+    try:
+        return stripe.checkout.Session.expire(
+            session.id, api_key=settings.STRIPE_SECRET_KEY
+        )
+    except stripe.StripeError:
+        # Expiration can race a completed payment or succeed despite a lost
+        # response. Only an authoritative terminal state permits progress.
+        lease.assert_current()
+        recovered = stripe.checkout.Session.retrieve(
+            session.id, api_key=settings.STRIPE_SECRET_KEY
+        )
+        if recovered.status not in ("complete", "expired"):
+            raise
+        return recovered
+
+
+def remember_checkout(request, order):
+    """Keep browser confirmation access even after a stale session response."""
+    owned = request.session.get("checkout_orders", [])
+    if str(order.public_id) not in owned:
+        request.session["checkout_orders"] = (owned + [str(order.public_id)])[
+            -50:
+        ]
+
+
+def start_checkout(request, form, items, total, tokens, lease):
+    """Resolve the browser's durable active attempt before starting another."""
+    order = lease.active_order
+    if order and order.status == "paid":
+        if str(order.public_id) not in request.session.get(
+            "cleared_orders", []
+        ):
+            remember_checkout(request, order)
+            return redirect("checkout:success", public_id=order.public_id)
+        order = None
+    # A legacy attempt without a saved response or payload cannot be retried
+    # safely after product labels/URLs have changed.
+    if (
+        order
+        and not order.stripe_session_id
+        and not order.stripe_checkout_payload
+    ):
+        order = None
+    snapshot = sorted((p.pk, q, p.price) for p, q in items)
+    changed = order is not None and (
+        order.full_name != form.cleaned_data["name"]
+        or order.email != form.cleaned_data["email"]
+        or order.address != form.cleaned_data["address"]
+        or (order.cart_line_tokens and order.cart_line_tokens != tokens)
+        or sorted(order.items.values_list("product_id", "quantity", "price"))
+        != snapshot
+    )
+    # One renewal handles an expired or superseded Session, including recovery
+    # after an earlier connection loss.
+    for _ in range(2):
+        if order is None:
+            with transaction.atomic():
+                order = Order.objects.create(
+                    user=request.user
+                    if request.user.is_authenticated
+                    else None,
+                    full_name=form.cleaned_data["name"],
+                    email=form.cleaned_data["email"],
+                    address=form.cleaned_data["address"],
+                    total_price=total,
+                    cart_line_tokens=tokens,
+                )
+                OrderItem.objects.bulk_create(
+                    [
+                        OrderItem(
+                            order=order, product=p, quantity=q, price=p.price
+                        )
+                        for p, q in items
+                    ]
+                )
+                order.stripe_checkout_payload = session_payload(order, items)
+                order.save(update_fields=["stripe_checkout_payload"])
+                # Commit the active pointer and immutable request before any
+                # Stripe I/O so another worker recovers this same attempt.
+                lease.set_order(order)
+            changed = False
+        request.session["pending_order"] = str(order.public_id)
+        remember_checkout(request, order)
+        lease.assert_current()
+        if order.stripe_session_id:
+            session = stripe.checkout.Session.retrieve(
+                order.stripe_session_id,
+                api_key=settings.STRIPE_SECRET_KEY,
+            )
+        else:
+            # Recover an ambiguous create response before replacing it, even
+            # if the customer has since changed their cart or contact details.
+            session = stripe.checkout.Session.create(
+                api_key=settings.STRIPE_SECRET_KEY,
+                idempotency_key=f"order-{order.public_id}",
+                **order.stripe_checkout_payload,
+            )
+            lease.assert_current()
+            order.stripe_session_id = session.id
+            order.save(update_fields=["stripe_session_id"])
+        lease.assert_current()
+        if session.status == "open" and changed:
+            session = expire_checkout_session(session, lease)
+            lease.assert_current()
+        if session.status == "expired":
+            # Keep the old order/Session mapping for late webhooks.
+            order = None
+            continue
+        if session.status == "complete":
+            # Changed data must not create another payment while this Session
+            # awaits the signed webhook that confirms its result.
+            return redirect("checkout:success", public_id=order.public_id)
+        if session.status == "open" and session.url and not changed:
+            return redirect(session.url)
+        break
+    form.add_error(
+        None,
+        "This payment session is unavailable. "
+        "Please retry; your cart has been kept.",
+    )
+    return None
+
+
 def checkout(request):
     clear_paid_purchases(request)
     form = CheckoutForm(request.POST if request.method == "POST" else None)
@@ -101,110 +228,31 @@ def checkout(request):
                 "Your cart has been kept.",
             )
         else:
-            tokens = cart_line_tokens(request)
-            order = (
-                Order.objects.filter(
-                    public_id=request.session.get("pending_order"),
-                    status="pending",
-                ).first()
-                if request.session.get("pending_order")
-                else None
-            )
-            # A legacy attempt without a saved response or payload cannot be
-            # retried safely after product labels/URLs have changed.
-            if (
-                order
-                and not order.stripe_session_id
-                and not order.stripe_checkout_payload
-            ):
-                order = None
-            snapshot = sorted((p.pk, q, p.price) for p, q in items)
-            if order and (
-                order.full_name != form.cleaned_data["name"]
-                or order.email != form.cleaned_data["email"]
-                or order.address != form.cleaned_data["address"]
-                or (
-                    order.cart_line_tokens and order.cart_line_tokens != tokens
-                )
-                or sorted(
-                    order.items.values_list("product_id", "quantity", "price")
-                )
-                != snapshot
-            ):
-                order = None
+            lease = None
             try:
-                # One renewal handles an expired Session, including a cached
-                # create response recovered after an earlier connection loss.
-                for _ in range(2):
-                    if order is None:
-                        with transaction.atomic():
-                            order = Order.objects.create(
-                                user=request.user
-                                if request.user.is_authenticated
-                                else None,
-                                full_name=form.cleaned_data["name"],
-                                email=form.cleaned_data["email"],
-                                address=form.cleaned_data["address"],
-                                total_price=total,
-                                cart_line_tokens=tokens,
-                            )
-                            OrderItem.objects.bulk_create(
-                                [
-                                    OrderItem(
-                                        order=order,
-                                        product=p,
-                                        quantity=q,
-                                        price=p.price,
-                                    )
-                                    for p, q in items
-                                ]
-                            )
-                            order.stripe_checkout_payload = session_payload(
-                                order, items
-                            )
-                            order.save(
-                                update_fields=["stripe_checkout_payload"]
-                            )
-                    request.session["pending_order"] = str(order.public_id)
-                    owned = request.session.get("checkout_orders", [])
-                    if str(order.public_id) not in owned:
-                        request.session["checkout_orders"] = (
-                            owned + [str(order.public_id)]
-                        )[-50:]
-                    if order.stripe_session_id:
-                        session = stripe.checkout.Session.retrieve(
-                            order.stripe_session_id,
-                            api_key=settings.STRIPE_SECRET_KEY,
-                        )
-                    else:
-                        session = stripe.checkout.Session.create(
-                            api_key=settings.STRIPE_SECRET_KEY,
-                            idempotency_key=f"order-{order.public_id}",
-                            **order.stripe_checkout_payload,
-                        )
-                        order.stripe_session_id = session.id
-                        order.save(update_fields=["stripe_session_id"])
-                    if session.status == "expired":
-                        # Keep the old order/Session mapping for late webhooks.
-                        order = None
-                        continue
-                    if session.status == "complete":
-                        # Retrieval is not confirmation; only a signed webhook
-                        # can change the database payment status.
-                        return redirect(
-                            "checkout:success", public_id=order.public_id
-                        )
-                    if session.status == "open" and session.url:
-                        return redirect(session.url)
-                    break
+                with checkout_lease(request) as lease:
+                    response = start_checkout(
+                        request,
+                        form,
+                        items,
+                        total,
+                        cart_line_tokens(request),
+                        lease,
+                    )
+                    if response is not None:
+                        return response
+            except CheckoutBusy:
                 form.add_error(
                     None,
-                    "This payment session is unavailable. "
-                    "Please retry; your cart has been kept.",
+                    "A payment request is already being processed. "
+                    "Please wait and retry; your cart has been kept.",
                 )
             except stripe.StripeError:
                 logger.warning(
-                    "Stripe checkout failed for order %s", order.public_id
+                    "Stripe checkout failed for order %s",
+                    getattr(
+                        getattr(lease, "active_order", None), "public_id", None
+                    ),
                 )
                 form.add_error(
                     None,
@@ -219,9 +267,18 @@ def checkout(request):
 def success(request, public_id):
     # A return URL is not payment evidence.
     # Only the signed webhook changes status.
-    if str(public_id) not in request.session.get("checkout_orders", []):
-        return HttpResponse(status=404)
     order = get_object_or_404(Order, public_id=public_id)
+    owned = str(public_id) in request.session.get("checkout_orders", [])
+    if not owned and request.session.session_key:
+        # Concurrent SessionMiddleware saves can lose a confirmation list.
+        # The durable pointer is scoped to this same unguessable browser key.
+        owned = CheckoutState.objects.filter(
+            pk=session_digest(request),
+            active_order=order,
+        ).exists()
+    if not owned:
+        return HttpResponse(status=404)
+    remember_checkout(request, order)
     clear_paid_purchases(request)
     return render(request, "checkout/success.html", {"order": order})
 

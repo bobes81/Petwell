@@ -4,7 +4,7 @@
 {% block content %}
 <div class="container d-flex justify-content-center align-items-center" style="min-height:80vh;">
   <div class="card shadow-sm p-5 border-0 rounded-4" style="max-width:420px; width:100%;">
-    <h2 class="text-center mb-4 text-primary fw-bold">{% trans "Sign In" %}</h2>
+    <h1 class="h2 text-center mb-4 text-primary fw-bold">{% trans "Sign In" %}</h1>
 
     {% if form.errors %}
     <div class="alert alert-danger">
@@ -48,7 +48,7 @@
     </div>
     <div class="text-center mt-4">
       <p class="text-muted small mb-0">{% trans "Don't have an account?" %}
-        <a href="{% url 'account_signup' %}" class="text-primary fw-semibold">{% trans "Sign Up" %}</a>
+        <a href="{{ signup_url }}" class="text-primary fw-semibold">{% trans "Sign Up" %}</a>
       </p>
     </div>
   </div>

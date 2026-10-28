@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>PetWell — retrospective wireframes, 28 October 2026</title>
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; color: #20242a; background: #f0f1f2; font: 15px/1.5 system-ui,sans-serif; }
+header { padding: 1.2rem; background: #fff0bd; border-bottom: 3px solid #685319; text-align: center; }
+h1 { margin: .3rem 0; font-size: clamp(1.4rem,4vw,2rem); }
+header p { max-width: 72rem; margin: .5rem auto; }
+nav { padding: .75rem 1rem; background: white; text-align: center; }
+nav a { display: inline-block; margin: .25rem .6rem; color: #252b37; }
+main { max-width: 1360px; padding: 1.2rem; margin: auto; }
+.intro { max-width: 74rem; margin: 0 auto 1.2rem; }
+.frames { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1.2rem; align-items: start; }
+figure { min-width: 0; margin: 0; padding: .9rem; background: white; border: 2px solid #525965; border-radius: .25rem; }
+figure h2 { font-size: 1.2rem; margin: 0 0 .4rem; }
+.frame-label { font-size: .8rem; font-weight: 700; padding: .45rem; background: #f7f1dd; border: 1px solid #afa07a; margin-bottom: .7rem; }
+.window { padding: .7rem; border: 1px solid #6a717b; }
+.bar { display: flex; flex-wrap: wrap; gap: .35rem .6rem; align-items: center; padding: .55rem; border: 1px solid #7d838b; background: #eceeef; font-size: .8rem; }
+.bar strong { margin-right: auto; }
+.box { margin: .65rem 0; padding: .7rem; border: 1px solid #858b94; background: #fafafa; }
+.hero { padding: 1.4rem .7rem; text-align: center; }
+.heading { font-weight: 750; font-size: 1.1rem; }
+.subhead { font-weight: 700; }
+.row { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .6rem; }
+.row.three { grid-template-columns: repeat(3,minmax(0,1fr)); }
+.placeholder { display: grid; place-items: center; min-height: 70px; border: 1px dashed #7b828c; background: repeating-linear-gradient(135deg,#f3f3f3,#f3f3f3 8px,#e6e6e6 8px,#e6e6e6 9px); color: #454c56; font-size: .85rem; text-align: center; }
+.action { display: inline-block; padding: .35rem .65rem; border: 2px solid #4d5664; margin: .45rem .2rem .15rem 0; font-weight: 700; font-size: .8rem; background: #e7e9ed; }
+.field { margin: .5rem 0; padding: .4rem .55rem; min-height: 35px; border: 1px solid #7c838b; background: white; font-size: .85rem; }
+.note { font-size: .85rem; color: #424b58; }
+.notice { padding: .5rem; margin-top: .6rem; background: #eceff2; border-left: 3px solid #697584; }
+.flow { display: grid; gap: .35rem; margin-top: .6rem; }
+.arrow { text-align: center; font-weight: 750; }
+.table { width: 100%; border-collapse: collapse; margin: .8rem 0; font-size: .85rem; }
+.table th,.table td { padding: .45rem; border: 1px solid #8b9199; text-align: left; }
+figcaption { margin-top: .7rem; font-size: .85rem; }
+.footer-wire { margin-top: .8rem; padding: .5rem; border-top: 1px solid #9ba1a8; font-size: .8rem; }
+p { margin: .45rem 0; }
+footer { max-width: 1100px; margin: 1.4rem auto; padding: 1rem; text-align: center; }
+@media(max-width:800px) { .frames { grid-template-columns: 1fr; } }
+@media(max-width:450px) { main { padding: .6rem; } figure { padding: .6rem; } .row.three { grid-template-columns: 1fr; } .row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+<strong>RETROSPECTIVE DESIGN REVIEW — CREATED 28 OCTOBER 2026</strong>
+<h1>PetWell interface wireframes</h1>
+<p><strong>Not original planning. Not application screenshots.</strong> These low-fidelity diagrams document the current submission journey and the new owner-only pet-profile design. They do not prove earlier design work, deployment, payment processing or user testing.</p>
+</header>
+<nav aria-label="Wireframe sections"><a href="#home">Home</a><a href="#shop">Shop</a><a href="#cart">Cart</a><a href="#checkout">Checkout transition</a><a href="#blog">Blog</a><a href="#pet-profile">My pet profile</a></nav>
+<main>
+<p class="intro">The boxes represent layout and information hierarchy. Product names, prices and profile values are symbolic placeholders. Authentication/ownership controls and payment states are described, not simulated. At narrow widths, navigation collapses and card/form columns stack. Verify each diagram against the reviewed implementation before treating it as a final specification.</p>
+<div class="frames">
+<figure id="home">
+<h2>1. Home — introduce the shop and community</h2><div class="frame-label">Retrospective wireframe · 28 October 2026 · not original planning</div>
+<div class="window">
+<div class="bar"><strong>PetWell</strong><span>Home</span><span>Shop</span><span>Blog</span><span>Cart</span><span>Account</span></div>
+<div class="box hero"><div class="heading">Caring for pets, inspiring people</div><p>Brief purpose and value statement</p><span class="action">Visit the shop</span></div>
+<div class="row three"><div class="box"><div class="subhead">Wellness tips</div><p>Short introduction</p></div><div class="box"><div class="subhead">Nutrition ideas</div><p>Ask your vet</p></div><div class="box"><div class="subhead">Community stories</div><p>Read the blog</p></div></div>
+<div class="box hero"><div class="subhead">Join the community</div><span class="action">Create account</span></div>
+<div class="footer-wire">Newsletter email field + Subscribe · copyright</div>
+</div><figcaption>Primary next step: discover products. Secondary path: read and contribute community stories. Mobile navigation must retain keyboard-accessible controls.</figcaption>
+</figure>
+<figure id="shop">
+<h2>2. Shop — browse products and add to cart</h2><div class="frame-label">Retrospective wireframe · 28 October 2026 · not original planning</div>
+<div class="window"><div class="bar"><strong>PetWell</strong><span>Shop</span><span>Blog</span><span>Cart (count)</span><span>Account</span></div><div class="box heading">PetWell shop</div>
+<div class="row"><div class="box"><div class="placeholder">Accurate product image<br>or labelled local fallback</div><p class="subhead">Product name</p><p>Plain-language description</p><p>£price</p><span class="action">Add to cart</span></div><div class="box"><div class="placeholder">Accurate product image<br>or labelled local fallback</div><p class="subhead">Product name</p><p>Plain-language description</p><p>£price</p><span class="action">Add to cart</span></div></div>
+<div class="notice">Empty catalogue: clear message. Images must match real product identity; legacy filenames are not proof of an actual product.</div><div class="footer-wire">Newsletter · shared navigation</div></div>
+<figcaption>Product cards stack on small screens. Adding to cart is a CSRF-protected POST; prices and availability come from stored product data.</figcaption>
+</figure>
+<figure id="cart">
+<h2>3. Cart — review items before payment</h2><div class="frame-label">Retrospective wireframe · 28 October 2026 · not original planning</div>
+<div class="window"><div class="bar"><strong>PetWell</strong><span>Shop</span><span>Cart</span><span>Checkout</span></div><div class="box heading">Your cart</div>
+<table class="table"><thead><tr><th>Product</th><th>Qty</th><th>Subtotal</th><th>Action</th></tr></thead><tbody><tr><td>Product name</td><td>n</td><td>£subtotal</td><td>Remove</td></tr></tbody></table>
+<div class="box"><p>Items: quantity</p><p class="subhead">Total: £database total</p><span class="action">Proceed to checkout</span></div>
+<div class="notice">Alternative empty state: “Your cart is empty” with a route back to the shop.</div><div class="notice">Keep the cart after cancellation/failure. Remove purchased quantities only after verified confirmation and safe cart-line matching.</div><div class="footer-wire">Newsletter · shared navigation</div></div>
+<figcaption>Use a responsive table wrapper without page-level horizontal overflow. Removal is POST-only. This diagram contains no actual order or payment evidence.</figcaption>
+</figure>
+<figure id="checkout">
+<h2>4. Checkout — leave PetWell for hosted card entry</h2><div class="frame-label">Retrospective wireframe · 28 October 2026 · not original planning</div>
+<div class="window"><div class="bar"><strong>PetWell</strong><span>Cart</span><span>Checkout</span></div>
+<div class="box"><div class="heading">Review total: £database total</div><div class="field">Full name</div><div class="field">Email</div><div class="field">Delivery address</div><span class="action">Continue to secure payment</span><p class="note">Show form/configuration errors here; preserve cart.</p></div>
+<div class="flow"><div class="arrow">↓ redirect</div><div class="box"><div class="subhead">External Stripe-hosted card entry</div><p>Conceptual transition only — no copied Stripe interface, card fields or test-success claim.</p></div><div class="arrow">↓ return to PetWell</div><div class="box"><div class="subhead">Awaiting confirmation / confirmed order</div><p>A return URL does not mark an order paid. Signed matching webhook confirmation determines status.</p></div></div>
+</div><figcaption>Order starts pending. Cancellation, connection errors and delayed webhooks need clear recoverable states. Real sandbox end-to-end checks remain a separate task.</figcaption>
+</figure>
+<figure id="blog">
+<h2>5. Blog — read stories and manage owned content</h2><div class="frame-label">Retrospective wireframe · 28 October 2026 · not original planning</div>
+<div class="window"><div class="bar"><strong>PetWell</strong><span>Shop</span><span>Blog</span><span>Account</span></div><div class="box"><div class="heading">PetWell blog</div><span class="action">Add post (signed-in users)</span></div>
+<div class="box"><div class="placeholder">Optional article image / local fallback</div><p class="subhead">Article title → full story</p><p>Short preview · author · date</p><span class="action">Edit (author/staff)</span><span class="action">Delete (author/staff)</span></div>
+<div class="box"><div class="subhead">Create / edit view</div><div class="field">Title</div><div class="field">Content</div><div class="field">Optional valid image · retain/remove existing image</div><span class="action">Save</span><span class="action">Cancel</span><p class="note">Inline errors for invalid image or unavailable upload.</p></div>
+<div class="notice">Deletion opens a confirmation form. Direct GET/POST attempts by non-owners are denied on the server, regardless of which controls are visible.</div></div>
+<figcaption>Article detail has one main title and a back-to-blog route. Public content is indexable; create/edit/delete forms remain private/noindex.</figcaption>
+</figure>
+<figure id="pet-profile">
+<h2>6. My pet profile — owner-only custom records</h2><div class="frame-label">Retrospective wireframe · 28 October 2026 · not original planning</div>
+<div class="window"><div class="bar"><strong>PetWell</strong><span>My orders</span><span>My pets</span><span>Logout</span></div><div class="box"><div class="heading">My pets</div><span class="action">Add a pet</span></div>
+<div class="box"><div class="subhead">Pet name · species</div><p>Care focus · routine reminder</p><p>Owner-supplied everyday notes</p><span class="action">Edit own profile</span><span class="action">Delete own profile</span></div>
+<div class="box"><div class="subhead">Add / edit profile form</div><div class="field">Pet name (up to 80 characters)</div><div class="field">Species: dog / cat / other</div><div class="field">Care focus: general / nutrition / dental / calm / mobility</div><div class="field">Everyday notes (optional, up to 500 characters)</div><span class="action">Add pet / Save changes</span><span class="action">Cancel</span></div>
+<div class="notice">Require login; show only the current owner's records. Validate input, show useful empty/error states and protect direct edit/delete requests.</div><p class="note">The selected care focus supplies an everyday routine reminder and a veterinary-team signpost. No actual pet/customer record is shown.</p></div>
+<figcaption>No veterinary diagnosis, automatic treatment recommendation or test pass is implied. These records illustrate an owner-managed feature, not a public pet directory.</figcaption>
+</figure>
+</div>
+</main>
+<footer><strong>Retrospective documentation, not historical planning evidence.</strong><br>Created 28 October 2026 from repository review and current feature work. No original sprint dates, external-service passes, payment results or marketing statistics are asserted.</footer>
+</body>
+</html>

@@ -4,7 +4,7 @@ PetWell is a Django e-commerce portfolio project for Code Institute Portfolio Pr
 
 Deployment target: **https://petwell-u0cr.onrender.com**. This branch has not been deployed or merged. The target URL is not a claim that the latest changes are live.
 
-Resubmission deadline: **31 October 2026, 12:00 UK time (GMT)**. The focus is a working, testable submission. Assessment compliance must be checked against the actual rubric and assessor feedback; neither was supplied for this revision.
+Resubmission deadline: **31 October 2026, 12:00 noon Irish and UK time (GMT)**. The focus is a working, testable submission. A private feedback summary supplied by the owner guides this review. The private correspondence is not published; the official assessment guide was not available in the checkout. The evidence map is not an assessor decision.
 
 ## Features and user stories
 
@@ -15,6 +15,7 @@ Resubmission deadline: **31 October 2026, 12:00 UK time (GMT)**. The focus is a 
 | Customer | Pay securely without exposing card details | Hosted Stripe Checkout; server-calculated GBP amount |
 | Customer | See an accurate payment result | Pending order until verified signed webhook; return URL cannot mark paid |
 | Customer | Keep cart on cancellation or payment failure | No cart clearing before payment; recoverable errors |
+| Member | Manage my pets and everyday care reminders | Private PetProfile CRUD, validation, server-side ownership and focus-specific routine prompt |
 | Member | See only my orders and buy again | Login-protected order history; owner-only POST reorder at current prices |
 | Reader | Read full blog articles | Linked list/detail views and public sitemap entries |
 | Author | Create, edit and delete my posts | Server-side ownership checks for GET and POST; delete confirmation |
@@ -24,7 +25,9 @@ Resubmission deadline: **31 October 2026, 12:00 UK time (GMT)**. The focus is a 
 
 ### Custom functionality and data model
 
-The existing models are `Product`, `Order`, `OrderItem`, `BlogPost` and `Subscriber`, alongside Django/allauth users; see the [current schema diagram](docs/MODELS.md). Order history and **Buy again** extend these models into a customer-facing repeat-purchase workflow. Historical totals and item prices remain unchanged; reordered products use current prices. Only the purchaser can access/reorder their paid orders. Guest orders remain tied to their browser session and are not automatically claimed by email.
+The application models are `Product`, `Order`, `OrderItem`, `BlogPost`, `Subscriber` and `PetProfile`, plus the internal `CheckoutState` coordinator, alongside Django/allauth users; see the [current schema diagram](docs/MODELS.md). **My pets** (`/pets/`) is a distinct member feature: add a name/species/care focus and optional notes, view a routine reminder, edit the profile or confirm deletion. Profiles are private to their owner, including direct form URLs; staff do not receive access to another member's care notes. These are planning reminders, not veterinary advice.
+
+Order history and **Buy again** extend the commerce models into a customer-facing repeat-purchase workflow. Historical totals and item prices remain unchanged; reordered products use current prices. Only the purchaser can access/reorder their paid orders. Guest orders remain tied to their browser session and are not automatically claimed by email.
 
 `Order` now has a unique public UUID, pending/paid status, unique Stripe Checkout Session ID and payment timestamp, plus the frozen Stripe creation payload and cart-line identities (neither contains credentials). `OrderItem` protects referenced products from deletion so historical purchases are preserved. Existing pre-Stripe orders migrate to **pending** because there is no payment evidence for them. Do not manually relabel them as paid.
 
@@ -37,7 +40,7 @@ Python 3.11; Django 5.2.17; Stripe Python SDK 12.5.1; PostgreSQL on Render (SQLi
 Use the existing checkout in an isolated cloud task; no extra Git worktree is necessary.
 
 ```bash
-git clone https://github.com/bobes81/Petwell.git
+git clone --branch fix/pp5-resubmission https://github.com/bobes81/Petwell.git
 cd Petwell
 python3.11 -m venv venv
 source venv/bin/activate
@@ -47,7 +50,11 @@ export DEBUG=True
 export SITE_URL=http://localhost:8000
 export ALLOWED_HOSTS=localhost,127.0.0.1
 export EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
-# Set SECRET_KEY securely in your shell or environment settings.
+# Fresh local-only secret; keep it stable in your private environment if
+# testing password-reset links across server restarts.
+export SECRET_KEY="$(python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())')"
+# Keep DATABASE_URL unset locally unless you deliberately select a local DB.
+unset DATABASE_URL
 python manage.py migrate
 python manage.py shell -c 'from products.seed import run; run()'
 python manage.py collectstatic --noinput
@@ -55,7 +62,27 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-On Windows, activate with `venv\Scripts\activate` and configure environment variables using PowerShell. The product seed is repeatable. Do not load `fixtures/products.json` expecting data: it is currently empty. Create products through admin or use the seed.
+On Windows PowerShell, after cloning the same branch and opening the checkout:
+
+```powershell
+py -3.11 -m venv venv
+.\venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+$env:DJANGO_SETTINGS_MODULE = "petwell.settings"
+$env:DEBUG = "True"
+$env:SITE_URL = "http://localhost:8000"
+$env:ALLOWED_HOSTS = "localhost,127.0.0.1"
+$env:EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+$env:SECRET_KEY = python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+Remove-Item Env:DATABASE_URL -ErrorAction SilentlyContinue
+python manage.py migrate
+python manage.py shell -c "from products.seed import run; run()"
+python manage.py collectstatic --noinput
+python manage.py createsuperuser
+python manage.py runserver
+```
+
+These are instructions, not a claim that Windows was tested here. The Linux/cloud workflow was exercised locally. The product seed is repeatable. Do not load `fixtures/products.json` expecting data: it is currently empty. Create products through admin or use the seed.
 
 The app reads the **process environment**. It does not automatically load `.env`; if using that file, use your shell/IDE's secure environment loader. `.env` is ignored. Never commit keys. Local console email prints messages to the developer terminal and does not deliver them.
 
@@ -65,7 +92,9 @@ For offline tests (no external credentials required):
 python manage.py test --settings=petwell.test_settings
 ```
 
-Test settings always use an isolated in-memory SQLite database and in-memory email backend, not a configured production database. Stripe and Cloudinary upload calls in tests are mocked. The public Cloudinary cloud name used in tests is a dummy for URL rendering, not an account credential.
+Default test settings always use an isolated in-memory SQLite database and in-memory email backend, not a configured production database. Stripe and Cloudinary upload calls in tests are mocked. The public Cloudinary cloud name used in tests is a dummy for URL rendering, not an account credential.
+
+CI also runs the suite against a disposable PostgreSQL 16 service with `petwell.postgres_test_settings` and `TEST_DATABASE_URL`. This test-only module must never serve the app or point to a production database. The PostgreSQL-specific overlapping-worker test is explicitly skipped on local SQLite; report the backend and skip count rather than treating it as a local concurrency pass.
 
 ## Environment variables
 
@@ -90,7 +119,7 @@ Hosted Stripe Checkout does not require a publishable key or Stripe.js in this a
 ## Checkout and payment lifecycle
 
 1. Validate customer name/email/address and each cart quantity/product. Read all prices from the database; ignore client-supplied totals.
-2. Save a pending order and item-price snapshot atomically. The complete Stripe creation payload is saved before the API request. Lost-response retries reuse the exact payload and idempotency key, including product labels and line order. Existing sessions are retrieved: open sessions are reused, completed sessions wait for their webhook, and confirmed expired sessions get a new order/key while the old mapping remains intact.
+2. Acquire a short database checkout lease for the browser session so overlapping workers use one durable active-order pointer. Save a pending order and item-price snapshot atomically before Stripe I/O. The complete Stripe creation payload is saved before the API request. Lost-response retries reuse the exact payload and idempotency key, including product labels and line order. Existing sessions are retrieved before considering changed cart/contact data: unchanged open sessions are reused; a superseded open session must be confirmed expired before replacement; completed sessions wait for their webhook. Confirmed expired sessions get a new order/key while the old mapping remains intact. Ambiguous expiration fails closed. The lease expires after 120 seconds if a worker dies; requests use a bounded 10-second Stripe timeout and preserve durable recovery data.
 3. Create a card-only, GBP Stripe Checkout Session and redirect to Stripe. No card data passes through PetWell.
 4. Only a correctly signed `checkout.session.completed` or `checkout.session.async_payment_succeeded` event can set `paid`. Its Session ID, order UUID, client reference, total, currency, payment mode, paid status and live/test mode must match. Duplicate events do not change the original `paid_at` timestamp.
 5. The return page displays pending until that confirmation arrives. It cannot mark an order paid, even if its URL is copied. Guest confirmation requires the original checkout browser session.
@@ -106,7 +135,7 @@ The in-app paid result and account history are payment confirmation. Automatic o
 
 1. Connect the GitHub repository to a Render Python web service. Select the reviewed branch/commit only when ready to deploy. Use the repository's `.python-version` (3.11) with a supported patch runtime. Confirm Render's runtime in build logs.
 2. Attach a persistent Render PostgreSQL database and securely set the variables above, especially `DATABASE_URL`, `SECRET_KEY`, `DEBUG=False`, the Render hostname and sandbox Stripe keys. Do not use local/test settings.
-3. Build command: `bash build.sh`. It installs requirements, collects static assets and applies migrations. If your Render plan supports a pre-deploy command, prefer `python manage.py migrate --noinput` there and run `pip install -r requirements.txt && python manage.py collectstatic --noinput` as the build command. Back up first whichever path you choose.
+3. Before a release, review `python manage.py showmigrations` and take a PostgreSQL backup. The existing orders migration assigns distinct UUIDs and keeps old orders pending; `0004` adds immutable payment/cart snapshots. `orders.0005` adds the checkout coordinator and `accounts.0001` adds private pet profiles. All are required; apply them with `python manage.py migrate --noinput`. Do not fake, skip or edit applied migrations. Build command: `bash build.sh`. It installs requirements, collects static assets and applies migrations. If your Render plan supports a pre-deploy command, prefer `python manage.py migrate --noinput` there and run `pip install -r requirements.txt && python manage.py collectstatic --noinput` as the build command. Back up first whichever path you choose.
 4. Start command: `gunicorn petwell.wsgi:application --bind 0.0.0.0:$PORT`.
 5. Run `python manage.py check --deploy --fail-level WARNING` with the actual Render configuration. A passing check is not proof that PostgreSQL, Cloudinary, SMTP or Stripe credentials work; validate them separately.
 6. Create an admin user securely using `python manage.py createsuperuser`. Add real product data/images and review current prices. Optionally set the Django Sites record to the Render hostname for account email links.
@@ -136,15 +165,39 @@ Use the listener's signing secret locally. Complete a **test** hosted checkout. 
 
 See [docs/TESTING.md](docs/TESTING.md) for reproducible commands, actual results and the outstanding manual matrix. See [docs/EVIDENCE.md](docs/EVIDENCE.md) for the screenshot, wireframe and marketing checklist. These documents distinguish automated results from work that has not been performed.
 
-No W3C, Lighthouse, cross-browser, accessibility, real email or live payment pass is claimed without a recorded run. Existing image files and the Facebook mockup in `static/images/` are legacy assets whose provenance and currency must be checked before treating them as evidence.
+No W3C, Lighthouse, cross-browser, accessibility, real email or live payment pass is claimed without a recorded run. [Asset inspection](docs/ASSETS.md) records what the legacy images actually show. The old file named Facebook mockup is a watermarked title card, not a Facebook-page design or published-page evidence.
+
+A new [Facebook-page design proposal](docs/marketing/facebook-mockup.html) and [its genuine local rendering](docs/marketing/facebook-mockup.png) are labelled **retrospective mockup, created 28 October 2026, not published**. It is a design artifact, not proof of a live page, customer engagement or a campaign. Open the HTML locally to inspect the layout. The real Facebook page URL has not been supplied.
 
 ## UX, SEO and business purpose
 
 PetWell's B2C shop pairs wellness products with community articles. The intended conversion path is homepage → shop → cart → secure hosted payment → confirmed order; returning customers use My orders → Buy again. The responsive Bootstrap navigation, labelled forms, keyboard skip link, inline validation, delete confirmation, readable empty states and local placeholder image support this path.
 
-`/robots.txt` names the Render sitemap and discourages indexing of private/account/cart/checkout routes. Robots rules are not access control. `/sitemap.xml` contains the homepage, shop, blog list and existing public blog posts using the configured deployment domain. Navigation now links to full blog articles. Placeholder social account links were removed until the real marketing pages are verified.
+`/robots.txt` names the Render sitemap and discourages indexing of private/account/cart/checkout routes. Robots rules are not access control. `/sitemap.xml` contains the homepage, shop, blog list and existing public blog posts using the configured deployment domain. Navigation now links to full blog articles. Placeholder social account links were removed until the real marketing pages are verified. Public pages now have page-specific metadata and canonical URLs without query parameters; private pages have noindex metadata and no public canonical.
 
 Planned marketing: maintain an authentic Facebook business page, publish real product/community posts and use consented newsletter subscriptions. No marketing reach, conversion statistics or active campaign delivery is claimed. Replace planning statements with dated evidence only after actually doing the work.
+
+## Design artifacts
+
+These are new **retrospective design reviews created 28 October 2026**, not invented pre-development planning. [Editable wireframes and captions](docs/design/README.md) describe six actual workflows; the [ER diagram](docs/MODELS.md) reflects the current database schema.
+
+<details>
+<summary>Retrospective wireframes — local diagram render, not application evidence</summary>
+
+![Retrospective desktop wireframes created 28 October 2026](docs/design/wireframes-desktop.png)
+
+</details>
+
+<details>
+<summary>Facebook-page design proposal — explicitly not published</summary>
+
+![Local rendering of the clearly labelled Facebook-page proposal, not a live page](docs/marketing/facebook-mockup.png)
+
+</details>
+
+## Assessment status
+
+[Assessment review](docs/ASSESSMENT_REVIEW.md) maps the requested areas to actual models, screens, tests and remaining evidence. The owner supplied a private assessment summary on 28 October; the original correspondence is not published and the official full guide was not available here. The mapping must not be presented as an official assessor sign-off.
 
 ## Known issues and submission work remaining
 
@@ -155,7 +208,7 @@ Planned marketing: maintain an authentic Facebook business page, publish real pr
 - Guests must retain the checkout browser session to view confirmation. Guest purchases are not attached to an account by matching email.
 - Real Cloudinary assets still require browser/network checks on the deployed site. Bootstrap CSS/JS is served locally rather than depending on a CDN.
 - Historical duplicate/backup templates and settings remain in the repository; active settings are `petwell/settings.py`, and project-level `templates/` takes precedence over app templates.
-- Wireframes, dated browser screenshots, external HTML/CSS/accessibility reports, assessor mapping and real Facebook marketing evidence remain owner tasks. Do not submit placeholders as completed evidence.
+- Retrospective wireframes, a Facebook-page design mockup, local screenshots and an assessment evidence map are included. Actual deployed screenshots, external HTML/CSS/accessibility reports and source/rights records remain owner tasks. Published Facebook evidence is optional only if the actual assessment accepts the clearly labelled mockup; no published page is claimed. Do not submit placeholders as completed evidence.
 
 ## Credits and authorship
 

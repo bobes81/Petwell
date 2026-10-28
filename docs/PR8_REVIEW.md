@@ -1,40 +1,39 @@
-# PR #8 review — 27 October 2026
+# PR #8 resubmission review — 28 October 2026
 
-Reviewed [PR #8](https://github.com/bobes81/Petwell/pull/8), branch `fix/pp5-resubmission`, starting at `b77fb811ddb30e4253edc251d807b6007914bf45`. The original 46 tests passed, as did the existing GitHub workflow. No original test failure was hidden or disabled; review found missing regression coverage.
+Continued from `166334a` on the same `fix/pp5-resubmission` branch, preserving its previous payment/blog fixes. The earlier 63-test baseline passed; this review added uncovered failure cases and the additional distinct custom feature. The owner's private assessment correspondence is not published. The project-level mapping is in [ASSESSMENT_REVIEW.md](ASSESSMENT_REVIEW.md).
 
-## Findings fixed
+## Changes completed
 
-| Finding | Failure scenario | Fix and regression coverage |
-| --- | --- | --- |
-| Mutable Stripe retry parameters | Stripe receives a create request, the response is lost, then a product is renamed or the cart key order changes. Retrying the same key rebuilt different parameters and Stripe rejected it. | Save the exact create payload before the network request; retry it unchanged. Freeze product labels and canonical line order. |
-| Expired checkout loop | A cancelled/abandoned Session expires. Replaying its create request can keep redirecting to an unusable cached Session. | Retrieve saved Sessions; reuse open URLs, await webhook for completed Sessions, renew confirmed expired Sessions with a fresh order/key. Also recover from an expired cached create response. Keep old mappings. |
-| Possible new item loss | A product is removed and re-added before the old payment webhook arrives; quantity-only clearing deleted the new line. | Per-line identities are captured with the order and reset on removal. Clear only purchased quantities from the matching original line. |
-| Checkout without webhook configuration | API credentials were present but the signing secret was absent, so payment could start without local confirmation being configured. | Require both keys before creating a Session. Preserve the cart and show a useful error otherwise. |
-| Payable/paid order deletion | Admin deletion could orphan an outstanding Session or destroy a paid history record. | Disable order deletion, including for superusers through admin. Payment/snapshot fields remain read-only. |
-| Legacy retry cannot be reconstructed safely | Pre-fix pending order has neither saved payload nor Session ID after a lost response. | Start a fresh order/key; preserve the old row instead of guessing its original idempotent request. |
-| Malformed payment input | Signed malformed JSON structures or missing mode/metadata could cause a server error or incomplete validation. | Reject malformed events and missing explicit live/test mode. Verify stale-signature rejection. |
-| Missing Cloudinary name causes server errors | Stored images accessed `.url` while optional Cloudinary configuration was absent; browser `onerror` could not catch server-side URL construction. | Shared safe image URL filter and form widget use local placeholders; retain/clear/text-edit flows still work. |
-| Newsletter database length error | A syntactically valid email exceeded the model's 254-character field; PostgreSQL could fail although SQLite accepted it. | Validate with a form using the model field's length before persistence. Preserve normalization and duplicate handling. |
+- **Distinct custom model and frontend:** `PetProfile` provides member-owned species/care-focus/notes, routine reminders and full validated CRUD at `/pets/`. Owner-only queries prevent direct access by other members or staff; no medical claim is made.
+- **Duplicate-payment safety:** resolve the existing Stripe attempt before reacting to changed cart/contact data. Completed sessions wait for webhook confirmation. Superseded open sessions must be confirmed expired before replacement; ambiguous failures keep the old attempt. `CheckoutState` provides a durable pointer and token-checked 120-second database lease without holding a database transaction over Stripe I/O. Requests have a bounded 10-second Stripe timeout.
+- **Recovery:** stale browser workers reuse the durable pointer; worker/lease takeover cannot overwrite a newer holder; same-session confirmation ownership can be recovered after lost session data. Frozen request snapshots and old Session mappings remain intact. Only signed webhook validation can mark paid.
+- **Account UX/security:** preserve validated internal destinations across login/signup; reject external redirects; explain invalid/expired/sessionless/used password-reset links and offer recovery.
+- **SEO/navigation:** distinct escaped metadata, trusted public canonicals without query strings, private noindex, correct Render crawler URLs/copies, My pets navigation and complete heading outlines. Old settings module now aliases the authoritative current configuration instead of restoring retired hosts.
+- **Assets/design:** factual image inventory; no unrelated/generated title cards passed off as product photos. New Facebook-page mockup is explicitly not published. New wireframes are dated retrospective design review. Both have genuine local renders. ERD reflects actual models; feature stories separate code/testing from deployed completion.
+- **Validation:** moved invalid body style blocks into scoped CSS while preserving appearance; added markup regression and genuine Nu HTML/CSS outputs. Added PostgreSQL CI coverage for lease concurrency.
 
-The payment payload and cart-line snapshots contain no API or webhook secrets. They are protected read-only fields in admin. Migration `0004` adds the snapshots with empty defaults; it does not invent payment evidence. Legacy paid orders with no line identities do not automatically remove cart items, because the original line association cannot be established safely.
+## Checks actually completed
 
-## Validation actually performed
+- SQLite Django suite: **108 tests, 107 passed, 1 explicit PostgreSQL-only skip, 0 failures**. Actual output: [django-tests.txt](evidence/django-tests.txt). No assertion was removed or disabled for a pass.
+- Local mobile/desktop Chromium: **10 grouped flows, 16 screenshots**, no detected overflow/broken images/external requests/JavaScript exceptions in checked states; blog CRUD/permissions, pet CRUD/validation/privacy, synthetic history/reorder, auth recovery and unavailable checkout all passed. [Browser results](evidence/28oct-browser-results.json).
+- Nu checker: **19 HTML documents and 2 project CSS files**, no messages on the final runs. Optional strict style audit failures are separately disclosed in [TESTING.md](TESTING.md); no false style/all-accessibility pass is claimed.
+- Build, migrations, dependency consistency, system checks, production-style settings and local Gunicorn/WhiteNoise smoke checks passed. This is not actual Render, external TLS or PostgreSQL integration validation.
+- CI is configured for SQLite plus PostgreSQL 16. The local PostgreSQL-only test is skipped because no local server is available; verify the actual current head's CI status rather than infer it from SQLite.
 
-- **63 Django tests passed**, no failures or skips. Includes the original suite, 17 added regressions, signed webhook verification, pending/paid behavior, cart safety, blog author/staff permissions, image handling, migration safety and order history privacy.
-- Two new tests were run against the original code and failed as expected (mutable retry payload and removal/re-add cart loss). [Original regression failures](evidence/pr8-regressions-before.txt) and [final test output](evidence/django-tests.txt) are retained.
-- Django system and migration consistency checks passed. Local `build.sh` installation, manifest static collection and migration `0004` succeeded.
-- `check --deploy --fail-level WARNING` passed with production-style settings and an ephemeral strong local secret. This does not validate the actual Render configuration. The development fallback secret remains unsuitable for deployment.
-- Local Gunicorn/WhiteNoise smoke requests passed for eight public routes and the page's manifest assets, HSTS, HTTP-to-HTTPS redirect, Render sitemap URLs and refusal of an unconfigured webhook. [Machine-readable results](evidence/pr8-production-smoke.json). This uses SQLite and a trusted-proxy header on loopback; it is not a Render, external TLS or PostgreSQL integration test.
-- Updated CI to run production-style system checks and static collection as well as the existing Django suite. Check the current PR head's run before merging.
+All repository/PR text is English. Common credential shapes, private-correspondence copying, whitespace, relative documentation links and final app diffs were reviewed. Fixture passwords, synthetic users and manually seeded paid orders are test data; they are not external payment evidence.
 
-No Stripe API calls, payment processing, external Cloudinary uploads or SMTP sends were performed. Stripe calls and upload operations in automated tests are mocked; signature verification uses the real verifier with a fixture signing secret. Browser screenshots linked in TESTING.md belong to the earlier implementation and are not newly captured deployed evidence.
+## Migration/release review
 
-## Remaining before merge/deployment
+Back up the existing database; run `python manage.py showmigrations` and `python manage.py migrate --noinput` with the approved configuration. In addition to earlier migrations, `accounts.0001` creates PetProfile and `orders.0005` creates CheckoutState. Do not fake or edit applied migrations. Legacy orders without Stripe evidence remain pending; old cart lines without provable identity are not removed automatically.
 
-1. Review the supplied Code Institute rubric and assessor feedback against these fixes. A passing test suite does not establish an assessment Pass.
-2. Configure the real Render environment securely: strong `SECRET_KEY`, `DEBUG=False`, correct host/`SITE_URL`, persistent PostgreSQL `DATABASE_URL`, Stripe **sandbox** API/signing keys, Cloudinary configuration and verified SMTP sender if delivery is required. None of these credential bindings is present in this cloud instance.
-3. After an explicitly approved deployment to the intended test environment, run a real Stripe sandbox checkout and verify matching webhook delivery and paid order. Verify decline, cancellation, completed-before-webhook, duplicate delivery and delayed cart reconciliation. Never enable live mode or use a real card for this assessment check.
-4. Run actual Render deployment checks, verify database persistence/backups and apply migrations including `0004`. Confirm successful webhook delivery for both subscribed Session events. Check real Cloudinary uploads and password-reset email delivery. Review legacy orders/carts without guessing past payment status.
-5. Complete the deployed responsive, accessibility, validator and cross-browser matrix; add genuine wireframes, screenshots, source credits and Facebook marketing evidence. [Evidence checklist](EVIDENCE.md).
+No merge, deployment, live mode, real payment, external upload/email or new production service was performed. The deployment target is `https://petwell-u0cr.onrender.com`; this branch is not claimed to be live.
 
-PR remains unmerged. No production deployment, live payment enablement or payment was performed by this review.
+## Owner actions before submission
+
+1. Review the actual assessment guide against the evidence map; approve the completed branch only after remaining mandatory gaps are checked. No Pass is guaranteed.
+2. Supply accurate authorised catalogue photos/source records. Current fallbacks are usable but are not real product photographs.
+3. Configure/reuse secure Render/PostgreSQL, Stripe **sandbox**, Cloudinary and verified SMTP bindings; review backups/migrations and explicitly approve the test deployment. Never put keys in chat, Git or screenshots.
+4. After approved deployment, complete a real sandbox payment and signed webhook acceptance, decline/cancel/retry checks, upload/email and database-persistence verification, and deployed accessibility/browser evidence.
+5. Apply the saved `api.github.com` network requirement to the cloud runtime if direct PR-description/issue administration is needed. Native Git can update this PR branch, but direct GitHub API is currently blocked. Feature-level issue drafts/statuses are documented honestly in [USER_STORIES.md](USER_STORIES.md); no invented issues or sprint history are claimed.
+
+A clearly labelled Facebook mockup and retrospective design artifacts are included; they are not live marketing or original historical planning. The main remaining submission gaps are genuine product photos and actual approved-deployment/integration evidence, plus final assessment-guide review.

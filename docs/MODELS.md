@@ -5,6 +5,8 @@ This diagram describes the implemented models; it is not a wireframe or evidence
 ```mermaid
 erDiagram
     USER ||--o{ BLOG_POST : authors
+    USER ||--o{ PET_PROFILE : owns
+    ORDER o|--o{ CHECKOUT_STATE : active_attempt
     USER o|--o{ ORDER : places
     ORDER ||--o{ ORDER_ITEM : contains
     PRODUCT ||--o{ ORDER_ITEM : referenced_by
@@ -13,6 +15,20 @@ erDiagram
         string username
         string email
         boolean is_staff
+    }
+    PET_PROFILE {
+        int id PK
+        int owner_id FK
+        string name
+        string species
+        string care_focus
+        text notes "optional, max500"
+    }
+    CHECKOUT_STATE {
+        string session_digest PK
+        int active_order_id FK "nullable"
+        uuid processing_token "nullable lease holder"
+        datetime processing_until "nullable lease expiry"
     }
     PRODUCT {
         int id PK
@@ -63,3 +79,5 @@ Deleting a user removes their posts and sets their orders' user link to null. De
 The UUID migration first adds a nullable field, assigns a distinct value to every historical row, then enforces uniqueness/non-nullability. Historical orders become pending rather than assuming they were paid. The migration regression test exercises multiple existing rows.
 
 Migration `0004` adds JSON snapshots without inferring missing legacy payment data. Legacy no-response/no-payload attempts get fresh keys, and legacy lines without identities are not automatically removed from carts. Admin order deletion is disabled so payable/paid orders retain their webhook/history record.
+
+`accounts.0001` creates the owner-only PetProfile model and frontend feature. `orders.0005` creates CheckoutState: an internal session-scoped lease/pointer, not a substitute for the user-facing custom model. API I/O occurs outside the short database transaction; expired leases can recover durable order snapshots.

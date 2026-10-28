@@ -2,15 +2,18 @@ import hashlib
 import hmac
 import json
 import time
+from datetime import timedelta
 from decimal import Decimal
 from types import SimpleNamespace
 from unittest.mock import patch
+from uuid import uuid4
 
 import stripe
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
+from django.utils import timezone
 
-from orders.models import Order
+from orders.models import CheckoutState, Order
 from products.models import Product
 
 
@@ -552,3 +555,427 @@ class CheckoutTests(TestCase):
                 )
         order.refresh_from_db()
         self.assertEqual(order.status, "pending")
+
+    def test_completed_session_with_changed_contact_cannot_start_new_payment(
+        self,
+    ):
+        order, _ = self.create_order()
+        self.retrieve.return_value = SimpleNamespace(
+            id=order.stripe_session_id, status="complete", url=None
+        )
+        changed = {**self.data, "address": "A corrected delivery address"}
+        with (
+            patch("checkout.views.stripe.checkout.Session.create") as create,
+            patch("checkout.views.stripe.checkout.Session.expire") as expire,
+        ):
+            response = self.client.post(self.url, changed)
+        self.assertEqual(
+            response.url, reverse("checkout:success", args=[order.public_id])
+        )
+        create.assert_not_called()
+        expire.assert_not_called()
+        self.assertEqual(Order.objects.count(), 1)
+        order.refresh_from_db()
+        self.assertEqual(order.status, "pending")
+        self.assertEqual(order.address, self.data["address"])
+
+    def test_completed_session_with_changed_cart_cannot_start_new_payment(
+        self,
+    ):
+        order, _ = self.create_order()
+        self.retrieve.return_value = SimpleNamespace(
+            id=order.stripe_session_id, status="complete", url=None
+        )
+        session = self.client.session
+        session["cart"][str(self.product.pk)] = 3
+        session.save()
+        with patch("checkout.views.stripe.checkout.Session.create") as create:
+            response = self.client.post(self.url, self.data)
+        self.assertEqual(
+            response.url, reverse("checkout:success", args=[order.public_id])
+        )
+        create.assert_not_called()
+        self.assertEqual(Order.objects.count(), 1)
+        self.assertEqual(
+            self.client.session["cart"], {str(self.product.pk): 3}
+        )
+
+    def test_changed_cart_expires_existing_session_before_creating_replacement(
+        self,
+    ):
+        old, _ = self.create_order()
+        session = self.client.session
+        session["cart"][str(self.product.pk)] = 3
+        session.save()
+        calls = []
+
+        def retrieve(*args, **kwargs):
+            calls.append("retrieve")
+            return SimpleNamespace(
+                id=old.stripe_session_id,
+                status="open",
+                url="https://checkout.stripe.com/old",
+            )
+
+        def expire(*args, **kwargs):
+            calls.append("expire")
+            return SimpleNamespace(
+                id=old.stripe_session_id, status="expired", url=None
+            )
+
+        def create(*args, **kwargs):
+            calls.append("create")
+            return SimpleNamespace(
+                id="cs_replacement",
+                status="open",
+                url="https://checkout.stripe.com/replacement",
+            )
+
+        self.retrieve.side_effect = retrieve
+        with (
+            patch(
+                "checkout.views.stripe.checkout.Session.expire",
+                side_effect=expire,
+            ) as expiration,
+            patch(
+                "checkout.views.stripe.checkout.Session.create",
+                side_effect=create,
+            ),
+        ):
+            response = self.client.post(self.url, self.data)
+        self.assertEqual(calls, ["retrieve", "expire", "create"])
+        expiration.assert_called_once_with(
+            old.stripe_session_id, api_key="sk_test_offline"
+        )
+        self.assertEqual(
+            response.url, "https://checkout.stripe.com/replacement"
+        )
+        self.assertEqual(Order.objects.count(), 2)
+        replacement = Order.objects.exclude(pk=old.pk).get()
+        self.assertEqual(replacement.total_price, Decimal("21.75"))
+        self.assertEqual(replacement.items.get().quantity, 3)
+        old.refresh_from_db()
+        self.assertEqual(old.stripe_session_id, "cs_test_123")
+        self.assertEqual(old.total_price, Decimal("14.50"))
+
+    def test_changed_contact_expiration_failure_preserves_existing_attempt(
+        self,
+    ):
+        old, _ = self.create_order()
+        with (
+            patch(
+                "checkout.views.stripe.checkout.Session.expire",
+                side_effect=stripe.APIConnectionError(
+                    "expiration unavailable"
+                ),
+            ),
+            patch("checkout.views.stripe.checkout.Session.create") as create,
+        ):
+            response = self.client.post(
+                self.url, {**self.data, "email": "updated@example.test"}
+            )
+        self.assertContains(response, "could not start payment")
+        self.assertEqual(self.retrieve.call_count, 2)
+        create.assert_not_called()
+        self.assertEqual(Order.objects.count(), 1)
+        self.assertEqual(
+            self.client.session["pending_order"], str(old.public_id)
+        )
+        old.refresh_from_db()
+        self.assertEqual(old.email, self.data["email"])
+        self.assertEqual(old.stripe_session_id, "cs_test_123")
+        self.assertTrue(self.client.session["cart"])
+
+    def test_expiration_racing_completion_waits_for_original_webhook(self):
+        old, _ = self.create_order()
+        self.retrieve.side_effect = [
+            SimpleNamespace(
+                id=old.stripe_session_id,
+                status="open",
+                url="https://checkout.stripe.com/old",
+            ),
+            SimpleNamespace(
+                id=old.stripe_session_id, status="complete", url=None
+            ),
+        ]
+        with (
+            patch(
+                "checkout.views.stripe.checkout.Session.expire",
+                side_effect=stripe.InvalidRequestError(
+                    "Session has already completed", param=None
+                ),
+            ),
+            patch("checkout.views.stripe.checkout.Session.create") as create,
+        ):
+            response = self.client.post(
+                self.url, {**self.data, "address": "Updated address"}
+            )
+        self.assertEqual(
+            response.url, reverse("checkout:success", args=[old.public_id])
+        )
+        create.assert_not_called()
+        self.assertEqual(Order.objects.count(), 1)
+        old.refresh_from_db()
+        self.assertEqual(old.status, "pending")
+        self.assertEqual(old.address, self.data["address"])
+
+    def test_lost_expiration_response_can_recover_confirmed_expiry(self):
+        old, _ = self.create_order()
+        self.retrieve.side_effect = [
+            SimpleNamespace(
+                id=old.stripe_session_id,
+                status="open",
+                url="https://checkout.stripe.com/old",
+            ),
+            SimpleNamespace(
+                id=old.stripe_session_id, status="expired", url=None
+            ),
+        ]
+        with (
+            patch(
+                "checkout.views.stripe.checkout.Session.expire",
+                side_effect=stripe.APIConnectionError(
+                    "lost expiration response"
+                ),
+            ),
+            patch(
+                "checkout.views.stripe.checkout.Session.create",
+                return_value=SimpleNamespace(
+                    id="cs_replacement",
+                    status="open",
+                    url="https://checkout.stripe.com/replacement",
+                ),
+            ) as create,
+        ):
+            response = self.client.post(
+                self.url, {**self.data, "email": "updated@example.test"}
+            )
+        self.assertEqual(
+            response.url, "https://checkout.stripe.com/replacement"
+        )
+        create.assert_called_once()
+        replacement = Order.objects.exclude(pk=old.pk).get()
+        self.assertEqual(replacement.email, "updated@example.test")
+        old.refresh_from_db()
+        self.assertEqual(old.stripe_session_id, "cs_test_123")
+
+    def test_expiration_with_unknown_result_never_starts_replacement(self):
+        old, _ = self.create_order()
+        self.retrieve.side_effect = [
+            SimpleNamespace(
+                id=old.stripe_session_id,
+                status="open",
+                url="https://checkout.stripe.com/old",
+            ),
+            stripe.APIConnectionError("cannot recover expiration status"),
+        ]
+        with (
+            patch(
+                "checkout.views.stripe.checkout.Session.expire",
+                side_effect=stripe.APIConnectionError(
+                    "lost expiration response"
+                ),
+            ),
+            patch("checkout.views.stripe.checkout.Session.create") as create,
+        ):
+            response = self.client.post(
+                self.url, {**self.data, "address": "Updated address"}
+            )
+        self.assertContains(response, "could not start payment")
+        create.assert_not_called()
+        self.assertEqual(Order.objects.count(), 1)
+        old.refresh_from_db()
+        self.assertEqual(old.stripe_session_id, "cs_test_123")
+
+    def test_changed_contact_recovers_lost_create_response_before_expiring_it(
+        self,
+    ):
+        with patch(
+            "checkout.views.stripe.checkout.Session.create",
+            side_effect=stripe.APIConnectionError("lost creation response"),
+        ) as first:
+            self.client.post(self.url, self.data)
+        old = Order.objects.get()
+        changed = {**self.data, "email": "updated@example.test"}
+        calls = []
+
+        def recover_or_create(**kwargs):
+            calls.append("create")
+            session_id = "cs_recovered" if len(calls) == 1 else "cs_new"
+            return SimpleNamespace(
+                id=session_id,
+                status="open",
+                url=f"https://checkout.stripe.com/{session_id}",
+            )
+
+        def expire(*args, **kwargs):
+            calls.append("expire")
+            return SimpleNamespace(
+                id="cs_recovered", status="expired", url=None
+            )
+
+        with (
+            patch(
+                "checkout.views.stripe.checkout.Session.create",
+                side_effect=recover_or_create,
+            ) as create,
+            patch(
+                "checkout.views.stripe.checkout.Session.expire",
+                side_effect=expire,
+            ),
+        ):
+            response = self.client.post(self.url, changed)
+        self.assertEqual(calls, ["create", "expire", "create"])
+        self.assertEqual(
+            create.call_args_list[0].kwargs, first.call_args.kwargs
+        )
+        self.assertNotEqual(
+            create.call_args_list[0].kwargs["idempotency_key"],
+            create.call_args_list[1].kwargs["idempotency_key"],
+        )
+        self.assertEqual(response.url, "https://checkout.stripe.com/cs_new")
+        old.refresh_from_db()
+        self.assertEqual(old.stripe_session_id, "cs_recovered")
+        replacement = Order.objects.exclude(pk=old.pk).get()
+        self.assertEqual(replacement.email, changed["email"])
+
+    def test_changed_cart_with_recovered_completed_session_does_not_pay_again(
+        self,
+    ):
+        with patch(
+            "checkout.views.stripe.checkout.Session.create",
+            side_effect=stripe.APIConnectionError("lost creation response"),
+        ) as first:
+            self.client.post(self.url, self.data)
+        old = Order.objects.get()
+        session = self.client.session
+        session["cart"][str(self.product.pk)] = 3
+        session.save()
+        with (
+            patch(
+                "checkout.views.stripe.checkout.Session.create",
+                return_value=SimpleNamespace(
+                    id="cs_recovered", status="complete", url=None
+                ),
+            ) as recover,
+            patch("checkout.views.stripe.checkout.Session.expire") as expire,
+        ):
+            response = self.client.post(self.url, self.data)
+        self.assertEqual(
+            response.url, reverse("checkout:success", args=[old.public_id])
+        )
+        recover.assert_called_once()
+        self.assertEqual(recover.call_args.kwargs, first.call_args.kwargs)
+        expire.assert_not_called()
+        self.assertEqual(Order.objects.count(), 1)
+        old.refresh_from_db()
+        self.assertEqual(old.stripe_session_id, "cs_recovered")
+        self.assertEqual(old.status, "pending")
+        self.assertEqual(old.total_price, Decimal("14.50"))
+
+    def test_same_browser_can_recover_confirmation_list_from_checkout_state(
+        self,
+    ):
+        order, _ = self.create_order()
+        session = self.client.session
+        session.pop("checkout_orders", None)
+        session.pop("pending_order", None)
+        session.save()
+        url = reverse("checkout:success", args=[order.public_id])
+        self.assertContains(
+            self.client.get(url), "Awaiting payment confirmation"
+        )
+        self.assertIn(
+            str(order.public_id), self.client.session["checkout_orders"]
+        )
+        self.assertEqual(Client().get(url).status_code, 404)
+
+    def test_paid_active_order_with_lost_session_list_does_not_charge_again(
+        self,
+    ):
+        order, _ = self.create_order()
+        self.webhook(self.event(order))
+        session = self.client.session
+        session.pop("checkout_orders", None)
+        session.pop("pending_order", None)
+        session.save()
+        with patch("checkout.views.stripe.checkout.Session.create") as create:
+            response = self.client.post(self.url, self.data)
+        self.assertEqual(
+            response.url, reverse("checkout:success", args=[order.public_id])
+        )
+        create.assert_not_called()
+        self.assertEqual(Order.objects.count(), 1)
+        self.assertContains(self.client.get(response.url), "Payment confirmed")
+        self.assertEqual(self.client.session["cart"], {})
+
+    def test_new_purchase_after_confirmed_cart_clear_starts_fresh_checkout(
+        self,
+    ):
+        old, _ = self.create_order()
+        self.webhook(self.event(old))
+        self.client.get(reverse("checkout:success", args=[old.public_id]))
+        self.client.post(reverse("cart:add_to_cart", args=[self.product.pk]))
+        with patch(
+            "checkout.views.stripe.checkout.Session.create",
+            return_value=SimpleNamespace(
+                id="cs_new_purchase",
+                status="open",
+                url="https://checkout.stripe.com/new-purchase",
+            ),
+        ) as create:
+            response = self.client.post(self.url, self.data)
+        self.assertEqual(
+            response.url, "https://checkout.stripe.com/new-purchase"
+        )
+        self.assertEqual(Order.objects.count(), 2)
+        new = Order.objects.exclude(pk=old.pk).get()
+        self.assertEqual(new.total_price, Decimal("7.25"))
+        self.assertNotEqual(
+            create.call_args.kwargs["idempotency_key"],
+            f"order-{old.public_id}",
+        )
+
+    def test_lost_lease_after_creation_recovers_same_durable_attempt(self):
+        competing_token = uuid4()
+
+        def create_after_lease_takeover(**kwargs):
+            CheckoutState.objects.update(
+                processing_token=competing_token,
+                processing_until=timezone.now() + timedelta(seconds=60),
+            )
+            return SimpleNamespace(
+                id="cs_durable",
+                status="open",
+                url="https://checkout.stripe.com/durable",
+            )
+
+        with patch(
+            "checkout.views.stripe.checkout.Session.create",
+            side_effect=create_after_lease_takeover,
+        ) as first:
+            response = self.client.post(self.url, self.data)
+        self.assertContains(response, "being processed")
+        order = Order.objects.get()
+        self.assertIsNone(order.stripe_session_id)
+        self.assertTrue(order.stripe_checkout_payload)
+        state = CheckoutState.objects.get()
+        self.assertEqual(state.active_order_id, order.pk)
+        self.assertEqual(state.processing_token, competing_token)
+        CheckoutState.objects.update(
+            processing_until=timezone.now() - timedelta(seconds=1)
+        )
+        with patch(
+            "checkout.views.stripe.checkout.Session.create",
+            return_value=SimpleNamespace(
+                id="cs_durable",
+                status="open",
+                url="https://checkout.stripe.com/durable",
+            ),
+        ) as recovered:
+            response = self.client.post(self.url, self.data)
+        self.assertEqual(response.url, "https://checkout.stripe.com/durable")
+        self.assertEqual(first.call_args.kwargs, recovered.call_args.kwargs)
+        self.assertEqual(Order.objects.count(), 1)
+        order.refresh_from_db()
+        self.assertEqual(order.stripe_session_id, "cs_durable")

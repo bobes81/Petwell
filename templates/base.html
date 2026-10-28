@@ -14,7 +14,12 @@
     <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
 
     <!-- SEO -->
-    <meta name="description" content="PetWell — Your trusted platform for pet wellness, nutrition, and healing stories.">
+    <meta name="description" content="{% block meta_description %}Shop pet wellness essentials and read community stories at PetWell. Browse products, manage your cart and pay securely through Stripe.{% endblock %}">
+    {% if seo_indexable %}
+    <link rel="canonical" href="{{ seo_canonical_url }}">
+    {% else %}
+    <meta name="robots" content="noindex,nofollow">
+    {% endif %}
 </head>
 
 <body>
@@ -39,9 +44,10 @@
                 </li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'checkout:checkout' %}">Checkout</a></li>
                 {% if user.is_authenticated %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'pets:list' %}">My pets</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'orders:history' %}">My orders</a></li>
                 <li class="nav-item small text-muted ms-3">
-                    Logged in as <strong>{{ user.username }}</strong> | {{ now|date:"d M Y, H:i" }}
+                    Logged in as <strong>{{ user.username }}</strong>
                 </li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
                 {% else %}
