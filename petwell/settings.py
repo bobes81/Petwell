@@ -80,7 +80,7 @@ TEMPLATES = [
 
 SITE_ID = 1
 
-# === DATABASES (LOCAL + HEROKU) ===
+# === DATABASES (LOCAL + RENDER) ===
 if os.environ.get("DATABASE_URL"):
     DATABASES = {
         "default": dj_database_url.parse(
@@ -106,25 +106,22 @@ STORAGES = {
     },
 }
 
+# The SDK loads CLOUDINARY_URL, or separate variables when CLOUDINARY_CLOUD_NAME
+# is set. Preserve that configuration instead of overwriting URL credentials
+# with missing separate values. Force HTTPS even if an environment option differs.
+_cloudinary_config = cloudinary.config(secure=True)
 CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": os.environ.get("CLOUDINARY_CLOUD_NAME"),
-    "API_KEY": os.environ.get("CLOUDINARY_API_KEY"),
-    "API_SECRET": os.environ.get("CLOUDINARY_API_SECRET"),
+    "CLOUD_NAME": _cloudinary_config.cloud_name,
+    "API_KEY": _cloudinary_config.api_key,
+    "API_SECRET": _cloudinary_config.api_secret,
+    "SECURE": True,
 }
 
-# CloudinaryField handles remote image uploads using the configuration above.
-
-cloudinary.config(
-    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
-    api_key=os.environ.get("CLOUDINARY_API_KEY"),
-    api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
-    secure=True,
-)
-
-# --- FIX Mixed Content (force HTTPS for images) ---
+# CloudinaryField handles remote uploads; absent configuration uses placeholders.
 MEDIA_URL = (
-    f"https://res.cloudinary.com/"
-    f"{os.environ.get('CLOUDINARY_CLOUD_NAME', '')}/image/upload/"
+    f"https://res.cloudinary.com/{_cloudinary_config.cloud_name}/image/upload/"
+    if _cloudinary_config.cloud_name
+    else "/media/"
 )
 
 # --- Force HTTPS site-wide ---

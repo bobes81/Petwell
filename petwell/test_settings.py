@@ -24,4 +24,10 @@ STRIPE_WEBHOOK_SECRET = "whsec_offline"
 STRIPE_LIVE_MODE = False
 
 # Public cloud name only, for deterministic URL rendering; no upload credentials.
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": "offline-test",
+    "API_KEY": None,
+    "API_SECRET": None,
+    "SECURE": True,
+}
 cloudinary.config(cloud_name="offline-test", api_key=None, api_secret=None)

@@ -4,6 +4,8 @@ Continued from `166334a` on the same `fix/pp5-resubmission` branch, preserving i
 
 An additional offline review resumed from `1f95d4b` on 28 October. It found no further payment or permission defect requiring code changes. It corrected stale evidence statuses and model lifecycle documentation, added a seed-specific image/rights checklist, and identified the unsupported digital-download claim. No application or migration files changed in this follow-up.
 
+The subsequent configuration review following `aec8b92` supports the owner's existing `CLOUDINARY_URL` directly. It fixes missing separate variables overwriting the SDK's URL credentials, synchronises storage/media configuration and enforces HTTPS. Separate-variable compatibility remains available with the SDK's documented precedence. Six fresh-process regressions use synthetic values and blocked network connections; the complete local suite now reports **114 tests, 113 passed, 1 PostgreSQL-only skip, 0 failures**. [Current test output](evidence/28oct-render-compatibility-tests.txt) and the [Render checklist](RENDER_CHECKLIST.md) distinguish compatibility from actual external-service verification. No schema migration or Render change was needed.
+
 ## Changes completed
 
 - **Distinct custom model and frontend:** `PetProfile` provides member-owned species/care-focus/notes, routine reminders and full validated CRUD at `/pets/`. Owner-only queries prevent direct access by other members or staff; no medical claim is made.
@@ -16,7 +18,7 @@ An additional offline review resumed from `1f95d4b` on 28 October. It found no f
 
 ## Checks actually completed
 
-- SQLite Django suite: **108 tests, 107 passed, 1 explicit PostgreSQL-only skip, 0 failures**. Actual output: [django-tests.txt](evidence/django-tests.txt). No assertion was removed or disabled for a pass.
+- Latest SQLite Django suite: **114 tests, 113 passed, 1 explicit PostgreSQL-only skip, 0 failures**. Actual output: [render compatibility run](evidence/28oct-render-compatibility-tests.txt). Earlier runs remain preserved. No assertion was removed or disabled for a pass.
 - Local mobile/desktop Chromium: **10 grouped flows, 16 screenshots**, no detected overflow/broken images/external requests/JavaScript exceptions in checked states; blog CRUD/permissions, pet CRUD/validation/privacy, synthetic history/reorder, auth recovery and unavailable checkout all passed. [Browser results](evidence/28oct-browser-results.json).
 - Nu checker: **19 HTML documents and 2 project CSS files**, no messages on the final runs. Optional strict style audit failures are separately disclosed in [TESTING.md](TESTING.md); no false style/all-accessibility pass is claimed.
 - Build, migrations, dependency consistency, system checks, production-style settings and local Gunicorn/WhiteNoise smoke checks passed. This is not actual Render, external TLS or PostgreSQL integration validation.

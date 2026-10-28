@@ -1,6 +1,6 @@
 # Test record — 28 October 2026
 
-This record covers the current `fix/pp5-resubmission` work following `166334a`. It is not a production or external-service test report. The earlier 63-test baseline passed before this review; new tests were added for uncovered defects and the additional pet-profile feature. No failing assertion was disabled to obtain a pass.
+This record covers `fix/pp5-resubmission`, including the Cloudinary URL compatibility fix following `aec8b92` and earlier work following `166334a`. It is not a production or external-service test report. The earlier 63-test baseline passed before this review; new tests were added for uncovered defects, the additional pet-profile feature and production configuration. No failing assertion was disabled to obtain a pass.
 
 ## Automated checks actually run
 
@@ -11,19 +11,28 @@ python manage.py makemigrations --check --dry-run --settings=petwell.test_settin
 python -m pip check
 ```
 
-**SQLite result: 108 discovered/executed tests — 107 passed, 1 explicitly skipped, 0 failures.** The skip is the PostgreSQL-only two-worker concurrency test. Deterministic stale-session, busy-lease, lease recovery/takeover, immutable-payload and payment-state tests run locally. Do not describe the SQLite run as proof of simultaneous PostgreSQL workers.
+**Latest SQLite result: 114 discovered/executed tests — 113 passed, 1 explicitly skipped, 0 failures.** The skip is the PostgreSQL-only two-worker concurrency test. Deterministic stale-session, busy-lease, lease recovery/takeover, immutable-payload and payment-state tests run locally. Do not describe the SQLite run as proof of simultaneous PostgreSQL workers.
 
-The test database is isolated and email is in memory. Stripe create/retrieve/expire and Cloudinary uploads are mocked; actual HMAC verification runs against signed fixture payloads. No test processes a payment, uploads an external image or delivers an email. [Actual local test output](evidence/django-tests.txt).
+The test database is isolated and email is in memory. Stripe create/retrieve/expire and Cloudinary uploads are mocked; actual HMAC verification runs against signed fixture payloads. No test processes a payment, uploads an external image or delivers an email. [Latest actual local test output](evidence/28oct-render-compatibility-tests.txt). The earlier 108-test run remains in [the original output](evidence/django-tests.txt).
 
 System checks, migration consistency and installed dependency checks passed. Selected Python error/import lint and whitespace checks passed. The repository changes were reviewed for English content, common real credential patterns, private-correspondence copying and broken relative documentation links; no matching accidental credentials/private text were found. Test passwords and the disposable CI PostgreSQL password are explicitly synthetic fixtures, not deployment credentials.
 
 A further offline review resumed from `1f95d4b` on 28 October and changed documentation only. The full suite was rerun with the same result: **108 tests, 107 passed, 1 PostgreSQL-only skip, 0 failures**. System checks, migration consistency, production-style `check --deploy` (ephemeral local secret, no external services) and `pip check` passed again. [Follow-up test output](evidence/28oct-followup-django-tests.txt) and [review/CI record](evidence/28oct-followup-review.json) preserve this verification separately. Existing browser/validator screenshots and reports were reviewed, not recaptured or represented as new runs.
+
+## Cloudinary URL and Render configuration regression
+
+The owner subsequently reported the existing Render variable names `CLOUDINARY_URL`, `DATABASE_URL`, `DEBUG` and `SECRET_KEY`. Their values were not inspected. Settings previously overwrote the SDK's URL-loaded credentials with missing separate values, losing the cloud name/API credentials and producing an invalid empty-cloud media URL. The new fresh-process regressions first reported **6 tests, 3 failures** against that code: [before-fix output](evidence/28oct-cloudinary-regressions-before.txt).
+
+The fix preserves SDK-loaded credentials, forces HTTPS and derives the storage dictionary/media URL from the same resolved configuration. Six new tests now pass: URL-only startup through storage-package import; separate-variable compatibility; SDK-native precedence when both sources exist; HTTPS despite a conflicting URL query; missing-service defaults; and explicit SendGrid/TLS configuration. Probes use synthetic credentials, strip inherited service settings, block socket connections and expose only public fields/credential-match booleans. The PostgreSQL URL fixture is parsed for engine/SSL settings without contacting a database. No real upload, payment or SMTP delivery is claimed.
+
+System/migration/deployment checks, static collection and dependency consistency also passed with a synthetic Cloudinary URL and a process-only ephemeral Django secret: [check output](evidence/28oct-render-compatibility-checks.txt). No new migration is required; the isolated full suite applies fresh migrations and exercises the legacy-order migration. The actual production migration state remains unknown. See [Render checklist](RENDER_CHECKLIST.md) before any approved release.
 
 | Area | Meaningful regression coverage |
 | --- | --- |
 | PetProfile | Complete owner-only CRUD; owner assigned server-side; no access by another member/staff; CSRF; supported species/focus; required/overlong validation; escaped text; focus reminder |
 | Blog | Author/staff CRUD; anonymous login requirement; direct non-owner GET/POST denial; GET delete confirmation; retained/cleared/new/invalid/oversized image; upload failure and absent Cloudinary configuration |
 | Accounts | Signup/login, strong password checks, internal `next` retained across auth links, external redirects rejected, invalid/expired/sessionless/used reset links, successful reset via local email fixture |
+| Configuration | URL-only Cloudinary startup and storage consistency, HTTPS, separate-variable fallback/precedence, PostgreSQL SSL parsing, disabled unconfigured Stripe, console default and explicit SendGrid/TLS settings; no external connections |
 | Payment creation | Database prices, bounded cart quantities, required API/signing keys, test/live mismatch rejection, frozen retries after lost responses/product rename/cart reordering |
 | Payment lifecycle | Open/complete/expired Session states, expiry races/failure, changed data cannot bypass completed checkout, no replacement before old payable Session is closed, recoverable errors |
 | Checkout coordination | Durable active-order pointer; preloaded stale worker requests deduplicated; busy lease refuses a second attempt; stale holder cannot overwrite/release a newer lease; interrupted holder releases safely |

@@ -108,13 +108,15 @@ CI also runs the suite against a disposable PostgreSQL 16 service with `petwell.
 | `STRIPE_SECRET_KEY` | Stripe sandbox/test secret (`sk_test_...`) for assessment. Never expose in templates or client code. |
 | `STRIPE_WEBHOOK_SECRET` | Signing secret (`whsec_...`) for the exact Stripe endpoint. A CLI listener has a different secret from a dashboard endpoint. |
 | `STRIPE_LIVE_MODE` | Keep **`False`** for assessment. A live key is rejected unless explicitly enabled. Do not enable live payments without owner approval. |
-| `CLOUDINARY_CLOUD_NAME` | Your public Cloudinary cloud name; needed to render stored Cloudinary images. |
-| `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | Cloudinary upload credentials, configured securely on Render. |
+| `CLOUDINARY_URL` | Supported existing Render configuration. The Cloudinary SDK reads the full private URL to configure the cloud name and upload credentials; separate Cloudinary variables are unnecessary. Treat the whole URL as a secret. |
+| `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | Optional alternative to `CLOUDINARY_URL`. Use one source: when `CLOUDINARY_CLOUD_NAME` is set, the SDK prefers the separate variables. All three are needed for uploads in that configuration. |
 | `EMAIL_BACKEND` | Default console backend. For delivery: `django.core.mail.backends.smtp.EmailBackend`. |
 | `SENDGRID_API_KEY` | SMTP password for SendGrid if SMTP backend is selected. |
 | `DEFAULT_FROM_EMAIL` | A sender address you have verified in SendGrid. Do not use the default example address in production. |
 
-Hosted Stripe Checkout does not require a publishable key or Stripe.js in this app. Old README names `STRIPE_WH_SECRET`, `EMAIL_HOST_PASSWORD` and `CLOUDINARY_URL` are not used by the current settings; configure the names above. Keep Render's `DJANGO_SETTINGS_MODULE` as `petwell.settings`, never `petwell.test_settings` or a cloud-only helper module.
+The existing Render variable names reported by the owner are `CLOUDINARY_URL`, `DATABASE_URL`, `DEBUG` and `SECRET_KEY`. This revision supports that Cloudinary URL directly and preserves it when the storage package loads. Copy the exact private value from your secure provider configuration; do not print it or include it in screenshots. Image delivery uses HTTPS. Without Cloudinary configuration, local placeholders remain available. These are configuration compatibility checks, not verification of the existing production values or an actual upload.
+
+Hosted Stripe Checkout does not require a publishable key or Stripe.js in this app. Old names `STRIPE_WH_SECRET` and `EMAIL_HOST_PASSWORD` are not used; use `STRIPE_WEBHOOK_SECRET` and `SENDGRID_API_KEY` respectively. The four existing variable names do not by themselves configure Stripe or email delivery: checkout stays unavailable without the API/signing keys, and email defaults to the console. Keep Render's `DJANGO_SETTINGS_MODULE` as `petwell.settings`, never `petwell.test_settings` or a cloud-only helper module.
 
 ## Checkout and payment lifecycle
 
@@ -133,8 +135,10 @@ The in-app paid result and account history are payment confirmation. Automatic o
 
 **No production deployment has been performed for this revision.** Before deployment, back up the existing database and confirm the selected branch/commit. Do not turn on automatic deployment while reviewing the branch.
 
+Use the [Render compatibility and release checklist](docs/RENDER_CHECKLIST.md) for the existing four-variable setup, additional test-payment/email requirements, backup and migration sequence, and the acceptance checks that remain unverified.
+
 1. Connect the GitHub repository to a Render Python web service. Select the reviewed branch/commit only when ready to deploy. Use the repository's `.python-version` (3.11) with a supported patch runtime. Confirm Render's runtime in build logs.
-2. Attach a persistent Render PostgreSQL database and securely set the variables above, especially `DATABASE_URL`, `SECRET_KEY`, `DEBUG=False`, the Render hostname and sandbox Stripe keys. Do not use local/test settings.
+2. Reuse the existing persistent Render PostgreSQL database and secure configuration. Verify `DATABASE_URL`, `SECRET_KEY`, `DEBUG=False` and the existing `CLOUDINARY_URL`; no separate Cloudinary credentials are required. Verify the Render hostname/URL (their defaults match this target), then configure sandbox Stripe and SMTP only when approved. Do not use local/test settings or create an additional paid resource for this checklist.
 3. Before a release, review `python manage.py showmigrations` and take a PostgreSQL backup. The existing orders migration assigns distinct UUIDs and keeps old orders pending; `0004` adds immutable payment/cart snapshots. `orders.0005` adds the checkout coordinator and `accounts.0001` adds private pet profiles. All are required; apply them with `python manage.py migrate --noinput`. Do not fake, skip or edit applied migrations. Build command: `bash build.sh`. It installs requirements, collects static assets and applies migrations. If your Render plan supports a pre-deploy command, prefer `python manage.py migrate --noinput` there and run `pip install -r requirements.txt && python manage.py collectstatic --noinput` as the build command. Back up first whichever path you choose.
 4. Start command: `gunicorn petwell.wsgi:application --bind 0.0.0.0:$PORT`.
 5. Run `python manage.py check --deploy --fail-level WARNING` with the actual Render configuration. A passing check is not proof that PostgreSQL, Cloudinary, SMTP or Stripe credentials work; validate them separately.
