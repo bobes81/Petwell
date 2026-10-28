@@ -1,6 +1,9 @@
+from decimal import Decimal
+
 from django.contrib.auth import get_user_model
-from django.db import connection
+from django.db import IntegrityError, connection, transaction
 from django.db.migrations.executor import MigrationExecutor
+from django.db.migrations.recorder import MigrationRecorder
 from django.db.models.deletion import ProtectedError
 from django.test import TestCase, TransactionTestCase
 from django.urls import reverse
@@ -69,30 +72,73 @@ class OrderHistoryTests(TestCase):
 
 
 class ExistingOrdersMigrationTests(TransactionTestCase):
-    def test_multiple_legacy_orders_get_distinct_ids_and_remain_unpaid(self):
-        before = [("orders", "0001_initial")]
-        after = [
-            (
-                "orders",
-                "0005_checkoutstate",
-            )
-        ]
+    def test_reported_initial_history_upgrades_all_apps_and_preserves_orders(self):
+        # Reconstruct only the reported history plus its required dependencies
+        # inside Django's isolated test database. Never downgrade production.
+        before = [("orders", "0001_initial"), ("products", "0001_initial")]
         executor = MigrationExecutor(connection)
-        executor.migrate(before)
+        after = executor.loader.graph.leaf_nodes()
         try:
+            executor.migrate([
+                (app, None) for app in sorted({app for app, _ in after})
+            ])
+            executor = MigrationExecutor(connection)
+            executor.migrate(before)
+            expected_history = {
+                node
+                for target in before
+                for node in executor.loader.graph.forwards_plan(target)
+            }
+            self.assertEqual(
+                set(MigrationRecorder(connection).applied_migrations()),
+                expected_history,
+            )
             old_apps = executor.loader.project_state(before).apps
+            LegacyUser = old_apps.get_model("auth", "User")
+            LegacyProduct = old_apps.get_model("products", "Product")
             LegacyOrder = old_apps.get_model("orders", "Order")
-            for name in ("First customer", "Second customer"):
-                LegacyOrder.objects.create(
+            LegacyItem = old_apps.get_model("orders", "OrderItem")
+            user = LegacyUser.objects.create(
+                username="migration-member", email="member@example.test"
+            )
+            product = LegacyProduct.objects.create(
+                name="Legacy balm", description="Synthetic migration fixture",
+                price="8.50", image="legacy-image",
+            )
+            snapshots = {}
+            for name, owner in (("First customer", user), ("Second customer", None)):
+                order = LegacyOrder.objects.create(
+                    user=owner,
                     full_name=name,
                     email="legacy@example.test",
                     address="Legacy",
-                    total_price="10.00",
+                    total_price="14.50",
                 )
+                item = LegacyItem.objects.create(
+                    order=order, product=product, quantity=2, price="7.25"
+                )
+                snapshots[order.pk] = {
+                    "full_name": name, "user_id": getattr(owner, "pk", None),
+                    "email": order.email, "address": order.address,
+                    "total_price": order.total_price,
+                    "created_at": order.created_at, "item_pk": item.pk,
+                }
             executor = MigrationExecutor(connection)
             executor.migrate(after)
+            # Old workers do not supply the new required application-default
+            # fields. A release must stop those writes before schema cutover.
+            with self.assertRaises(IntegrityError):
+                with transaction.atomic():
+                    LegacyOrder.objects.create(
+                        full_name="Old worker fixture",
+                        email="old-worker@example.test",
+                        address="Local only",
+                        total_price="1.00",
+                    )
             apps = executor.loader.project_state(after).apps
             MigratedOrder = apps.get_model("orders", "Order")
+            MigratedItem = apps.get_model("orders", "OrderItem")
+            MigratedProduct = apps.get_model("products", "Product")
             orders = list(MigratedOrder.objects.all())
             self.assertEqual(len(orders), 2)
             self.assertEqual(len({order.public_id for order in orders}), 2)
@@ -102,6 +148,52 @@ class ExistingOrdersMigrationTests(TransactionTestCase):
                     for order in orders
                 )
             )
+            for order in orders:
+                snapshot = snapshots[order.pk]
+                for field in (
+                    "full_name", "user_id", "email", "address", "created_at"
+                ):
+                    self.assertEqual(getattr(order, field), snapshot[field])
+                self.assertEqual(order.total_price, Decimal(snapshot["total_price"]))
+                self.assertIsNone(order.stripe_session_id)
+                self.assertEqual(order.cart_line_tokens, {})
+                self.assertEqual(order.stripe_checkout_payload, {})
+                item = MigratedItem.objects.get(pk=snapshot["item_pk"])
+                self.assertEqual(item.order_id, order.pk)
+                self.assertEqual(item.product_id, product.pk)
+                self.assertEqual(item.quantity, 2)
+                self.assertEqual(item.price, Decimal("7.25"))
+            migrated_product = MigratedProduct.objects.get(pk=product.pk)
+            self.assertEqual(migrated_product.name, product.name)
+            self.assertEqual(migrated_product.description, product.description)
+            self.assertEqual(migrated_product.price, Decimal("8.50"))
+            self.assertEqual(str(migrated_product.image), "legacy-image")
+            with self.assertRaises(ProtectedError):
+                migrated_product.delete()
+
+            # Exercise the newly created tables, including both blog branches,
+            # instead of checking only that the orders migration names applied.
+            profile = apps.get_model("accounts", "PetProfile").objects.create(
+                owner_id=user.pk, name="Fixture pet", species="dog",
+                care_focus="general",
+            )
+            self.assertEqual(profile.owner_id, user.pk)
+            state = apps.get_model("orders", "CheckoutState").objects.create(
+                session_digest="f" * 64, active_order_id=orders[0].pk
+            )
+            self.assertIsNone(state.processing_token)
+            self.assertIsNone(state.processing_until)
+            with self.assertRaises(ProtectedError):
+                orders[0].delete()
+            apps.get_model("blog", "BlogPost").objects.create(
+                author_id=user.pk, title="Migration fixture", content="Local only"
+            )
+            apps.get_model("blog", "Subscriber").objects.create(
+                email="subscriber@example.test"
+            )
+            final_executor = MigrationExecutor(connection)
+            final_executor.loader.check_consistent_history(connection)
+            self.assertEqual(final_executor.migration_plan(after), [])
         finally:
             MigrationExecutor(connection).migrate(after)
 

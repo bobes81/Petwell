@@ -1,6 +1,6 @@
 # Test record — 28 October 2026
 
-This record covers `fix/pp5-resubmission`, including the Cloudinary URL compatibility fix following `aec8b92` and earlier work following `166334a`. It is not a production or external-service test report. The earlier 63-test baseline passed before this review; new tests were added for uncovered defects, the additional pet-profile feature and production configuration. No failing assertion was disabled to obtain a pass.
+This record covers `fix/pp5-resubmission`, including the deployment-readiness review following `8888ae5`, the Cloudinary URL compatibility fix following `aec8b92` and earlier work following `166334a`. It is not a production or external-service test report. The earlier 63-test baseline passed before this review; new tests were added for uncovered defects, the additional pet-profile feature and production configuration. No failing assertion was disabled to obtain a pass.
 
 ## Automated checks actually run
 
@@ -13,7 +13,7 @@ python -m pip check
 
 **Latest SQLite result: 114 discovered/executed tests — 113 passed, 1 explicitly skipped, 0 failures.** The skip is the PostgreSQL-only two-worker concurrency test. Deterministic stale-session, busy-lease, lease recovery/takeover, immutable-payload and payment-state tests run locally. Do not describe the SQLite run as proof of simultaneous PostgreSQL workers.
 
-The test database is isolated and email is in memory. Stripe create/retrieve/expire and Cloudinary uploads are mocked; actual HMAC verification runs against signed fixture payloads. No test processes a payment, uploads an external image or delivers an email. [Latest actual local test output](evidence/28oct-render-compatibility-tests.txt). The earlier 108-test run remains in [the original output](evidence/django-tests.txt).
+The test database is isolated and email is in memory. Stripe create/retrieve/expire and Cloudinary uploads are mocked; actual HMAC verification runs against signed fixture payloads. No test processes a payment, uploads an external image or delivers an email. [Latest actual local test output](evidence/28oct-deployment-readiness-tests.txt). The [Cloudinary compatibility run](evidence/28oct-render-compatibility-tests.txt) and earlier 108-test [original output](evidence/django-tests.txt) remain preserved.
 
 System checks, migration consistency and installed dependency checks passed. Selected Python error/import lint and whitespace checks passed. The repository changes were reviewed for English content, common real credential patterns, private-correspondence copying and broken relative documentation links; no matching accidental credentials/private text were found. Test passwords and the disposable CI PostgreSQL password are explicitly synthetic fixtures, not deployment credentials.
 
@@ -27,6 +27,14 @@ The fix preserves SDK-loaded credentials, forces HTTPS and derives the storage d
 
 System/migration/deployment checks, static collection and dependency consistency also passed with a synthetic Cloudinary URL and a process-only ephemeral Django secret: [check output](evidence/28oct-render-compatibility-checks.txt). No new migration is required; the isolated full suite applies fresh migrations and exercises the legacy-order migration. The actual production migration state remains unknown. See [Render checklist](RENDER_CHECKLIST.md) before any approved release.
 
+## Deployment-readiness migration rehearsal
+
+The owner reports applied `orders.0001_initial` and `products.0001_initial`. Both files match `main` (`6f0ac78`); all other production migration records/schema remain unverified. The existing migration regression was strengthened rather than adding a duplicate test, so the suite remains **114 tests, 113 passed, 1 PostgreSQL-only skip, 0 failures**.
+
+It reconstructs that baseline plus its required auth/contenttypes dependency closure in the disposable test database, inserts synthetic member/guest orders, items and a product/image reference, then applies the entire current migration graph. Assertions preserve primary/foreign keys, contact fields, timestamps, quantities and historical prices, verify unique pending UUIDs/empty payment fields, exercise PetProfile/CheckoutState/blog tables and protected deletion, and require a consistent history with no pending plan. The rehearsal also confirms an old-model order insert fails after upgrade: required new fields use application defaults. That establishes a real cutover constraint; it is not a failed current-app checkout test. [Focused output](evidence/28oct-deployment-migration-test.txt).
+
+The migration reset/reversal exists only to construct a disposable test fixture; it is not a production rollback procedure. The test runs in both configured CI backends. Local system/migration checks, production-style `check --deploy` and dependency checks passed using SQLite and synthetic/process-only configuration: [actual check output](evidence/28oct-deployment-readiness-checks.txt). No production database, customer data, private settings, webhook destination or Render service was accessed. The [release recommendation remains NO-GO](RENDER_CHECKLIST.md) until the owner verifies the complete history/schema, backup/cutover plan, actual configuration and approved sandbox acceptance.
+
 | Area | Meaningful regression coverage |
 | --- | --- |
 | PetProfile | Complete owner-only CRUD; owner assigned server-side; no access by another member/staff; CSRF; supported species/focus; required/overlong validation; escaped text; focus reminder |
@@ -39,7 +47,7 @@ System/migration/deployment checks, static collection and dependency consistency
 | Signed webhooks | Valid signature and exact amount/currency/order/reference/mode; invalid/stale signature and malformed signed structures; duplicates; unpaid/unrelated events; late mapping retry; no return-URL payment confirmation |
 | Cart/orders | Clear once only after confirmation; keep newly re-added lines/additional quantities; own history only; owner-only POST reorder at current prices; historical totals preserved; protected product/order deletion |
 | SEO/markup | Render crawler URLs, public blog entries, private-page noindex and no canonical, trusted configured canonical host without query parameters, escaped metadata, public/form links and fallback images, complete heading outline and no body style blocks |
-| Migrations | Distinct legacy UUIDs and pending status, safe migration round-trip to current orders schema; new pet/coordinator migrations detected and applied locally |
+| Migrations | Full graph upgrade from reported initial order/product history and required dependencies; preserved member/guest orders/items/product image and historical values; unique pending UUIDs; usable new tables and protected references; old-worker cutover constraint; consistent completed history |
 
 ## Local browser/manual acceptance actually performed
 
