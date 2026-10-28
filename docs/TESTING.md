@@ -1,6 +1,6 @@
 # Test record — 28 October 2026
 
-This record covers `fix/pp5-resubmission`, including the deployment-readiness review following `8888ae5`, the Cloudinary URL compatibility fix following `aec8b92` and earlier work following `166334a`. It is not a production or external-service test report. The earlier 63-test baseline passed before this review; new tests were added for uncovered defects, the additional pet-profile feature and production configuration. No failing assertion was disabled to obtain a pass.
+This record covers `fix/pp5-resubmission`, including the confirmed-blog-history and webhook review following `b32d841`, earlier deployment/configuration fixes and the additional pet-profile feature. It is not a production or external-service test report. The earlier 63-test baseline passed before this work; meaningful regressions were added without disabling a failing assertion to obtain a pass.
 
 ## Automated checks actually run
 
@@ -11,9 +11,9 @@ python manage.py makemigrations --check --dry-run --settings=petwell.test_settin
 python -m pip check
 ```
 
-**Latest SQLite result: 114 discovered/executed tests — 113 passed, 1 explicitly skipped, 0 failures.** The skip is the PostgreSQL-only two-worker concurrency test. Deterministic stale-session, busy-lease, lease recovery/takeover, immutable-payload and payment-state tests run locally. Do not describe the SQLite run as proof of simultaneous PostgreSQL workers.
+**Latest SQLite result: 116 discovered/executed tests — 115 passed, 1 explicitly skipped, 0 failures.** The skip is the PostgreSQL-only two-worker concurrency test. Deterministic stale-session, busy-lease, lease recovery/takeover, immutable-payload and payment-state tests run locally. Do not describe the SQLite run as proof of simultaneous PostgreSQL workers.
 
-The test database is isolated and email is in memory. Stripe create/retrieve/expire and Cloudinary uploads are mocked; actual HMAC verification runs against signed fixture payloads. No test processes a payment, uploads an external image or delivers an email. [Latest actual local test output](evidence/28oct-deployment-readiness-tests.txt). The [Cloudinary compatibility run](evidence/28oct-render-compatibility-tests.txt) and earlier 108-test [original output](evidence/django-tests.txt) remain preserved.
+The test database is isolated and email is in memory. Stripe create/retrieve/expire and Cloudinary uploads are mocked; actual HMAC verification runs against signed fixture payloads. No test processes a payment, uploads an external image or delivers an email. [Latest actual local test output](evidence/28oct-confirmed-history-tests.txt). Earlier [114-test migration](evidence/28oct-deployment-readiness-tests.txt), [Cloudinary compatibility](evidence/28oct-render-compatibility-tests.txt) and [108-test original](evidence/django-tests.txt) outputs remain preserved.
 
 System checks, migration consistency and installed dependency checks passed. Selected Python error/import lint and whitespace checks passed. The repository changes were reviewed for English content, common real credential patterns, private-correspondence copying and broken relative documentation links; no matching accidental credentials/private text were found. Test passwords and the disposable CI PostgreSQL password are explicitly synthetic fixtures, not deployment credentials.
 
@@ -29,11 +29,20 @@ System/migration/deployment checks, static collection and dependency consistency
 
 ## Deployment-readiness migration rehearsal
 
-The owner reports applied `orders.0001_initial` and `products.0001_initial`. Both files match `main` (`6f0ac78`); all other production migration records/schema remain unverified. The existing migration regression was strengthened rather than adding a duplicate test, so the suite remains **114 tests, 113 passed, 1 PostgreSQL-only skip, 0 failures**.
+The owner now confirms applied `orders.0001_initial`, `products.0001_initial` and blog through `0004_merge_20260213_0814`, including both branches and the merge. All those files match `main` (`6f0ac78`). `orders.0002`–`0005` and `accounts.0001` are confirmed pending; other installed-app history/schema was not inspected. The existing migration regression was updated to that baseline rather than duplicated. Two additional webhook regressions bring the suite to **116 tests, 115 passed, 1 PostgreSQL-only skip, 0 failures**.
 
-It reconstructs that baseline plus its required auth/contenttypes dependency closure in the disposable test database, inserts synthetic member/guest orders, items and a product/image reference, then applies the entire current migration graph. Assertions preserve primary/foreign keys, contact fields, timestamps, quantities and historical prices, verify unique pending UUIDs/empty payment fields, exercise PetProfile/CheckoutState/blog tables and protected deletion, and require a consistent history with no pending plan. The rehearsal also confirms an old-model order insert fails after upgrade: required new fields use application defaults. That establishes a real cutover constraint; it is not a failed current-app checkout test. [Focused output](evidence/28oct-deployment-migration-test.txt).
+The fixture reconstructs that baseline plus its required auth/contenttypes dependency closure, inserts synthetic member/guest orders/items, a product/image reference, an existing story/image and a subscriber, then upgrades the entire graph. It requires exactly the five pending project migrations and no product/blog replay. Assertions preserve primary/foreign keys, article/subscriber content, image references, contact fields, timestamps, quantities and historical prices, verify unique pending UUIDs/empty payment fields, exercise new tables/protected deletion and require consistent completed history. The old-model insert still fails after upgrade because required new fields use application defaults; this is a verified cutover constraint. [Updated focused output](evidence/28oct-confirmed-blog-migration-tests.txt); the [earlier partial-history rehearsal](evidence/28oct-deployment-migration-test.txt) retains its original scope.
 
-The migration reset/reversal exists only to construct a disposable test fixture; it is not a production rollback procedure. The test runs in both configured CI backends. Local system/migration checks, production-style `check --deploy` and dependency checks passed using SQLite and synthetic/process-only configuration: [actual check output](evidence/28oct-deployment-readiness-checks.txt). No production database, customer data, private settings, webhook destination or Render service was accessed. The [release recommendation remains NO-GO](RENDER_CHECKLIST.md) until the owner verifies the complete history/schema, backup/cutover plan, actual configuration and approved sandbox acceptance.
+Migration reset/reversal exists only to construct a disposable fixture; it is not a production rollback procedure. The regression runs in both configured CI backends. Local system/migration checks, production-style `check --deploy` and dependency checks passed using SQLite and synthetic/process-only configuration: [latest actual output](evidence/28oct-confirmed-history-checks.txt). No production database, customer data, private settings, webhook destination or Render service was accessed. The [release recommendation remains NO-GO](RENDER_CHECKLIST.md) pending the remaining gates. The [recovery runbook](RELEASE_RUNBOOK.md) explains partial migration failure and the separate need to preserve/reconcile post-backup writes and externally issued Stripe Sessions.
+
+## Additional signed-webhook regressions
+
+Two new offline tests exercise real HMAC verification against synthetic JSON deliveries: [focused output](evidence/28oct-sandbox-webhook-followup-tests.txt).
+
+- A fresh client with CSRF enforcement and no cookies receives HTTP 400 for a wrong signature and HTTP 200 for a valid signature. No session cookie is created. The signed delivery marks only the order state; the customer's cart remains until the next browser cart visit reconciles it.
+- An unpaid completion and async failure keep the order pending/cart intact; async success marks paid. Later distinct success event IDs and delayed failure/expiry/unpaid events preserve `paid_at`, the single order and a newly added cart line after the purchased line was cleared.
+
+The deployment checklist requests the two documented successful checkout events; synthetic failure/expiry deliveries are defensive ignore-path tests, not claims that the live endpoint received those events. No actual Stripe Session was created or payment processed. No further application-code defect was found by this review.
 
 | Area | Meaningful regression coverage |
 | --- | --- |
@@ -44,10 +53,10 @@ The migration reset/reversal exists only to construct a disposable test fixture;
 | Payment creation | Database prices, bounded cart quantities, required API/signing keys, test/live mismatch rejection, frozen retries after lost responses/product rename/cart reordering |
 | Payment lifecycle | Open/complete/expired Session states, expiry races/failure, changed data cannot bypass completed checkout, no replacement before old payable Session is closed, recoverable errors |
 | Checkout coordination | Durable active-order pointer; preloaded stale worker requests deduplicated; busy lease refuses a second attempt; stale holder cannot overwrite/release a newer lease; interrupted holder releases safely |
-| Signed webhooks | Valid signature and exact amount/currency/order/reference/mode; invalid/stale signature and malformed signed structures; duplicates; unpaid/unrelated events; late mapping retry; no return-URL payment confirmation |
+| Signed webhooks | Valid signature and exact amount/currency/order/reference/mode; invalid/stale signature and malformed signed structures; cookieless CSRF-enforcing delivery; distinct success IDs and delayed failure/expiry/unpaid events; timestamp/cart preservation; late mapping retry; no return-URL payment confirmation |
 | Cart/orders | Clear once only after confirmation; keep newly re-added lines/additional quantities; own history only; owner-only POST reorder at current prices; historical totals preserved; protected product/order deletion |
 | SEO/markup | Render crawler URLs, public blog entries, private-page noindex and no canonical, trusted configured canonical host without query parameters, escaped metadata, public/form links and fallback images, complete heading outline and no body style blocks |
-| Migrations | Full graph upgrade from reported initial order/product history and required dependencies; preserved member/guest orders/items/product image and historical values; unique pending UUIDs; usable new tables and protected references; old-worker cutover constraint; consistent completed history |
+| Migrations | Upgrade from confirmed order/product initial plus complete blog history/dependencies; exactly five pending project migrations with no blog/product replay; preserved member/guest orders/items, product/article images, story and subscriber fields; unique pending UUIDs; usable new tables/protected references; old-worker cutover constraint; consistent completed history |
 
 ## Local browser/manual acceptance actually performed
 

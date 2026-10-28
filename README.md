@@ -4,7 +4,7 @@ PetWell is a Django e-commerce portfolio project for Code Institute Portfolio Pr
 
 Deployment target: **https://petwell-u0cr.onrender.com**. This branch has not been deployed or merged. The target URL is not a claim that the latest changes are live.
 
-Deployment readiness: **NO-GO pending owner verification** of the complete production migration history/schema, backup and write-pause/cutover plan, actual configuration and sandbox integrations. The reported `orders.0001`/`products.0001` upgrade path is tested in isolation; see the [release gates](docs/RENDER_CHECKLIST.md).
+Deployment readiness: **NO-GO pending the release gates** for complete migration/schema agreement, backup and write-pause/cutover plan, actual configuration and sandbox integrations. The owner confirms applied `orders.0001`, `products.0001` and the complete `blog.0001`–`0004` history, including both branches and the merge. The isolated upgrade preserves existing commerce/blog data and applies the pending `orders.0002`–`0005` and `accounts.0001`; see the [release checklist](docs/RENDER_CHECKLIST.md) and [forward/abort/recovery runbook](docs/RELEASE_RUNBOOK.md).
 
 Resubmission deadline: **31 October 2026, 12:00 noon Irish and UK time (GMT)**. The focus is a working, testable submission. A private feedback summary supplied by the owner guides this review. The private correspondence is not published; the official assessment guide was not available in the checkout. The evidence map is not an assessor decision.
 
@@ -137,7 +137,7 @@ The in-app paid result and account history are payment confirmation. Automatic o
 
 **No production deployment has been performed for this revision.** Before deployment, back up the existing database and confirm the selected branch/commit. Do not turn on automatic deployment while reviewing the branch.
 
-Use the [Render compatibility and release checklist](docs/RENDER_CHECKLIST.md) for the existing four-variable setup, additional test-payment/email requirements, backup and migration sequence, and the acceptance checks that remain unverified.
+Use the [Render compatibility and release checklist](docs/RENDER_CHECKLIST.md) for the existing four-variable setup, additional test-payment/email requirements, backup and migration sequence, and the acceptance checks that remain unverified. The [release and recovery runbook](docs/RELEASE_RUNBOOK.md) covers abort decisions, partial migration failure and preserving order/Stripe mappings before any approved database restoration. A backup does not undo provider payments or invalidate already issued Checkout URLs.
 
 1. Review the existing Render Python service's GitHub connection. Select the reviewed branch/commit only when ready to deploy. Use the repository's `.python-version` (3.11) with a supported patch runtime. Confirm Render's runtime in build logs.
 2. Reuse the existing persistent Render PostgreSQL database and secure configuration. Verify `DATABASE_URL`, `SECRET_KEY`, `DEBUG=False` and the existing `CLOUDINARY_URL`; no separate Cloudinary credentials are required. Verify the Render hostname/URL (their defaults match this target), then configure sandbox Stripe and SMTP only when approved. Do not use local/test settings or create an additional paid resource for this checklist.

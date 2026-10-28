@@ -73,7 +73,7 @@ class CheckoutTests(TestCase):
             "data": {"object": obj},
         }
 
-    def webhook(self, event, secret="whsec_offline", timestamp=None):
+    def webhook(self, event, secret="whsec_offline", timestamp=None, client=None):
         payload = json.dumps(event).encode()
         timestamp = str(int(time.time()) if timestamp is None else timestamp)
         signature = hmac.new(
@@ -81,7 +81,7 @@ class CheckoutTests(TestCase):
             timestamp.encode() + b"." + payload,
             hashlib.sha256,
         ).hexdigest()
-        return self.client.post(
+        return (client or self.client).post(
             reverse("checkout:webhook"),
             payload,
             content_type="application/json",
@@ -290,6 +290,83 @@ class CheckoutTests(TestCase):
             ).status_code,
             400,
         )
+
+    def test_cookieless_webhook_with_csrf_checks_requires_valid_signature(self):
+        order, _ = self.create_order()
+        sender = Client(enforce_csrf_checks=True)
+        event = self.event(order)
+        self.assertEqual(
+            self.webhook(event, secret="wrong", client=sender).status_code,
+            400,
+        )
+        self.assertFalse(sender.cookies)
+        order.refresh_from_db()
+        self.assertEqual(order.status, "pending")
+        self.assertIsNone(order.paid_at)
+
+        self.assertEqual(self.webhook(event, client=sender).status_code, 200)
+        self.assertFalse(sender.cookies)
+        order.refresh_from_db()
+        self.assertEqual(order.status, "paid")
+        self.assertIsNotNone(order.paid_at)
+        self.assertEqual(Order.objects.count(), 1)
+        # Stripe's separate HTTP request cannot modify a customer's session.
+        self.assertEqual(
+            self.client.session["cart"], {str(self.product.pk): 2}
+        )
+        self.assertContains(
+            self.client.get(reverse("cart:view_cart")), "Your cart is empty"
+        )
+        self.assertEqual(self.client.session["cart"], {})
+
+    def test_delayed_failure_and_distinct_success_events_preserve_paid_order(self):
+        order, _ = self.create_order()
+        for event_type in (
+            "checkout.session.completed",
+            "checkout.session.async_payment_failed",
+        ):
+            event = self.event(order, payment_status="unpaid")
+            event["type"] = event_type
+            self.assertEqual(self.webhook(event).status_code, 200)
+            order.refresh_from_db()
+            self.assertEqual(order.status, "pending")
+            self.assertIsNone(order.paid_at)
+            self.assertEqual(
+                self.client.session["cart"], {str(self.product.pk): 2}
+            )
+
+        success = self.event(order)
+        success["id"] = "evt_async_success_fixture"
+        success["type"] = "checkout.session.async_payment_succeeded"
+        self.assertEqual(self.webhook(success).status_code, 200)
+        order.refresh_from_db()
+        paid_at = order.paid_at
+        self.assertEqual(order.status, "paid")
+        self.assertIsNotNone(paid_at)
+        self.client.get(reverse("cart:view_cart"))
+        self.assertEqual(self.client.session["cart"], {})
+        self.client.post(reverse("cart:add_to_cart", args=[self.product.pk]))
+
+        for number, (event_type, payment_status) in enumerate((
+            ("checkout.session.completed", "paid"),
+            ("checkout.session.async_payment_succeeded", "paid"),
+            ("checkout.session.async_payment_failed", "unpaid"),
+            ("checkout.session.expired", "unpaid"),
+            ("checkout.session.completed", "unpaid"),
+        )):
+            with self.subTest(event_type=event_type, status=payment_status):
+                delayed = self.event(order, payment_status=payment_status)
+                delayed["id"] = f"evt_delayed_fixture_{number}"
+                delayed["type"] = event_type
+                self.assertEqual(self.webhook(delayed).status_code, 200)
+                order.refresh_from_db()
+                self.assertEqual(order.status, "paid")
+                self.assertEqual(order.paid_at, paid_at)
+                self.assertEqual(Order.objects.count(), 1)
+                self.client.get(reverse("cart:view_cart"))
+                self.assertEqual(
+                    self.client.session["cart"], {str(self.product.pk): 1}
+                )
 
     def test_paid_cart_clears_on_cart_visit_without_return_url(self):
         order, _ = self.create_order()

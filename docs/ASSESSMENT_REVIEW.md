@@ -25,3 +25,9 @@ Deadline: **31 October 2026, 12:00 noon Irish and UK time (GMT)**.
 - Genuine local renders of new designs are evidence of those designs, not an existing Facebook page, original historical wireframes or live campaigns.
 - Build/deployment-settings smoke checks are local; they cannot prove actual Render PostgreSQL, external TLS, Stripe, Cloudinary or SMTP configuration.
 - Review docs/TESTING.md for actual command outcomes and docs/EVIDENCE.md for owner-required records. No private assessor correspondence or secret values should be committed.
+
+## Current release and submission boundary
+
+The owner confirms applied order/product initial migrations and the complete blog history through `0004`, including both branches and the merge. The isolated upgrade now preserves existing blog posts/images and subscribers alongside commerce fixtures, and two additional signed-webhook regressions cover cookieless delivery and delayed/duplicate event ordering. Current results are recorded in [TESTING.md](TESTING.md); they are not external Stripe or production-database verification.
+
+The pending `accounts.0001` and `orders.0002`–`0005` have not been applied to production in this review. PetProfile and the revised checkout are implemented and tested on the branch, not claimed as released functionality. The [release checklist](RENDER_CHECKLIST.md) and [recovery runbook](RELEASE_RUNBOOK.md) retain NO-GO until the owner verifies backup/cutover, actual configuration, remaining installed-app history/schema and genuine sandbox acceptance. Accurate authorised product photos/rights, supported catalogue fulfilment and final official-guide review remain submission work; this migration confirmation does not resolve those gaps.

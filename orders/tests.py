@@ -72,10 +72,14 @@ class OrderHistoryTests(TestCase):
 
 
 class ExistingOrdersMigrationTests(TransactionTestCase):
-    def test_reported_initial_history_upgrades_all_apps_and_preserves_orders(self):
+    def test_confirmed_commerce_and_blog_history_upgrades_without_data_loss(self):
         # Reconstruct only the reported history plus its required dependencies
         # inside Django's isolated test database. Never downgrade production.
-        before = [("orders", "0001_initial"), ("products", "0001_initial")]
+        before = [
+            ("orders", "0001_initial"),
+            ("products", "0001_initial"),
+            ("blog", "0004_merge_20260213_0814"),
+        ]
         executor = MigrationExecutor(connection)
         after = executor.loader.graph.leaf_nodes()
         try:
@@ -93,6 +97,32 @@ class ExistingOrdersMigrationTests(TransactionTestCase):
                 set(MigrationRecorder(connection).applied_migrations()),
                 expected_history,
             )
+            # Both historical blog branches are already applied. Only the
+            # pending project migrations may run during this forward upgrade.
+            plan = MigrationExecutor(connection).migration_plan(after)
+            self.assertTrue(all(not backwards for _, backwards in plan))
+            self.assertEqual(
+                {
+                    (migration.app_label, migration.name)
+                    for migration, _ in plan
+                    if migration.app_label in {
+                        "orders", "products", "blog", "accounts"
+                    }
+                },
+                {
+                    ("accounts", "0001_initial"),
+                    (
+                        "orders",
+                        "0002_order_paid_at_order_public_id_order_status_and_more",
+                    ),
+                    ("orders", "0003_alter_orderitem_product"),
+                    (
+                        "orders",
+                        "0004_order_cart_line_tokens_order_stripe_checkout_payload",
+                    ),
+                    ("orders", "0005_checkoutstate"),
+                },
+            )
             old_apps = executor.loader.project_state(before).apps
             LegacyUser = old_apps.get_model("auth", "User")
             LegacyProduct = old_apps.get_model("products", "Product")
@@ -105,6 +135,15 @@ class ExistingOrdersMigrationTests(TransactionTestCase):
                 name="Legacy balm", description="Synthetic migration fixture",
                 price="8.50", image="legacy-image",
             )
+            legacy_post = old_apps.get_model("blog", "BlogPost").objects.create(
+                author_id=user.pk,
+                title="Existing blog fixture",
+                content="Preserve this synthetic story during the upgrade.",
+                image="legacy-blog-image",
+            )
+            legacy_subscriber = old_apps.get_model(
+                "blog", "Subscriber"
+            ).objects.create(email="existing-subscriber@example.test")
             snapshots = {}
             for name, owner in (("First customer", user), ("Second customer", None)):
                 order = LegacyOrder.objects.create(
@@ -171,8 +210,24 @@ class ExistingOrdersMigrationTests(TransactionTestCase):
             with self.assertRaises(ProtectedError):
                 migrated_product.delete()
 
-            # Exercise the newly created tables, including both blog branches,
-            # instead of checking only that the orders migration names applied.
+            migrated_post = apps.get_model("blog", "BlogPost").objects.get(
+                pk=legacy_post.pk
+            )
+            for field in ("author_id", "title", "content", "created_at"):
+                self.assertEqual(
+                    getattr(migrated_post, field), getattr(legacy_post, field)
+                )
+            self.assertEqual(str(migrated_post.image), "legacy-blog-image")
+            migrated_subscriber = apps.get_model(
+                "blog", "Subscriber"
+            ).objects.get(pk=legacy_subscriber.pk)
+            self.assertEqual(migrated_subscriber.email, legacy_subscriber.email)
+            self.assertEqual(
+                migrated_subscriber.subscribed_at, legacy_subscriber.subscribed_at
+            )
+
+            # Exercise new tables and writes to the existing blog tables,
+            # instead of checking only that migration names were recorded.
             profile = apps.get_model("accounts", "PetProfile").objects.create(
                 owner_id=user.pk, name="Fixture pet", species="dog",
                 care_focus="general",
