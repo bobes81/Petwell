@@ -2,6 +2,8 @@
 
 Continued from `166334a` on the same `fix/pp5-resubmission` branch, preserving its previous payment/blog fixes. The earlier 63-test baseline passed; this review added uncovered failure cases and the additional distinct custom feature. The owner's private assessment correspondence is not published. The project-level mapping is in [ASSESSMENT_REVIEW.md](ASSESSMENT_REVIEW.md).
 
+An additional offline review resumed from `1f95d4b` on 28 October. It found no further payment or permission defect requiring code changes. It corrected stale evidence statuses and model lifecycle documentation, added a seed-specific image/rights checklist, and identified the unsupported digital-download claim. No application or migration files changed in this follow-up.
+
 ## Changes completed
 
 - **Distinct custom model and frontend:** `PetProfile` provides member-owned species/care-focus/notes, routine reminders and full validated CRUD at `/pets/`. Owner-only queries prevent direct access by other members or staff; no medical claim is made.
@@ -20,6 +22,8 @@ Continued from `166334a` on the same `fix/pp5-resubmission` branch, preserving i
 - Build, migrations, dependency consistency, system checks, production-style settings and local Gunicorn/WhiteNoise smoke checks passed. This is not actual Render, external TLS or PostgreSQL integration validation.
 - CI is configured for SQLite plus PostgreSQL 16. The local PostgreSQL-only test is skipped because no local server is available; verify the actual current head's CI status rather than infer it from SQLite.
 
+The follow-up reran the complete local suite: **108 tests, 107 passed, 1 PostgreSQL-only skip, 0 failures**, plus clean system, migration-consistency, production-style deployment and dependency checks. [Follow-up output](evidence/28oct-followup-django-tests.txt) is separate from the original run. The existing push and PR runs for `1f95d4b` were rechecked through public GitHub Actions pages and both showed Success with `test` and `postgres` jobs. [Recorded verification](evidence/28oct-followup-review.json) gives the actual run URLs and evidence boundaries; check the new documentation commit's CI separately.
+
 All repository/PR text is English. Common credential shapes, private-correspondence copying, whitespace, relative documentation links and final app diffs were reviewed. Fixture passwords, synthetic users and manually seeded paid orders are test data; they are not external payment evidence.
 
 ## Migration/release review
@@ -32,6 +36,7 @@ No merge, deployment, live mode, real payment, external upload/email or new prod
 
 1. Review the actual assessment guide against the evidence map; approve the completed branch only after remaining mandatory gaps are checked. No Pass is guaranteed.
 2. Supply accurate authorised catalogue photos/source records. Current fallbacks are usable but are not real product photographs.
+   Review the seeded PDF listing too: there is no implemented download-delivery feature. Provide and verify an actual fulfilment process or remove that listing from the offered catalogue before accepting payment for it.
 3. Configure/reuse secure Render/PostgreSQL, Stripe **sandbox**, Cloudinary and verified SMTP bindings; review backups/migrations and explicitly approve the test deployment. Never put keys in chat, Git or screenshots.
 4. After approved deployment, complete a real sandbox payment and signed webhook acceptance, decline/cancel/retry checks, upload/email and database-persistence verification, and deployed accessibility/browser evidence.
 5. Apply the saved `api.github.com` network requirement to the cloud runtime if direct PR-description/issue administration is needed. Native Git can update this PR branch, but direct GitHub API is currently blocked. Feature-level issue drafts/statuses are documented honestly in [USER_STORIES.md](USER_STORIES.md); no invented issues or sprint history are claimed.

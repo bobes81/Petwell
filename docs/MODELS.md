@@ -74,7 +74,7 @@ erDiagram
     }
 ```
 
-Deleting a user removes their posts and sets their orders' user link to null. Deleting an order removes its items. A product referenced by an order item cannot be deleted. Subscriber records are independent of user accounts. Reordering does not modify old records or prices and does not initiate payment.
+Deleting a user removes their posts and pet profiles and sets their orders' user link to null. Deleting an order removes its items, but an order referenced by a CheckoutState cannot be deleted because that foreign key is protected. A product referenced by an order item also cannot be deleted. Subscriber records are independent of user accounts. Reordering does not modify old records or prices and does not initiate payment. The admin additionally disables order deletion, including records not currently referenced by a checkout coordinator.
 
 The UUID migration first adds a nullable field, assigns a distinct value to every historical row, then enforces uniqueness/non-nullability. Historical orders become pending rather than assuming they were paid. The migration regression test exercises multiple existing rows.
 

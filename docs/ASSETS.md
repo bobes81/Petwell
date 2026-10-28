@@ -21,12 +21,33 @@ The current `Product.image` field stores a Cloudinary reference. A local file wi
 
 A fallback makes the interface usable; it does not supply a genuine product photograph. Before presenting real products, review each product's actual identity, description and price, supply an accurate image you own or have permission to use, record the source and permission, and upload it through the configured admin/Cloudinary workflow. Do not use the decorative candle or dog portrait as an invented photograph of a sample balm, spray or shampoo.
 
+### Catalogue-photo readiness checklist
+
+The following names come from `products/seed.py`, not from a verified deployed catalogue. The seed supplies **no image for any of these entries**. Existing database records may differ; inspect them after authorised access instead of inferring their state from the seed.
+
+| Seed product | Image and rights evidence |
+| --- | --- |
+| Calming Lavender Spray | Not supplied |
+| Dental Chew Sticks | Not supplied |
+| Joint Support Treats | Not supplied |
+| Hypoallergenic Shampoo | Not supplied |
+| Mindful Pet Journal (PDF) | Not supplied; confirm that any offered download can actually be delivered |
+| Organic Paw Balm | Not supplied |
+| Digestive Support Powder | Not supplied |
+| Eco Toy Rope | Not supplied |
+| Herbal Ear Cleaner | Not supplied |
+| Herbal Chill Drops | Not supplied |
+
+For each retained catalogue item, record the exact product name, image creator/source URL or owner reference, permission/licence and any required attribution, the date checked, and its uploaded image reference. Do not publish private supplier agreements or account credentials. Match the image to the actual item; a branded supplier photo requires permission, and a photo of an unrelated item does not resolve the gap. Also review descriptions and wellness claims for accuracy.
+
+After an approved upload, inspect shop/cart/reorder pages on desktop and mobile, confirm the correct image and readable alternative text, and check the missing-image fallback separately. Save actual results and captions with the date and deployed revision. No catalogue image, permission or external upload is marked complete by this document.
+
 ## Submission and marketing evidence
 
-- The Facebook-named title card is not a Facebook UI mockup or proof that a page exists. Supply the genuine published page URL and actual, dated page/post screenshots once created and checked.
+- The Facebook-named title card is not a Facebook UI mockup or proof that a page exists. The new [clearly labelled proposal](marketing/facebook-mockup.html) and [genuine local rendering](marketing/facebook-mockup.png) are design evidence only. If claiming a published page, supply its verified URL and actual, dated page/post screenshots. Do not imply that publication occurred merely because the mockup exists.
 - Never claim reach, engagement, sales or campaign delivery from these files. Only include statistics that were actually measured.
 - Existing `docs/evidence/local-*.png` files are genuine **local-development** screenshots from the earlier implementation. They show neither production deployment nor live payment/marketing integration and must retain that label.
-- Keep original planning files and clearly label any retrospective wireframes. No actual school rubric or assessor-feedback document was found in the repository during this inspection; [EVIDENCE.md](EVIDENCE.md) records that missing input.
+- Keep original planning files and clearly label any retrospective wireframes. The owner supplied a private feedback summary; it is intentionally not committed. The official full guide was not available in the checkout. The project's own [assessment map](ASSESSMENT_REVIEW.md) and [evidence checklist](EVIDENCE.md) record the remaining review without publishing private correspondence.
 - Check each used asset's rights and add real attribution where required. No guessed licence, fabricated supplier claim or removed provenance mark should be used to fill an evidence gap.
 
 See [TESTING.md](TESTING.md) for tested behaviour and the outstanding deployed checks, and [EVIDENCE.md](EVIDENCE.md) for the remaining submission checklist.

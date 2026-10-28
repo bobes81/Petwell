@@ -165,7 +165,7 @@ Use the listener's signing secret locally. Complete a **test** hosted checkout. 
 
 See [docs/TESTING.md](docs/TESTING.md) for reproducible commands, actual results and the outstanding manual matrix. See [docs/EVIDENCE.md](docs/EVIDENCE.md) for the screenshot, wireframe and marketing checklist. These documents distinguish automated results from work that has not been performed.
 
-No W3C, Lighthouse, cross-browser, accessibility, real email or live payment pass is claimed without a recorded run. [Asset inspection](docs/ASSETS.md) records what the legacy images actually show. The old file named Facebook mockup is a watermarked title card, not a Facebook-page design or published-page evidence.
+No W3C, Lighthouse, cross-browser, accessibility, real email or live payment pass is claimed without a recorded run. [Asset inspection and catalogue-photo checklist](docs/ASSETS.md) record what the legacy images actually show and which seeded products still need accurate authorised images and source records. The old file named Facebook mockup is a watermarked title card, not a Facebook-page design or published-page evidence.
 
 A new [Facebook-page design proposal](docs/marketing/facebook-mockup.html) and [its genuine local rendering](docs/marketing/facebook-mockup.png) are labelled **retrospective mockup, created 28 October 2026, not published**. It is a design artifact, not proof of a live page, customer engagement or a campaign. Open the HTML locally to inspect the layout. The real Facebook page URL has not been supplied.
 
@@ -205,6 +205,7 @@ These are new **retrospective design reviews created 28 October 2026**, not inve
 - Existing orders without Stripe evidence stay pending. Never fulfil/relabel them based on historical assumptions. Pre-fix attempts with no Session ID or saved payload get a fresh order/key. For legacy orders without cart-line identities, automatic cart subtraction is skipped to preserve potentially new items; review/clear that cart manually.
 - Paid order history protects referenced products from deletion; edit a product instead of deleting it when it appears in an order.
 - Card-only GBP checkout has no stock control, shipping charges, taxes, refunds or automated fulfilment. Review whether your actual product catalogue is suitable for this scope.
+- The sample seed includes a "Mindful Pet Journal (PDF)" described as downloadable, but this application has no digital-download delivery feature. Before offering it, supply the actual file and a verified fulfilment process, or remove the entry from the offered catalogue. A paid order does not deliver a file automatically.
 - Guests must retain the checkout browser session to view confirmation. Guest purchases are not attached to an account by matching email.
 - Real Cloudinary assets still require browser/network checks on the deployed site. Bootstrap CSS/JS is served locally rather than depending on a CDN.
 - Historical duplicate/backup templates and settings remain in the repository; active settings are `petwell/settings.py`, and project-level `templates/` takes precedence over app templates.
