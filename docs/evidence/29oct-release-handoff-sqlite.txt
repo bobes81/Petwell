@@ -1,0 +1,31 @@
+Creating test database for alias 'default'...
+..........................................................Stripe checkout failed for order 10a3b7f7-4e88-4af2-b250-e05504576620
+..Stripe checkout failed for order 6c400aa6-6d56-4e39-b662-15ef95004c8e
+.Stripe checkout failed for order bdd467ab-05e2-47dd-a2aa-2cf4dfee223b
+.Stripe checkout failed for order 8d7f99bc-0adc-4c76-9e6d-b5ea1e3536d5
+...........Stripe checkout failed for order c0d58c5c-3e10-4bb6-875b-6b94c2094d6c
+........Stripe checkout failed for order c5fe8d20-49b6-4901-83d8-ed5ea3697fa2
+...Payment details mismatch for order c5ba902f-8c0c-4bda-9cf9-fceea4c25186
+Payment details mismatch for order c5ba902f-8c0c-4bda-9cf9-fceea4c25186
+Payment details mismatch for order c5ba902f-8c0c-4bda-9cf9-fceea4c25186
+....Stripe checkout failed for order 55e2b70a-3477-486e-8877-af42ee51fd7b
+......Stripe checkout failed for order 0860eac8-e21c-4d6b-9bea-f7475710e71b
+..Stripe checkout failed for order 479578c7-69f9-47d3-b69b-620e9afc6192
+...Stripe checkout failed for order c011ed8c-765a-4fa4-8457-4d3e33266cbc
+...Stripe checkout failed for order a9238cb3-c47e-4e53-8b40-5ca9f99ad609
+..Stripe checkout failed for order 5f9a4fb8-a762-4dc8-bfac-c38985af5584
+Stripe checkout failed for order 5f9a4fb8-a762-4dc8-bfac-c38985af5584
+....Payment details mismatch for order d810e88e-f89d-42fa-8d6d-5b870ef09d53
+Payment details mismatch for order d810e88e-f89d-42fa-8d6d-5b870ef09d53
+Payment details mismatch for order d810e88e-f89d-42fa-8d6d-5b870ef09d53
+Payment details mismatch for order d810e88e-f89d-42fa-8d6d-5b870ef09d53
+Payment details mismatch for order d810e88e-f89d-42fa-8d6d-5b870ef09d53
+Payment details mismatch for order d810e88e-f89d-42fa-8d6d-5b870ef09d53
+.............................................................s....................
+----------------------------------------------------------------------
+Ran 190 tests in 19.374s
+
+OK (skipped=1)
+Destroying test database for alias 'default'...
+Found 190 test(s).
+System check identified no issues (0 silenced).

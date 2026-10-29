@@ -9,3 +9,7 @@ Updated 29 October 2026. The candidate is technically ready for **owner-controll
 5. **Authorise genuine test-only acceptance before opening checkout/submitting.** After approved deployment, verify site-created sandbox checkout, exact signed webhook, cart clearing, decline/cancel/retry/duplicate handling; actual authorised image rendering/upload; a received reset email/link; private CRUD/history, SEO/navigation, mobile/keyboard behavior and persistence. Pause/drain checkout and reconcile issued Sessions before declaring withdrawal effective. Record the deployed commit and genuine redacted results; then review the official assessment guide and disclose assistance as required. No Pass is guaranteed.
 
 No paid resource, new feature, published Facebook page or invented historical/marketing evidence is required here; the existing labelled mockup is permitted by the supplied feedback. This checklist grants no merge, deployment, provider action, production write, payment or spending approval.
+
+## 30 October owner handoff
+
+Use the [step-by-step release and rollback plan](RELEASE_2026-10-30.md), [iPad/MacBook checklist](IPAD_MACBOOK_CHECKLIST.md), [Pass compliance matrix](PASS_COMPLIANCE_MATRIX.md) and [exact-record PDF procedure](LEGACY_PDF_WITHDRAWAL.md). The owner conditionally approved withdrawing the confirmed undeliverable PDF; production identification/access/application still require the reviewed approval and pause. No record was changed.

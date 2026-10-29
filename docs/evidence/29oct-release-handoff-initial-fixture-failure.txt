@@ -1,0 +1,41 @@
+Creating test database for alias 'default'...
+..........................................................Stripe checkout failed for order f374cd8f-8c39-4f48-b40f-4d66f2ef5e41
+..Stripe checkout failed for order faf2ba33-9d90-41cf-999d-7dd889d772bc
+.Stripe checkout failed for order 929a6b3c-a231-416c-a7a7-55f8a18be4ee
+.Stripe checkout failed for order 9d72fb60-9413-4fb2-ba9d-8aeafc8a0928
+...........Stripe checkout failed for order 8b655f1e-ca60-42ed-9573-06cce4abec61
+........Stripe checkout failed for order 33d8b5e0-1d8b-4d45-85e1-15c1ec9c463b
+...Payment details mismatch for order 750c281d-462a-4d0d-a74c-5447e02e7dd2
+Payment details mismatch for order 750c281d-462a-4d0d-a74c-5447e02e7dd2
+Payment details mismatch for order 750c281d-462a-4d0d-a74c-5447e02e7dd2
+....Stripe checkout failed for order c12f98d7-263f-4bef-9b6c-e50c263cd725
+......Stripe checkout failed for order 28feef3c-7b37-481d-bd4e-ed0977d73114
+..Stripe checkout failed for order a400313d-7a29-478f-aa90-ef27299343b2
+...Stripe checkout failed for order 666c26a6-1243-48d0-b67c-dcb807f52f78
+...Stripe checkout failed for order 798239ab-15ef-450d-9a48-57f652d47533
+..Stripe checkout failed for order 2c75c293-48bb-487d-a99d-ca5681be1bfc
+Stripe checkout failed for order 2c75c293-48bb-487d-a99d-ca5681be1bfc
+....Payment details mismatch for order 47186ac9-4657-47a4-bb7b-830c88ed9c56
+Payment details mismatch for order 47186ac9-4657-47a4-bb7b-830c88ed9c56
+Payment details mismatch for order 47186ac9-4657-47a4-bb7b-830c88ed9c56
+Payment details mismatch for order 47186ac9-4657-47a4-bb7b-830c88ed9c56
+Payment details mismatch for order 47186ac9-4657-47a4-bb7b-830c88ed9c56
+Payment details mismatch for order 47186ac9-4657-47a4-bb7b-830c88ed9c56
+..................................................F..........s....................
+======================================================================
+FAIL: test_empty_image_variants_can_be_withdrawn_but_not_swapped_after_review (products.test_pdf_withdrawal.LegacyPDFWithdrawalTests.test_empty_image_variants_can_be_withdrawn_but_not_swapped_after_review)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/Petwell/products/test_pdf_withdrawal.py", line 222, in test_empty_image_variants_can_be_withdrawn_but_not_swapped_after_review
+    with self.assertRaisesMessage(CommandError, "changed since review"):
+  File "/workspace/.python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/contextlib.py", line 144, in __exit__
+    next(self.gen)
+AssertionError: CommandError not raised
+
+----------------------------------------------------------------------
+Ran 190 tests in 18.785s
+
+FAILED (failures=1, skipped=1)
+Destroying test database for alias 'default'...
+Found 190 test(s).
+System check identified no issues (0 silenced).

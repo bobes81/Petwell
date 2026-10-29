@@ -71,3 +71,7 @@ See [TESTING.md](TESTING.md) for the tests actually run, [EVIDENCE.md](EVIDENCE.
 After a later approved deployment, keep checkout unavailable until the exact PDF row and any existing orders/Sessions are reviewed. The migration defaults every row to available. Explicitly set only the verified undeliverable offer unavailable when authorised; never infer the database ID from seed order or treat the code migration as automatic withdrawal. See [PR9 review](PR9_REVIEW_AND_RELEASE_GATES.md).
 
 Availability validation guards a new request against the committed catalogue state; it is not a provider-wide transaction barrier. Before declaring a withdrawal effective, an approved operator must pause/drain in-flight checkout requests and reconcile already-issued hosted Sessions. Do not assume a flag closes a Stripe URL, hold database locks over provider I/O, or discard a valid signed payment event. Concurrent withdrawal/provider acceptance is an operational gate, not a claimed automated external pass.
+
+## 30 October owner handoff
+
+Use the [step-by-step release and rollback plan](RELEASE_2026-10-30.md), [iPad/MacBook checklist](IPAD_MACBOOK_CHECKLIST.md), [Pass compliance matrix](PASS_COMPLIANCE_MATRIX.md) and [exact-record PDF procedure](LEGACY_PDF_WITHDRAWAL.md). The owner conditionally approved withdrawing the confirmed undeliverable PDF; production identification/access/application still require the reviewed approval and pause. No record was changed.

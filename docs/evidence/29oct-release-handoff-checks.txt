@@ -1,0 +1,5 @@
+Checked 312 relative Markdown links, including local anchors.
+System check identified no issues (0 silenced).
+No changes detected
+Changed text files reviewed for English-only content, common real credential shapes and accidental private-correspondence copying.
+Relative README/documentation links resolve.

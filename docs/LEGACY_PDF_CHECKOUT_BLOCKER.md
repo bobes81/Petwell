@@ -8,7 +8,7 @@ At the earlier review, the Product model had no `is_active`/`available` field. `
 
 ## Implemented in reviewed PR #9, still awaiting approved release
 
-- Add a backward-compatible Product availability flag with a reviewed migration and safe default for existing physical products; explicitly identify and archive only the undeliverable legacy PDF after verifying the actual production record.
+- Add a Product availability flag with a reviewed migration and true default for existing products (old writers must be stopped during schema cutover); explicitly identify and archive only the undeliverable legacy PDF after verifying the actual production record.
 - Filter unavailable products from the public catalogue.
 - Reject direct add-to-cart of unavailable products.
 - Keep unavailable existing-cart lines visible as unavailable and exclude them from payable totals; require their removal before checkout.
@@ -25,3 +25,7 @@ At the earlier review, the Product model had no `is_active`/`available` field. `
 This note is a handoff for an implementation/test task; it does not claim the blocker is fixed.
 
 Current code/tests and the targeted migration rehearsal are recorded in [PR9_REVIEW_AND_RELEASE_GATES.md](PR9_REVIEW_AND_RELEASE_GATES.md). No production archive or deployment occurred. The default-true availability migration does not resolve the actual PDF offer until an authorised operator verifies its identity and obligations and explicitly withdraws it, or provides genuine fulfilment.
+
+## Final owner procedure
+
+The conditional decision to withdraw the confirmed undeliverable historical offer is approved; production execution is not. Use [the guarded exact-record review/withdrawal procedure](LEGACY_PDF_WITHDRAWAL.md), not a guessed ID, name-based bulk update or deletion. Its read-only default, reviewed fingerprint, explicit attestations and availability-only update preserve history; the actual offer remains unresolved until an authorised operator verifies and applies it after cutover.
