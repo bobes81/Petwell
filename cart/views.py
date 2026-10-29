@@ -54,7 +54,7 @@ def view_cart(request):
 def add_to_cart(request, product_id):
     clear_paid_purchases(request)
     cart = request.session.get("cart", {})
-    product = get_object_or_404(Product, pk=product_id, is_available=True)
+    product = get_object_or_404(Product, pk=product_id, is_available=True, price__gt=0)
     cart[str(product_id)] = min(cart.get(str(product_id), 0) + 1, 99)
     request.session["cart"] = cart
     cart_line_tokens(request)
