@@ -39,3 +39,21 @@ class CartTests(TestCase):
         )
         self.client.post(reverse("cart:remove_from_cart", args=[99999]))
         self.assertEqual(self.client.session["cart"], {})
+
+
+class UnavailableCartTests(TestCase):
+    def setUp(self):
+        self.hidden = Product.objects.create(name="Withdrawn", price="4.99", is_available=False)
+
+    def test_direct_add_rejected_and_cart_unchanged(self):
+        response = self.client.post(reverse("cart:add_to_cart", args=[self.hidden.pk]))
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(self.client.session.get("cart", {}), {})
+
+    def test_existing_unavailable_line_is_removable(self):
+        session = self.client.session
+        session["cart"] = {str(self.hidden.pk): 1}
+        session.save()
+        self.assertContains(self.client.get(reverse("cart:view_cart")), "Unavailable product")
+        self.client.post(reverse("cart:remove_from_cart", args=[self.hidden.pk]))
+        self.assertEqual(self.client.session["cart"], {})
