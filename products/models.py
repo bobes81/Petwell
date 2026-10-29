@@ -6,6 +6,7 @@ class Product(models.Model):
     description = models.TextField()
     price = models.DecimalField(max_digits=6, decimal_places=2)
     image = CloudinaryField('image', blank=True, null=True)
+    is_available = models.BooleanField(default=True, help_text='Uncheck to withdraw a product from sale without deleting order history.')
 
     @property
     def image_is_ai_illustration(self):
