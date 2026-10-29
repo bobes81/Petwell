@@ -58,3 +58,14 @@ class SampleCatalogueTests(TestCase):
         )
         self.assertEqual(str(product.image), "catalogue/owner-image")
         self.assertTrue(Product.objects.filter(pk=legacy_pdf.pk).exists())
+
+
+class ProductAvailabilityTests(TestCase):
+    def test_unavailable_product_is_not_listed_but_preserved(self):
+        hidden = Product.objects.create(name="Mindful Pet Journal (PDF)", price="4.99", is_available=False)
+        visible = Product.objects.create(name="Physical balm", price="7.25")
+        from django.urls import reverse
+        response = self.client.get(reverse("products:product_list"))
+        self.assertContains(response, visible.name)
+        self.assertNotContains(response, hidden.name)
+        self.assertTrue(Product.objects.filter(pk=hidden.pk).exists())
