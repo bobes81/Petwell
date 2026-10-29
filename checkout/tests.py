@@ -125,6 +125,42 @@ class CheckoutTests(TestCase):
         )
         self.assertFalse(Order.objects.exists())
 
+    def test_overlong_valid_email_is_rejected_before_order_or_stripe(self):
+        # Forms.EmailField otherwise accepts 320 characters, but the order's
+        # varchar(254) is enforced by PostgreSQL (not by SQLite).
+        self.data["email"] = (
+            "a" * 64 + "@" + "b" * 63 + "." + "c" * 63 + "." + "d" * 62
+        )
+        self.assertEqual(len(self.data["email"]), 255)
+        with patch(
+            "checkout.views.stripe.checkout.Session.create",
+            return_value=SimpleNamespace(
+                id="cs_overlong_email", status="open",
+                url="https://checkout.stripe.com/overlong-email",
+            ),
+        ) as create:
+            response = self.client.post(self.url, self.data)
+        self.assertContains(response, "at most 254 characters")
+        self.assertFalse(Order.objects.exists())
+        self.assertFalse(CheckoutState.objects.exists())
+        create.assert_not_called()
+        self.assertEqual(
+            self.client.session["cart"], {str(self.product.pk): 2}
+        )
+
+    def test_maximum_order_email_length_can_start_checkout(self):
+        self.data["email"] = (
+            "a" * 64 + "@" + "b" * 63 + "." + "c" * 63 + "." + "d" * 61
+        )
+        self.assertEqual(len(self.data["email"]), 254)
+        order, create = self.create_order()
+        self.assertEqual(order.email, self.data["email"])
+        self.assertEqual(
+            create.call_args.kwargs["customer_email"], self.data["email"]
+        )
+        self.assertEqual(order.status, "pending")
+        self.assertIsNone(order.paid_at)
+
     def test_empty_stale_negative_and_noninteger_cart_rejected(self):
         for cart in (
             {},
@@ -173,6 +209,50 @@ class CheckoutTests(TestCase):
             )
         self.assertEqual(Order.objects.get().status, "pending")
         self.assertTrue(self.client.session["cart"])
+
+    def test_rate_limit_preserves_attempt_and_retries_without_leaking_diagnostics(self):
+        diagnostic = "Synthetic provider diagnostic not for the customer"
+        with patch(
+            "checkout.views.stripe.checkout.Session.create",
+            side_effect=[
+                stripe.RateLimitError(diagnostic),
+                SimpleNamespace(
+                    id="cs_after_rate_limit", status="open",
+                    url="https://checkout.stripe.com/after-rate-limit",
+                ),
+            ],
+        ) as create:
+            failed = self.client.post(self.url, self.data)
+            self.assertContains(failed, "We could not start payment")
+            self.assertNotContains(failed, diagnostic)
+            order = Order.objects.get()
+            self.assertEqual(order.status, "pending")
+            self.assertIsNone(order.paid_at)
+            self.assertIsNone(order.stripe_session_id)
+            self.assertEqual(
+                CheckoutState.objects.get().active_order_id, order.pk
+            )
+            self.assertIsNone(CheckoutState.objects.get().processing_token)
+            self.assertEqual(
+                self.client.session["cart"], {str(self.product.pk): 2}
+            )
+            retried = self.client.post(self.url, self.data)
+        self.assertEqual(
+            retried.url, "https://checkout.stripe.com/after-rate-limit"
+        )
+        self.assertEqual(create.call_count, 2)
+        self.assertEqual(
+            create.call_args_list[0].kwargs, create.call_args_list[1].kwargs
+        )
+        self.assertEqual(Order.objects.count(), 1)
+        order.refresh_from_db()
+        self.assertEqual(order.stripe_session_id, "cs_after_rate_limit")
+        self.assertEqual(order.status, "pending")
+        self.assertIsNone(order.paid_at)
+        self.assertEqual(self.webhook(self.event(order)).status_code, 200)
+        order.refresh_from_db()
+        self.assertEqual(order.status, "paid")
+        self.assertIsNotNone(order.paid_at)
 
     def test_return_url_does_not_confirm_payment_or_clear_cart(self):
         order, _ = self.create_order()
@@ -269,6 +349,59 @@ class CheckoutTests(TestCase):
             self.webhook(self.event(order, id="cs_not_saved_yet")).status_code,
             503,
         )
+
+    def test_webhook_racing_session_save_retries_then_confirms_same_order(self):
+        sender = Client(enforce_csrf_checks=True)
+        event = None
+
+        def deliver_before_create_returns(**kwargs):
+            nonlocal event
+            order = Order.objects.get()
+            self.assertIsNone(order.stripe_session_id)
+            self.assertEqual(
+                CheckoutState.objects.get().active_order_id, order.pk
+            )
+            event = self.event(order, id="cs_early_delivery")
+            self.assertEqual(
+                self.webhook(event, client=sender).status_code, 503
+            )
+            order.refresh_from_db()
+            self.assertEqual(order.status, "pending")
+            self.assertIsNone(order.paid_at)
+            return SimpleNamespace(
+                id="cs_early_delivery", status="open",
+                url="https://checkout.stripe.com/early-delivery",
+            )
+
+        with patch(
+            "checkout.views.stripe.checkout.Session.create",
+            side_effect=deliver_before_create_returns,
+        ) as create:
+            response = self.client.post(self.url, self.data)
+        self.assertEqual(
+            response.url, "https://checkout.stripe.com/early-delivery"
+        )
+        create.assert_called_once()
+        order = Order.objects.get()
+        self.assertEqual(order.stripe_session_id, "cs_early_delivery")
+        self.assertEqual(self.webhook(event, client=sender).status_code, 200)
+        order.refresh_from_db()
+        self.assertEqual(order.status, "paid")
+        paid_at = order.paid_at
+        self.assertIsNotNone(paid_at)
+        self.assertEqual(self.webhook(event, client=sender).status_code, 200)
+        order.refresh_from_db()
+        self.assertEqual(order.paid_at, paid_at)
+        self.assertEqual(Order.objects.count(), 1)
+        self.assertFalse(sender.cookies)
+        self.assertEqual(
+            self.client.session["cart"], {str(self.product.pk): 2}
+        )
+        self.assertContains(
+            self.client.get(reverse("checkout:success", args=[order.public_id])),
+            "Payment confirmed",
+        )
+        self.assertEqual(self.client.session["cart"], {})
 
     def test_other_browser_cannot_read_guest_order(self):
         order, _ = self.create_order()

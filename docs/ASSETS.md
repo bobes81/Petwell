@@ -23,7 +23,7 @@ A fallback makes the interface usable; it does not supply a genuine product phot
 
 ### Catalogue-photo readiness checklist
 
-The following names come from `products/seed.py`, not from a verified deployed catalogue. The seed supplies **no image for any of these entries**. Existing database records may differ; inspect them after authorised access instead of inferring their state from the seed.
+The following inventory records the ten names in the seed inspected on 28 October, not a verified deployed catalogue. On 29 October the unsupported PDF was removed from **future seeding**, leaving nine physical sample offers; existing database rows were not changed. The seed supplies **no image for any entry**. Existing database records may differ; inspect them after authorised access instead of inferring their state from the seed.
 
 | Seed product | Image and rights evidence |
 | --- | --- |
@@ -31,7 +31,7 @@ The following names come from `products/seed.py`, not from a verified deployed c
 | Dental Chew Sticks | Not supplied |
 | Joint Support Treats | Not supplied |
 | Hypoallergenic Shampoo | Not supplied |
-| Mindful Pet Journal (PDF) | Not supplied; confirm that any offered download can actually be delivered |
+| Mindful Pet Journal (PDF), legacy seed only | Omitted from new seeding; existing rows preserved. Any existing offer needs an actual file and verified fulfilment process, or removal from the offered catalogue. |
 | Organic Paw Balm | Not supplied |
 | Digestive Support Powder | Not supplied |
 | Eco Toy Rope | Not supplied |

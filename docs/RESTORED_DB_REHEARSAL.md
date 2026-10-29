@@ -1,8 +1,12 @@
 # Isolated restored-database rehearsal on the owner's Mac
 
-On **29 October 2026**, the owner reported successfully restoring the **28 October Render backup** into an isolated **PostgreSQL 18** database on their MacBook: **10 products, 5 orders and 2 blog posts**. This is owner-reported restore evidence. This repository review did not access the database or independently verify those counts, all records, migration outcome, browser behaviour or external services.
+## Completed owner-reported results — 29 October 2026
 
-The next step is a rehearsal on a **disposable local working copy**, keeping the original backup and first restored database untouched. It is separate from any approved production release. Do not upload/commit the dump, database credentials or customer data. A successful restore into version 18 does not establish that a new version 18 dump can be restored into an older production server; retain the original Render backup and verify the actual recovery target/version before any later restore.
+The owner reports successful restoration of the **28 October Render backup** into an isolated **PostgreSQL 18 working copy on their MacBook**, followed by successful application of **all five pending project migrations** and **no remaining migrations**. Original records were preserved: **10 products, 5 orders, 5 order items, 2 blog posts and 2 subscribers**. Reported integrity checks found **zero missing UUIDs, duplicate UUIDs, missing order links or incorrectly paid legacy orders**.
+
+The owner reported passing local browser checks for shop, cart, unavailable-payment protection, signup, login/logout, private pet CRUD, blog CRUD and empty order history for a new user. These are genuine **owner-reported real-data local results**, not tests independently run by the repository reviewer. No raw database, private screenshot, customer row, credentials or connection string is published. The report does not establish actual Stripe, Cloudinary, SMTP or Render acceptance, or additional unreported checks.
+
+**This local restore/forward-migration/browser rehearsal is completed; it is not an outstanding owner task.** Keep the original backup and genuine private result record. The procedure below remains for traceability or a future relevant schema change; do not rerun it just because the release has not yet occurred. It is separate from production approval. A successful restore into version 18 does not establish that a new version 18 dump can be restored into an older production server; retain the original Render backup and verify the actual recovery target/version before any later restore.
 
 ## Local-only configuration
 
@@ -12,7 +16,7 @@ This profile permits local PostgreSQL without forcing SSL; ordinary `petwell.set
 
 Do **not** use `petwell.test_settings` or `petwell.postgres_test_settings` to run the restored application. Do not run the Django test runner, `flush`, production seed, `build.sh`, fake migrations or schema downgrades against the valuable restored database. Automated tests use disposable test databases; the owner rehearsal uses an explicitly selected working copy.
 
-## Working-copy steps — to be performed by the owner locally
+## Recorded working-copy procedure — not a pending repeat task
 
 1. Keep the original 28 October backup private and intact. Make a separate disposable working database using the owner's already verified local restore method. Review the selected checkout/commit and isolate the terminal from production credentials; keep only the local role/password needed for that working copy. Do not create a paid service or alter Render configuration.
 2. Activate the project virtualenv and install the pinned requirements if not already installed. In a **local rehearsal terminal only**, clear stale production/service bindings before startup; base settings still parse inherited values before the profile overrides them. Do not run this command in a production shell:
@@ -35,8 +39,8 @@ Do **not** use `petwell.test_settings` or `petwell.postgres_test_settings` to ru
    python manage.py migrate --plan --settings=petwell.rehearsal_settings
    ```
 
-   Compare with the confirmed project baseline: `orders.0001`, `products.0001`, complete blog through `0004` including both branches/merge; project migrations pending are `orders.0002`–`0005` and `accounts.0001`. Other installed-app history must agree too. Stop if the target, records or tables differ; do not repair a mismatch by guessing or automatically faking migrations.
-4. Record private before-migration counts and selected non-sensitive integrity checks on the **working copy**. The reported 10/5/2 describes the original restored snapshot, not a fresh production count. A shell count uses no new order fields and can run before the upgrade:
+   For an initial untouched working copy, compare with the confirmed project baseline: `orders.0001`, `products.0001`, complete blog through `0004` including both branches/merge; project migrations pending are `orders.0002`–`0005` and `accounts.0001`. Other installed-app history must agree too. Stop if the target, records or tables differ; do not repair a mismatch by guessing or automatically faking migrations.
+4. Record private before-migration counts and selected non-sensitive integrity checks on the **working copy**. The reported 10 products, 5 orders, 5 order items, 2 posts and 2 subscribers describe the original restored snapshot, not a fresh production count. Browser-test additions must be recorded separately. A shell count uses no new order fields and can run before the upgrade:
 
    ```bash
    python manage.py shell --settings=petwell.rehearsal_settings -c 'from products.models import Product; from orders.models import Order, OrderItem; from blog.models import BlogPost, Subscriber; print({"products": Product.objects.count(), "orders": Order.objects.count(), "order_items": OrderItem.objects.count(), "posts": BlogPost.objects.count(), "subscribers": Subscriber.objects.count()})'
@@ -62,4 +66,4 @@ Do **not** use `petwell.test_settings` or `petwell.postgres_test_settings` to ru
 
 ## Release gate after rehearsal
 
-Even a successful local migration rehearsal does not authorise deployment. Production needs an approved exact-commit cutover/write pause, a fresh backup accounting for writes since 28 October, full schema/configuration checks, actual sandbox/webhook and image/email acceptance, and the remaining catalogue/assessment evidence. Follow [RENDER_CHECKLIST.md](RENDER_CHECKLIST.md) and [RELEASE_RUNBOOK.md](RELEASE_RUNBOOK.md). No live payment or production operation is part of this local procedure.
+The successful owner-reported local migration/browser rehearsal completes that local gate and does not authorise deployment. Production needs an approved exact-commit cutover/write pause, a fresh backup accounting for writes since 28 October, full schema/configuration checks, actual sandbox/webhook and image/email acceptance, and the remaining catalogue/assessment evidence. Follow [RENDER_CHECKLIST.md](RENDER_CHECKLIST.md) and [RELEASE_RUNBOOK.md](RELEASE_RUNBOOK.md). No live payment or production operation is part of this local procedure.

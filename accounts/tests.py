@@ -9,7 +9,7 @@ from allauth.account.utils import user_pk_to_url_str
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core import mail
-from django.test import Client, TestCase
+from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 
 
@@ -148,6 +148,74 @@ class PasswordResetTests(TestCase):
         self.assertTrue(self.user.check_password("Changed!UniquePass825"))
         self.assertFalse(self.user.check_password("Original!UniquePass492"))
         self.assert_unavailable_link(self.client.get(initial_path))
+
+    def test_reset_completion_does_not_disclose_whether_an_account_exists(self):
+        for email in (self.user.email, "notregistered@example.test"):
+            with self.subTest(registered=email == self.user.email):
+                response = self.client.post(
+                    self.request_url, {"email": email}, follow=True
+                )
+                self.assertRedirects(
+                    response, reverse("account_reset_password_done")
+                )
+                self.assertContains(
+                    response, "If an account uses that email address"
+                )
+                self.assertNotContains(response, "We’ve sent a password reset")
+                self.assertNotContains(response, email)
+                self.assertNotContains(response, self.user.username)
+                self.assertNotContains(response, "/password/reset/key/")
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password("Original!UniquePass492"))
+
+    @override_settings(ALLOWED_HOSTS=["petwell-u0cr.onrender.com"])
+    def test_reset_email_uses_https_render_host_behind_trusted_proxy(self):
+        response = self.client.post(
+            self.request_url,
+            {"email": self.user.email},
+            HTTP_HOST="petwell-u0cr.onrender.com",
+            HTTP_X_FORWARDED_PROTO="https",
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(len(mail.outbox), 1)
+        links = re.findall(r"https?://[^\s<>]+", mail.outbox[0].body)
+        reset_link = next(
+            link for link in links if "/password/reset/key/" in link
+        )
+        self.assertEqual(urlsplit(reset_link).scheme, "https")
+        self.assertEqual(
+            urlsplit(reset_link).netloc, "petwell-u0cr.onrender.com"
+        )
+        self.assertNotIn("set-password", reset_link)
+        self.assertEqual(mail.outbox[0].to, [self.user.email])
+        self.assertNotContains(response, reset_link, status_code=302)
+
+    def test_password_reset_invalidates_other_authenticated_browser_session(
+        self,
+    ):
+        other_browser = Client()
+        other_browser.force_login(self.user)
+        self.assertEqual(
+            other_browser.get(reverse("pets:list")).status_code, 200
+        )
+        token = default_token_generator.make_token(self.user)
+        self.assertEqual(
+            self.client.get(self.reset_url(token)).status_code, 302
+        )
+        response = self.client.post(
+            self.reset_url("set-password"),
+            {
+                "password1": "Changed!UniquePass825",
+                "password2": "Changed!UniquePass825",
+            },
+        )
+        self.assertRedirects(
+            response, reverse("account_reset_password_from_key_done")
+        )
+        self.assertRedirects(
+            other_browser.get(reverse("pets:list")),
+            reverse("account_login") + "?next=" + reverse("pets:list"),
+        )
 
 
 class AccountSwitchLinks(HTMLParser):

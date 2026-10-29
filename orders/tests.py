@@ -47,6 +47,26 @@ class OrderHistoryTests(TestCase):
             self.client.get(self.url), str(self.order.public_id)
         )
 
+    def test_staff_shop_account_cannot_browse_or_reorder_another_users_order(self):
+        self.other.is_staff = True
+        self.other.save(update_fields=["is_staff"])
+        self.client.force_login(self.other)
+        self.assertContains(self.client.get(self.url), "You have no orders yet")
+        self.assertNotContains(
+            self.client.get(self.url), str(self.order.public_id)
+        )
+        self.assertEqual(self.client.post(self.reorder).status_code, 404)
+        self.assertEqual(
+            self.client.get(
+                reverse("checkout:success", args=[self.order.public_id])
+            ).status_code,
+            404,
+        )
+        self.assertNotIn("cart", self.client.session)
+        self.order.refresh_from_db()
+        self.assertEqual(self.order.user_id, self.user.pk)
+        self.assertEqual(self.order.status, "paid")
+
     def test_reorder_post_adds_items_using_current_product_price(self):
         self.client.force_login(self.user)
         self.assertEqual(self.client.get(self.reorder).status_code, 405)
