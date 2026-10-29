@@ -131,6 +131,7 @@ class ExistingOrdersMigrationTests(TransactionTestCase):
                 },
                 {
                     ("accounts", "0001_initial"),
+                    ("products", "0002_product_is_available"),
                     (
                         "orders",
                         "0002_order_paid_at_order_public_id_order_status_and_more",
@@ -294,3 +295,16 @@ class OrderAdminProtectionTests(TestCase):
             self.client.post(url, {"post": "yes"}).status_code, 403
         )
         self.assertTrue(Order.objects.filter(pk=order.pk).exists())
+
+
+class ArchivedReorderTests(TestCase):
+    def test_archived_product_stays_in_history_but_is_not_reordered(self):
+        user = get_user_model().objects.create_user("archived-buyer")
+        hidden = Product.objects.create(name="Withdrawn PDF", price="4.99", is_available=False)
+        order = Order.objects.create(user=user, full_name="Buyer", email="buyer@example.test", address="Test", status="paid", total_price="4.99")
+        OrderItem.objects.create(order=order, product=hidden, quantity=1, price="4.99")
+        self.client.force_login(user)
+        self.assertContains(self.client.get(reverse("orders:history")), "Withdrawn PDF")
+        self.client.post(reverse("orders:reorder", args=[order.public_id]))
+        self.assertNotIn(str(hidden.pk), self.client.session.get("cart", {}))
+        self.assertEqual(OrderItem.objects.filter(order=order, product=hidden).count(), 1)
