@@ -19,9 +19,9 @@
                 {% for item in items %}
                 <tr>
                     <td>{{ item.product.name }}</td>
-                    <td>£{{ item.product.price }}</td>
+                    <td>{% if item.unavailable %}Unavailable{% else %}£{{ item.product.price }}{% endif %}</td>
                     <td>{{ item.quantity }}</td>
-                    <td>£{{ item.subtotal }}</td>
+                    <td>{% if item.unavailable %}—{% else %}£{{ item.subtotal }}{% endif %}</td>
                     <td>
                         <form method="post" action="{% url 'cart:remove_from_cart' item.product.id %}">{% csrf_token %}
                           <button class="btn btn-outline-danger btn-sm" type="submit">Remove {{ item.product.name }}</button>
@@ -36,9 +36,9 @@
     <div class="text-end mt-4">
         <h2 class="h5 fw-semibold">Items in cart: <span class="text-primary">{{ total_quantity }}</span></h2>
         <h2 class="h4 fw-bold">Total: <span class="text-success">£{{ total }}</span></h2>
-        <a href="{% url 'checkout:checkout' %}" class="btn btn-primary mt-3">
+        {% if total_quantity > 0 %}<a href="{% url 'checkout:checkout' %}" class="btn btn-primary mt-3">
             💳 Proceed to Checkout
-        </a>
+        </a>{% endif %}
     </div>
     {% else %}
     <p class="text-center text-muted fs-5">Your cart is empty 🐾</p>
