@@ -12,10 +12,12 @@ def view_cart(request):
     items = []
     total = 0
     total_quantity = 0
+    has_unavailable = False
 
     for product_id, quantity in cart.items():
         product = Product.objects.filter(pk=product_id).first()
-        if product is None or not product.is_available:
+        if product is None or not product.is_available or product.price <= 0:
+            has_unavailable = True
             items.append(
                 {
                     "unavailable": True,
@@ -43,6 +45,7 @@ def view_cart(request):
         "items": items,
         "total": total,
         "total_quantity": total_quantity,
+        "has_unavailable": has_unavailable,
     }
     return render(request, "cart/cart.html", context)
 
