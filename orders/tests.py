@@ -228,6 +228,7 @@ class ExistingOrdersMigrationTests(TransactionTestCase):
             self.assertEqual(migrated_product.description, product.description)
             self.assertEqual(migrated_product.price, Decimal("8.50"))
             self.assertEqual(str(migrated_product.image), "legacy-image")
+            self.assertTrue(migrated_product.is_available)
             with self.assertRaises(ProtectedError):
                 migrated_product.delete()
 
