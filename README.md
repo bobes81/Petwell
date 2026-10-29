@@ -117,12 +117,25 @@ For the owner's restored local database, use [petwell.rehearsal_settings](docs/R
 | `CLOUDINARY_URL` | Supported existing Render configuration. The Cloudinary SDK reads the full private URL to configure the cloud name and upload credentials; separate Cloudinary variables are unnecessary. Treat the whole URL as a secret. |
 | `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | Optional alternative to `CLOUDINARY_URL`. Use one source: when `CLOUDINARY_CLOUD_NAME` is set, the SDK prefers the separate variables. All three are needed for uploads in that configuration. |
 | `EMAIL_BACKEND` | Default console backend. For delivery: `django.core.mail.backends.smtp.EmailBackend`. |
-| `SENDGRID_API_KEY` | SMTP password for SendGrid if SMTP backend is selected. |
-| `DEFAULT_FROM_EMAIL` | A sender address you have verified in SendGrid. Do not use the default example address in production. |
+| `EMAIL_HOST`, `EMAIL_PORT` | SMTP server/port. Gmail: `smtp.gmail.com`, `587`. Legacy defaults: SendGrid, `587`. |
+| `EMAIL_USE_TLS`, `EMAIL_USE_SSL` | Gmail STARTTLS: `True`, `False`. Both cannot be true. SSL on 465 requires TLS false explicitly. |
+| `EMAIL_HOST_USER` | Gmail: `petwell.shop.uk@gmail.com`; legacy SendGrid default: `apikey`. |
+| `EMAIL_HOST_PASSWORD` | Private provider credential, e.g. an eligible Google App Password. Never the normal Google sign-in password; never commit a value. |
+| `EMAIL_TIMEOUT` | Positive timeout in seconds, default `10`. |
+| `SENDGRID_API_KEY` | Legacy password fallback only for `smtp.sendgrid.net` when `EMAIL_HOST_PASSWORD` is unset. Never reused for Gmail. |
+| `DEFAULT_FROM_EMAIL` | Gmail: `PetWell <petwell.shop.uk@gmail.com>`; otherwise an authorised/verified sender for the chosen provider. Do not use the example default in production. |
 
 The existing Render variable names reported by the owner are `CLOUDINARY_URL`, `DATABASE_URL`, `DEBUG` and `SECRET_KEY`. This revision supports that Cloudinary URL directly and preserves it when the storage package loads. Copy the exact private value from your secure provider configuration; do not print it or include it in screenshots. Image delivery uses HTTPS. Without Cloudinary configuration, local placeholders remain available. These are configuration compatibility checks, not verification of the existing production values or an actual upload.
 
-Hosted Stripe Checkout does not require a publishable key or Stripe.js in this app. Old names `STRIPE_WH_SECRET` and `EMAIL_HOST_PASSWORD` are not used; use `STRIPE_WEBHOOK_SECRET` and `SENDGRID_API_KEY` respectively. The four existing variable names do not by themselves configure Stripe or email delivery: checkout stays unavailable without the API/signing keys, and email defaults to the console. Keep Render's `DJANGO_SETTINGS_MODULE` as `petwell.settings`, never `petwell.test_settings` or a cloud-only helper module.
+Hosted Stripe Checkout does not require a publishable key or Stripe.js in this app. The old `STRIPE_WH_SECRET` name is unused; use `STRIPE_WEBHOOK_SECRET`. SMTP now supports `EMAIL_HOST_PASSWORD` directly; existing SendGrid fallback remains compatible. The four existing variable names do not by themselves configure Stripe or email delivery: checkout stays unavailable without the API/signing keys, and email defaults to the console. Keep Render's `DJANGO_SETTINGS_MODULE` as `petwell.settings`, never `petwell.test_settings` or a cloud-only helper module.
+
+## Catalogue images and legacy PDF
+
+[The safe image workflow](docs/CATALOGUE_IMAGES.md) and [blank nine-item manifest](docs/catalogue-images.example.json) prepare explicit association of owner-supplied AI illustrations with existing physical products. No nine source images were supplied or uploaded here. The command validates local files/hashes/provenance, exact product identities and Cloudinary metadata, defaults to dry-run and fills only empty image references after explicit `--apply`. It never uploads assets, creates products or overwrites existing images/prices/descriptions. New mapped artwork has an AI-illustration caption. This is a tool for a later approved operation, not evidence that production images are fixed.
+
+The supplied feedback identifies placeholders, without requiring photographic media. Review actual AI images for accuracy/rights and label them honestly; final assessment acceptance is not guaranteed. The legacy PDF is not a tenth target: preserve its records and either verify actual manual delivery or arrange complete withdrawal before enabling payments. Hiding only its shop card would leave cart/reorder paths open. No production data or schema was changed.
+
+For Gmail, the [Render SMTP checklist](docs/RENDER_CHECKLIST.md#smtp--delivery-is-not-enabled-by-the-four-reported-variables) lists the environment-only profile and remaining account/egress/received-email checks. App Password availability and outbound Render SMTP must be genuinely verified without buying resources. Offline configuration tests do not prove delivery.
 
 ## Checkout and payment lifecycle
 
@@ -137,7 +150,7 @@ Checkout is disabled until both the Stripe API key and webhook signing secret ar
 
 If a create response was lost and the saved attempt still has no Stripe Session ID after **23 hours**, automatic retry is held for review. Stripe idempotency keys are not permanent; blindly repeating an old create could produce another payable Session. The order, exact payload and cart remain intact, including when contact/cart details change. An operator must reconcile the original attempt through an approved provider procedure; do not create a replacement or mark it paid manually. Known Session IDs remain retrievable regardless of age. The 23-hour guard is conservative, not evidence that a payment failed or succeeded.
 
-The in-app paid result and account history are payment confirmation. Automatic order-confirmation email dispatch is deliberately not part of the webhook: SMTP availability cannot determine whether an order is paid. Welcome/password-reset email can use SendGrid when configured. Newsletter subscriptions are stored; no campaign automation is implemented. Refunds, tax/shipping rules, inventory and fulfilment automation are outside this revision.
+The in-app paid result and account history are payment confirmation. Automatic order-confirmation email dispatch is deliberately not part of the webhook: SMTP availability cannot determine whether an order is paid. Welcome/password-reset email can use Gmail SMTP or an already configured alternative when genuinely verified. Newsletter subscriptions are stored; no campaign automation is implemented. Refunds, tax/shipping rules, inventory and fulfilment automation are outside this revision.
 
 ## Render deployment — manual, owner-controlled
 
@@ -177,7 +190,7 @@ Use the listener's signing secret locally. Complete a **test** hosted checkout. 
 
 See [docs/TESTING.md](docs/TESTING.md) for reproducible commands, actual results and the outstanding manual matrix. See [docs/EVIDENCE.md](docs/EVIDENCE.md) for the screenshot, wireframe and marketing checklist. These documents distinguish automated results from work that has not been performed.
 
-No W3C, Lighthouse, cross-browser, accessibility, real email or live payment pass is claimed without a recorded run. [Asset inspection and catalogue-photo checklist](docs/ASSETS.md) record what the legacy images actually show and which seeded products still need accurate authorised images and source records. The old file named Facebook mockup is a watermarked title card, not a Facebook-page design or published-page evidence.
+No W3C, Lighthouse, cross-browser, accessibility, real email or live payment pass is claimed without a recorded run. [Asset inspection and catalogue-image checklist](docs/ASSETS.md) record what the legacy images actually show and which seeded products still need accurate authorised images and source records. The old file named Facebook mockup is a watermarked title card, not a Facebook-page design or published-page evidence.
 
 A new [Facebook-page design proposal](docs/marketing/facebook-mockup.html) and [its genuine local rendering](docs/marketing/facebook-mockup.png) are labelled **retrospective mockup, created 28 October 2026, not published**. It is a design artifact, not proof of a live page, customer engagement or a campaign. Open the HTML locally to inspect the layout. The supplied feedback explicitly permits this clearly labelled mockup format; a published page or marketing metrics are not added as submission blockers.
 
@@ -213,7 +226,7 @@ These are new **retrospective design reviews created 28 October 2026**, not inve
 
 ## Known issues and submission work remaining
 
-- End-to-end Stripe sandbox payments, Render webhook delivery, real Cloudinary uploads and SendGrid email require owner configuration and manual validation; no external integration pass is claimed yet.
+- End-to-end Stripe sandbox payments, Render webhook delivery, real Cloudinary uploads and Gmail/alternative SMTP delivery require owner configuration and manual validation; no external integration pass is claimed yet.
 - Existing orders without Stripe evidence stay pending. Never fulfil/relabel them based on historical assumptions. Pre-fix attempts with no Session ID or saved payload get a fresh order/key. For legacy orders without cart-line identities, automatic cart subtraction is skipped to preserve potentially new items; review/clear that cart manually.
 - Paid order history protects referenced products from deletion; edit a product instead of deleting it when it appears in an order.
 - Card-only GBP checkout has no stock control, shipping charges, taxes, refunds or automated fulfilment. Review whether your actual product catalogue is suitable for this scope.
@@ -221,7 +234,7 @@ These are new **retrospective design reviews created 28 October 2026**, not inve
 - Guests must retain the checkout browser session to view confirmation. Guest purchases are not attached to an account by matching email.
 - Real Cloudinary assets still require browser/network checks on the deployed site. Bootstrap CSS/JS is served locally rather than depending on a CDN.
 - Historical duplicate/backup templates and settings remain in the repository; active settings are `petwell/settings.py`, and project-level `templates/` takes precedence over app templates.
-- Retrospective wireframes, a Facebook-page design mockup, local screenshots and an assessment evidence map are included. Actual deployed screenshots, external HTML/CSS/accessibility reports and source/rights records remain owner tasks. The supplied feedback permits the clearly labelled Facebook mockup; no published page is claimed or newly required. Do not submit placeholders as completed evidence.
+- Retrospective wireframes, a Facebook-page design mockup, local screenshots and an assessment evidence map are included. Actual deployed screenshots, outstanding accessibility/browser checks and source/rights records remain owner tasks. Earlier local Nu validation results retain their recorded scope. The supplied feedback permits the clearly labelled Facebook mockup; no published page is claimed or newly required. Do not submit placeholders as completed evidence.
 
 ## Credits and authorship
 

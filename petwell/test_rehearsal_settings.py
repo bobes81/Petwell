@@ -87,6 +87,9 @@ class RehearsalSettingsTests(SimpleTestCase):
             "STRIPE_WEBHOOK_SECRET": "whsec_fixture_never_used",
             "STRIPE_LIVE_MODE": "True",
             "EMAIL_BACKEND": "django.core.mail.backends.smtp.EmailBackend",
+            "EMAIL_HOST": "smtp.gmail.com",
+            "EMAIL_HOST_USER": "petwell.shop.uk@gmail.com",
+            "EMAIL_HOST_PASSWORD": "fixture-gmail-password-never-used",
             "SENDGRID_API_KEY": "fixture-only",
             "CLOUDINARY_URL": "cloudinary://fixture:fixture@inherited-cloud",
         })

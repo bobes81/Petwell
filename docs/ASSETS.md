@@ -21,7 +21,7 @@ The current `Product.image` field stores a Cloudinary reference. A local file wi
 
 A fallback makes the interface usable; it does not supply a genuine product photograph. Before presenting real products, review each product's actual identity, description and price, supply an accurate image you own or have permission to use, record the source and permission, and upload it through the configured admin/Cloudinary workflow. Do not use the decorative candle or dog portrait as an invented photograph of a sample balm, spray or shampoo.
 
-### Catalogue-photo readiness checklist
+### Catalogue-image readiness checklist
 
 The following inventory records the ten names in the seed inspected on 28 October, not a verified deployed catalogue. On 29 October the unsupported PDF was removed from **future seeding**, leaving nine physical sample offers; existing database rows were not changed. The seed supplies **no image for any entry**. Existing database records may differ; inspect them after authorised access instead of inferring their state from the seed.
 
@@ -41,6 +41,12 @@ The following inventory records the ten names in the seed inspected on 28 Octobe
 For each retained catalogue item, record the exact product name, image creator/source URL or owner reference, permission/licence and any required attribution, the date checked, and its uploaded image reference. Do not publish private supplier agreements or account credentials. Match the image to the actual item; a branded supplier photo requires permission, and a photo of an unrelated item does not resolve the gap. Also review descriptions and wellness claims for accuracy.
 
 After an approved upload, inspect shop/cart/reorder pages on desktop and mobile, confirm the correct image and readable alternative text, and check the missing-image fallback separately. Save actual results and captions with the date and deployed revision. No catalogue image, permission or external upload is marked complete by this document.
+
+### Nine planned original AI illustrations — 29 October follow-up
+
+The owner now plans nine original AI-generated images for the physical catalogue. **Those files were not supplied or inspected in this review.** No filename, uploaded asset, image appearance, generator account or usage permission is invented. The earlier phrase “genuine-photo requirement” overstated the supplied feedback: it identifies placeholders, without specifying photographs. Accurate authorised illustrations can be reviewed as a candidate; do not guarantee assessment acceptance or describe them as actual supplier/product photographs.
+
+[CATALOGUE_IMAGES.md](CATALOGUE_IMAGES.md) provides a blank mapping template and a dry-run-first, empty-fields-only association command. A later owner-reviewed upload must retain provenance, use new unique public IDs and preserve existing assets. Mapped `petwell/ai-products/` images are explicitly captioned as AI-generated illustrations. Source hashes validate local files, not ownership or an actual Cloudinary upload. The legacy PDF remains a separate fulfilment decision, with its database/history untouched.
 
 ## Submission and marketing evidence
 

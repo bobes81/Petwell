@@ -1,0 +1,78 @@
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+Found 15 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: allauth, cloudinary, cloudinary_storage, crispy_bootstrap5, crispy_forms, messages, staticfiles, widget_tweaks
+  Apply all migrations: account, accounts, admin, auth, blog, contenttypes, orders, products, sessions, sites, socialaccount
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying account.0001_initial... OK
+  Applying account.0002_email_max_length... OK
+  Applying account.0003_alter_emailaddress_create_unique_verified_email... OK
+  Applying account.0004_alter_emailaddress_drop_unique_email... OK
+  Applying account.0005_emailaddress_idx_upper_email... OK
+  Applying account.0006_emailaddress_lower... OK
+  Applying account.0007_emailaddress_idx_email... OK
+  Applying account.0008_emailaddress_unique_primary_email_fixup... OK
+  Applying account.0009_emailaddress_unique_primary_email... OK
+  Applying accounts.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying blog.0001_initial... OK
+  Applying blog.0002_create_subscriber_table... OK
+  Applying blog.0003_create_subscriber_table... OK
+  Applying blog.0002_reset_subscriber_conflict... OK
+  Applying blog.0004_merge_20260213_0814... OK
+  Applying products.0001_initial... OK
+  Applying orders.0001_initial... OK
+  Applying orders.0002_order_paid_at_order_public_id_order_status_and_more... OK
+  Applying orders.0003_alter_orderitem_product... OK
+  Applying orders.0004_order_cart_line_tokens_order_stripe_checkout_payload... OK
+  Applying orders.0005_checkoutstate... OK
+  Applying sessions.0001_initial... OK
+  Applying sites.0001_initial... OK
+  Applying sites.0002_alter_domain_unique... OK
+  Applying socialaccount.0001_initial... OK
+  Applying socialaccount.0002_token_max_lengths... OK
+  Applying socialaccount.0003_extra_data_default_dict... OK
+  Applying socialaccount.0004_app_provider_id_settings... OK
+  Applying socialaccount.0005_socialtoken_nullable_app... OK
+  Applying socialaccount.0006_alter_socialaccount_extra_data...test_apply_preserves_existing_data_history_images_and_is_idempotent (products.test_image_mapping.ProductImageAssociationTests.test_apply_preserves_existing_data_history_images_and_is_idempotent) ... ok
+test_changed_row_during_apply_rolls_back_earlier_assignments (products.test_image_mapping.ProductImageAssociationTests.test_changed_row_during_apply_rolls_back_earlier_assignments) ... ok
+test_default_dry_run_has_no_database_writes_or_provider_actions (products.test_image_mapping.ProductImageAssociationTests.test_default_dry_run_has_no_database_writes_or_provider_actions) ... ok
+test_duplicate_ids_sources_or_image_references_are_rejected (products.test_image_mapping.ProductImageAssociationTests.test_duplicate_ids_sources_or_image_references_are_rejected) ... ok
+test_malformed_or_ambiguous_json_is_sanitized_and_rejected (products.test_image_mapping.ProductImageAssociationTests.test_malformed_or_ambiguous_json_is_sanitized_and_rejected) ... ok
+test_matching_jpeg_and_webp_sources_can_be_associated (products.test_image_mapping.ProductImageAssociationTests.test_matching_jpeg_and_webp_sources_can_be_associated) ... ok
+test_nonregular_manifest_is_rejected_before_any_open_can_block (products.test_image_mapping.ProductImageAssociationTests.test_nonregular_manifest_is_rejected_before_any_open_can_block) ... ok
+test_pillow_decompression_warning_is_an_error (products.test_image_mapping.ProductImageAssociationTests.test_pillow_decompression_warning_is_an_error) ... ok
+test_placeholder_or_unsafe_reference_values_are_rejected (products.test_image_mapping.ProductImageAssociationTests.test_placeholder_or_unsafe_reference_values_are_rejected) ... ok
+test_png_chunk_crc_error_is_a_sanitized_validation_failure (products.test_image_mapping.ProductImageAssociationTests.test_png_chunk_crc_error_is_a_sanitized_validation_failure) ... ok
+test_reserved_ai_namespace_has_an_honest_shop_caption (products.test_image_mapping.ProductImageAssociationTests.test_reserved_ai_namespace_has_an_honest_shop_caption) ... ok
+test_source_hash_size_content_and_declared_format_are_checked (products.test_image_mapping.ProductImageAssociationTests.test_source_hash_size_content_and_declared_format_are_checked) ... ok
+test_sources_cannot_escape_directory_or_use_symlinks (products.test_image_mapping.ProductImageAssociationTests.test_sources_cannot_escape_directory_or_use_symlinks) ... ok
+test_wrong_cloud_or_disabled_cloud_fails_without_writes (products.test_image_mapping.ProductImageAssociationTests.test_wrong_cloud_or_disabled_cloud_fails_without_writes) ... ok
+test_wrong_final_database_identity_never_partially_assigns_images (products.test_image_mapping.ProductImageAssociationTests.test_wrong_final_database_identity_never_partially_assigns_images) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.189s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+ OK
+System check identified no issues (0 silenced).

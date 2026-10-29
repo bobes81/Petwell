@@ -1,0 +1,25 @@
+29 October 2026: offline catalogue/Gmail readiness checks; synthetic Cloudinary/Gmail settings and ephemeral process-only Django secret. No provider connection/send, production database or source product images. The blank-manifest command is expected to fail safely with exit1.
+
+$ venv/bin/python manage.py check --settings=petwell.test_settings
+System check identified no issues (0 silenced).
+
+$ venv/bin/python manage.py makemigrations --check --dry-run --settings=petwell.test_settings
+No changes detected
+
+$ venv/bin/python manage.py check --deploy --fail-level WARNING
+System check identified no issues (0 silenced).
+
+$ venv/bin/python manage.py collectstatic --noinput
+
+0 static files copied to '/workspace/Petwell/staticfiles', 166 unmodified, 413 post-processed.
+
+$ venv/bin/python -m pip check
+WARNING: The directory '/home/agent/.cache/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+No broken requirements found.
+
+$ venv/bin/python manage.py associate_product_images docs/catalogue-images.example.json --images-dir /tmp --settings=petwell.test_settings
+CommandError: Use schema_version 1, a cloud name and exactly nine product entries.
+
+$ git diff --check
+
+All commands returned their expected exit status; blank-manifest refusal is not an applied image association.

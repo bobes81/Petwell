@@ -10,3 +10,6 @@ _backup_untracked/
 .env.*
 !.env.example
 media/
+
+# Keep reviewed image mappings/source records private.
+catalogue-images.private.json

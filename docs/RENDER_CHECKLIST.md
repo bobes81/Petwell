@@ -21,6 +21,14 @@ Keep the genuine private results and original backup. The [local-only instructio
 
 The deployed hostname defaults to `petwell-u0cr.onrender.com` and `SITE_URL` defaults to `https://petwell-u0cr.onrender.com`. Explicit `ALLOWED_HOSTS` and `SITE_URL` overrides are optional for that exact target; a real custom domain requires matching trusted values. Use `petwell.settings`, never test settings, for the application.
 
+## Cloudinary and the nine planned product images
+
+The existing `CLOUDINARY_URL` remains sufficient; separate Cloudinary variables are not required. Offline tests verify configuration, HTTPS URL rendering and mocked upload success/failure, not account permissions or a real upload. No nine new product-image assets were supplied to this review, and none is claimed to exist in Cloudinary or Git.
+
+Follow [the catalogue image workflow](CATALOGUE_IMAGES.md) for an explicit, reviewed association with the nine physical items. Owner-supplied AI artwork must be described as illustrations, with provenance/permission and accuracy checked; it is not automatically an actual product photograph or assessor-approved evidence. The legacy PDF is a separate fulfilment issue, not a tenth image target. The proposed mapping must preserve existing non-empty image references, prices, descriptions, orders and product identities.
+
+After separate approval, use the existing Cloudinary account only within its available no-charge limits. Upload reviewed files under new unique asset identifiers, preserve existing assets and privately record the exact public IDs/cloud name. Do not expose the credential URL/API secret or enable paid features. Then verify one real authorised upload, HTTPS image delivery, correct item association and desktop/mobile fallbacks; verify blog upload/replace/clear separately on safe test content. Do not mark those checks passed from a public-ID string or mocked adapter. If account permissions, quota or access block the step, record the blocker rather than purchasing or changing billing.
+
 ## Stripe sandbox — additional configuration required
 
 The four reported variables do not configure payment processing. Checkout remains unavailable and preserves the cart until both `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` are configured privately. Assessment must use the same Stripe sandbox/test account for the API key and webhook destination, with `STRIPE_LIVE_MODE=False` (the default). Live keys are rejected in this mode. Hosted Checkout does not need a publishable key.
@@ -29,17 +37,39 @@ For an approved deployment, use the sandbox destination `https://petwell-u0cr.on
 
 Offline tests verify key/mode guards, signed fixture validation, exact order/Session/amount/currency/mode matching and idempotent pending-to-paid handling. They do not verify real Stripe API access or webhook delivery. After deployment approval, record a genuine sandbox success, decline/cancellation, retry and duplicate delivery. Confirm that the return URL alone cannot mark paid and that cart reconciliation follows webhook confirmation. Do not use a real card or turn on live mode.
 
+Actual hosted-checkout testing also requires separate approval; this checklist does not authorise a transaction now. Use synthetic customer details and retain only redacted evidence for the selected deployed commit:
+
+| Acceptance step | Required observation |
+| --- | --- |
+| Site-created sandbox Checkout | One pending local order with correct server-calculated GBP item prices/total and a corresponding hosted test Session. A generic dashboard sample event cannot establish this match. |
+| Matching signed destination delivery | The exact endpoint above receives a genuine matching event with HTTP 200; only then does that order become paid, with its original Session/reference/amount/currency/test mode preserved. A browser return cannot supply payment evidence. |
+| Replay and cart reconciliation | Re-send the same matching test event: no second order/payment transition and no changed original paid timestamp. Purchased quantities clear once on the customer's next request; additional/re-added lines remain. |
+| Decline, cancel and retry | Use documented Stripe test data only. Failed/cancelled attempts stay unpaid and preserve the cart; a retry reuses the existing safe attempt or replaces it only after confirmed expiry. Never create a second payable Session to investigate an ambiguous first one. |
+
+The app is card-only; signed asynchronous-event fixture coverage is not proof that a real asynchronous payment method was offered or tested. Provider rate-limit/network-failure recovery and early-event 503/replay behavior are covered offline; report their scope rather than inducing external faults or claiming they occurred at Stripe.
+
 Unmapped attempts with a saved payload are automatically retried only while younger than 23 hours. At that boundary the app preserves the pending order/cart/payload and requests review, including after changed customer/cart data. Stripe's [idempotency documentation](https://docs.stripe.com/api/idempotent_requests) describes key pruning after at least 24 hours; the guard leaves a margin rather than assuming permanent deduplication. Known Session IDs can still be retrieved. Reconcile a held attempt under approved provider access before any replacement; a browser return or an empty local mapping is not proof of payment outcome.
 
 ## SMTP — delivery is not enabled by the four reported variables
 
-Email defaults to the console backend, which writes messages to the process log and does not deliver them. Do not publish logs containing password-reset links. The current supported SMTP setup is SendGrid:
+Email defaults to the console backend, which writes messages to the process log and does not deliver them. Do not publish logs containing password-reset links. Gmail-compatible configuration for the owner's existing address is prepared through process environment variables only:
 
-- `EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend`
-- private `SENDGRID_API_KEY`
-- `DEFAULT_FROM_EMAIL` using an actually verified sender
+| Variable | Gmail value |
+| --- | --- |
+| `EMAIL_BACKEND` | `django.core.mail.backends.smtp.EmailBackend` |
+| `EMAIL_HOST` | `smtp.gmail.com` |
+| `EMAIL_PORT` | `587` |
+| `EMAIL_USE_TLS` | `True` (STARTTLS) |
+| `EMAIL_USE_SSL` | `False` (do not enable both TLS and SSL) |
+| `EMAIL_HOST_USER` | `petwell.shop.uk@gmail.com` |
+| `EMAIL_HOST_PASSWORD` | Private Google App Password, if available for the existing account; no credential is supplied or requested in this repository |
+| `DEFAULT_FROM_EMAIL` | `PetWell <petwell.shop.uk@gmail.com>` |
 
-Settings use `smtp.sendgrid.net`, port 587, STARTTLS, username `apikey` and a 10-second timeout. `EMAIL_HOST_PASSWORD` is not a process-environment alias in this project; the password comes from `SENDGRID_API_KEY`. No provider account, subscription or paid resource was created or changed. Do not claim delivery until an actual reset email is received and its link works against the correct deployed hostname. Local in-memory email/token tests are separate evidence.
+Use the existing Google account's security controls: enable/verify two-step verification and create an App Password only if that account permits it. Do not use the normal Google sign-in password, enable obsolete “less secure apps”, place credentials in commands/evidence, create a paid mailbox or change billing. An unavailable App Password is an unresolved access/configuration blocker, not proof that SMTP works. Retain the 10-second timeout unless a separately reviewed need warrants changing it.
+
+For existing SendGrid configuration, defaults remain `smtp.sendgrid.net`, port 587, STARTTLS and username `apikey`; `SENDGRID_API_KEY` remains the password fallback for that host. An explicit `EMAIL_HOST_PASSWORD` takes precedence. A Gmail host must have its own explicit password and must not silently reuse a SendGrid key. Use an actually verified SendGrid sender if choosing that existing provider instead. No provider account, credential or subscription was created or changed here.
+
+Before later acceptance, check outbound SMTP access on the **existing** Render plan/network: provider policies may block SMTP ports. This review did not verify that egress. If blocked, record the failure and stop that integration step; do not buy a plan/resource or claim a local test proves Render delivery. After approved configuration/deployment, request a reset for a controlled test account, receive the message at the intended mailbox, verify the HTTPS Render-host link and complete the reset. Check sender branding if the Django Site record still says `example.com`. Keep tokens and email contents private. Local in-memory email/token and fresh-process configuration tests are separate evidence.
 
 Order payment state does not depend on SMTP. Automatic order-confirmation email dispatch is not implemented; a newsletter record is not campaign-delivery evidence.
 
@@ -81,8 +111,8 @@ The current recommendation is **NO-GO for a production release or a claim that e
 | Complete migration state and cutover | Full migration/schema agreement, reviewed forward/recovery plan and prevention of old-code order writes during cutover | Owner confirms the production order/product/blog baseline and successful complete local upgrade. The five new project migrations remain reported pending only in production. Verify the release-time production plan/schema and prevent old-code writes during cutover; old-model order writes fail after the new schema. No repeat of the completed local rehearsal is required absent a relevant schema change/drift. |
 | Production configuration | Correct existing database, strong existing secret, DEBUG off, HTTPS host and valid Cloudinary account/upload access | Variable-name compatibility is tested; private values and external access are not verified. |
 | Stripe sandbox | Same-account test API key and exact endpoint signing secret, live mode off, actual signed delivery and success/decline/cancel/retry acceptance | The route and offline signature/state logic are tested. The four reported variables alone do not configure Stripe, and no real sandbox checkout/delivery is claimed. |
-| Customer email | Configured SMTP backend, authorised sender and actually received password-reset email | Local token/email tests pass separately; console output is not delivery. Payment state remains independent of SMTP. |
-| Offered catalogue | Accurate authorised product photos/source records and a fulfilment process matching every offer | Existing placeholder images do not meet genuine-photo requirements. New development seeding omits the unsupported PDF; any legacy PDF listing still offered needs verified fulfilment or removal while preserving historical orders. |
+| Customer email | Existing Gmail/App Password or already configured alternative, SMTP egress, authorised sender and actually received password-reset email | Gmail environment support is prepared; credentials, account eligibility, Render egress and delivery are not verified. Local token/email tests and console output are not delivery. Payment state remains independent of SMTP. |
+| Offered catalogue | Accurate authorised product images/source records and a fulfilment process matching every offer | No nine original AI images were supplied or linked here. Review illustrations honestly rather than claiming product photographs or automatic assessment acceptance. New development seeding omits the unsupported PDF; any legacy PDF listing still offered needs verified fulfilment or complete withdrawal while preserving historical orders. |
 | Release approval | Owner review and explicit approval of the exact commit and release actions | This review does not merge, deploy, change Render or authorise live payments. |
 
 Do not run `bash build.sh` against a production `DATABASE_URL` as a read-only readiness check: it applies migrations and writes to the database during the build, before the web process starts. The backup and explicit release approval gates must precede that operation. Reuse existing resources; no paid resource or plan change is required by this checklist.

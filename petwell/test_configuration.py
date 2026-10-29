@@ -20,7 +20,11 @@ def refuse_network(*args, **kwargs):
 socket.socket.connect = refuse_network
 
 import django
-django.setup()
+try:
+    django.setup()
+except Exception as exc:
+    print(json.dumps({"startup_error": type(exc).__name__, "message": str(exc)}))
+    raise SystemExit(0)
 
 import cloudinary
 from django.conf import settings
@@ -55,10 +59,14 @@ print(json.dumps({
     "email_host": settings.EMAIL_HOST,
     "email_port": settings.EMAIL_PORT,
     "email_tls": settings.EMAIL_USE_TLS,
+    "email_ssl": settings.EMAIL_USE_SSL,
     "email_user": settings.EMAIL_HOST_USER,
     "email_timeout": settings.EMAIL_TIMEOUT,
+    "email_password_set": bool(settings.EMAIL_HOST_PASSWORD),
     "email_password_matches": (
-        settings.EMAIL_HOST_PASSWORD == os.environ.get("SENDGRID_API_KEY")
+        settings.EMAIL_HOST_PASSWORD == os.environ.get(
+            "EMAIL_HOST_PASSWORD", os.environ.get("SENDGRID_API_KEY")
+        )
     ),
     "from_email": settings.DEFAULT_FROM_EMAIL,
 }))
@@ -102,6 +110,14 @@ class ProductionConfigurationTests(SimpleTestCase):
         )
         # Keep stderr/environment out of assertion output even on startup errors.
         self.assertEqual(process.returncode, 0, "Offline startup probe failed.")
+        for name in (
+            "EMAIL_HOST_PASSWORD", "SENDGRID_API_KEY", "CLOUDINARY_API_SECRET"
+        ):
+            secret = environment.get(name)
+            self.assertFalse(
+                bool(secret) and secret in process.stdout,
+                "Offline configuration output must not contain credentials.",
+            )
         return json.loads(process.stdout)
 
     def test_existing_render_url_only_configuration_survives_storage_import(self):
@@ -201,7 +217,84 @@ class ProductionConfigurationTests(SimpleTestCase):
         self.assertEqual(config["email_host"], "smtp.sendgrid.net")
         self.assertEqual(config["email_port"], 587)
         self.assertTrue(config["email_tls"])
+        self.assertFalse(config["email_ssl"])
         self.assertEqual(config["email_user"], "apikey")
         self.assertEqual(config["email_timeout"], 10)
         self.assertTrue(config["email_password_matches"])
         self.assertEqual(config["from_email"], "PetWell <sender@example.test>")
+
+    def test_gmail_starttls_uses_explicit_credentials_without_sending(self):
+        config = self.configuration({
+            "EMAIL_BACKEND": "django.core.mail.backends.smtp.EmailBackend",
+            "EMAIL_HOST": "smtp.gmail.com",
+            "EMAIL_PORT": "587",
+            "EMAIL_USE_TLS": "True",
+            "EMAIL_USE_SSL": "False",
+            "EMAIL_HOST_USER": "petwell.shop.uk@gmail.com",
+            "EMAIL_HOST_PASSWORD": "synthetic-gmail-app-password-fixture",
+            "SENDGRID_API_KEY": "unrelated-sendgrid-fixture",
+            "DEFAULT_FROM_EMAIL": "PetWell <petwell.shop.uk@gmail.com>",
+        })
+        self.assertEqual(config["email_host"], "smtp.gmail.com")
+        self.assertEqual(config["email_port"], 587)
+        self.assertTrue(config["email_tls"])
+        self.assertFalse(config["email_ssl"])
+        self.assertEqual(config["email_user"], "petwell.shop.uk@gmail.com")
+        self.assertTrue(config["email_password_set"])
+        self.assertTrue(config["email_password_matches"])
+        self.assertEqual(
+            config["from_email"], "PetWell <petwell.shop.uk@gmail.com>"
+        )
+
+    def test_other_smtp_host_never_inherits_sendgrid_credentials(self):
+        config = self.configuration({
+            "EMAIL_HOST": "smtp.gmail.com",
+            "SENDGRID_API_KEY": "unrelated-sendgrid-fixture",
+        })
+        self.assertEqual(config["email_user"], "")
+        self.assertFalse(config["email_password_set"])
+        self.assertFalse(config["email_password_matches"])
+        self.assertEqual(
+            config["email_backend"], "django.core.mail.backends.console.EmailBackend"
+        )
+
+    def test_explicit_password_overrides_or_disables_sendgrid_fallback(self):
+        for password in ("explicit-smtp-fixture", ""):
+            with self.subTest(password_set=bool(password)):
+                config = self.configuration({
+                    "EMAIL_HOST_PASSWORD": password,
+                    "SENDGRID_API_KEY": "unrelated-sendgrid-fixture",
+                })
+                self.assertTrue(config["email_password_matches"])
+                self.assertEqual(config["email_password_set"], bool(password))
+
+    def test_implicit_tls_is_explicitly_available_for_other_smtp_providers(self):
+        config = self.configuration({
+            "EMAIL_HOST": "smtp.example.test",
+            "EMAIL_PORT": "465",
+            "EMAIL_USE_TLS": "false",
+            "EMAIL_USE_SSL": "true",
+            "EMAIL_TIMEOUT": "20",
+        })
+        self.assertEqual(config["email_port"], 465)
+        self.assertFalse(config["email_tls"])
+        self.assertTrue(config["email_ssl"])
+        self.assertEqual(config["email_timeout"], 20)
+
+    def test_invalid_email_options_fail_without_echoing_secrets(self):
+        for variables, expected in (
+            ({"EMAIL_USE_TLS": "True", "EMAIL_USE_SSL": "True"}, "cannot both"),
+            ({"EMAIL_PORT": "private-fixture-only"}, "must be integers"),
+            ({"EMAIL_PORT": "0"}, "EMAIL_PORT must be"),
+            ({"EMAIL_PORT": "65536"}, "EMAIL_PORT must be"),
+            ({"EMAIL_TIMEOUT": "0"}, "EMAIL_TIMEOUT must be positive"),
+            ({"EMAIL_USE_TLS": "private-fixture-only"}, "must be True or False"),
+        ):
+            with self.subTest(option=next(iter(variables))):
+                config = self.configuration({
+                    **variables,
+                    "EMAIL_HOST_PASSWORD": "private-fixture-only",
+                })
+                self.assertEqual(config["startup_error"], "ImproperlyConfigured")
+                self.assertIn(expected, config["message"])
+                self.assertNotIn("private-fixture-only", config["message"])

@@ -3,6 +3,7 @@ from pathlib import Path
 
 import cloudinary
 import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -136,18 +137,48 @@ SECURE_HSTS_PRELOAD = not DEBUG
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
 
 # === EMAIL CONFIGURATION (PETWELL SUPPORT) ===
+def _email_boolean(name, default):
+    value = os.environ.get(name, str(default)).strip().lower()
+    if value in {"true", "1", "yes", "on"}:
+        return True
+    if value in {"false", "0", "no", "off"}:
+        return False
+    raise ImproperlyConfigured(f"{name} must be True or False.")
+
+
 EMAIL_BACKEND = os.environ.get(
     "EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend"
 )
-EMAIL_HOST = "smtp.sendgrid.net"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "apikey"
-EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY")
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.sendgrid.net").strip()
+try:
+    EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
+    EMAIL_TIMEOUT = int(os.environ.get("EMAIL_TIMEOUT", "10"))
+except ValueError:
+    raise ImproperlyConfigured(
+        "EMAIL_PORT and EMAIL_TIMEOUT must be integers."
+    ) from None
+if not 1 <= EMAIL_PORT <= 65535 or EMAIL_TIMEOUT <= 0:
+    raise ImproperlyConfigured(
+        "EMAIL_PORT must be 1–65535 and EMAIL_TIMEOUT must be positive."
+    )
+EMAIL_USE_TLS = _email_boolean("EMAIL_USE_TLS", True)
+EMAIL_USE_SSL = _email_boolean("EMAIL_USE_SSL", False)
+if EMAIL_USE_TLS and EMAIL_USE_SSL:
+    raise ImproperlyConfigured(
+        "EMAIL_USE_TLS and EMAIL_USE_SSL cannot both be True."
+    )
+_sendgrid_host = EMAIL_HOST.lower() == "smtp.sendgrid.net"
+EMAIL_HOST_USER = os.environ.get(
+    "EMAIL_HOST_USER", "apikey" if _sendgrid_host else ""
+)
+# A stale SendGrid secret must never authenticate to Gmail/another SMTP host.
+# An explicitly empty password also disables the backwards-compatible fallback.
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+if EMAIL_HOST_PASSWORD is None and _sendgrid_host:
+    EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY")
 DEFAULT_FROM_EMAIL = os.environ.get(
     "DEFAULT_FROM_EMAIL", "PetWell <noreply@example.com>"
 )
-EMAIL_TIMEOUT = 10
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
