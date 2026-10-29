@@ -19,3 +19,11 @@ This branch introduces `Product.is_available` (default `True`) and guards public
 5. Never enable live payments or merge PR #9 automatically. Review CI and pending-payment state first.
 
 PR #9 is intentionally a draft against `fix/pp5-resubmission`, not a production release. If Codex continues working on PR #8, reconcile both branches carefully before any merge.
+
+## Additional pre-Codex code review (29 October 2026)
+
+- The cart now blocks the checkout navigation link when **any** line is withdrawn, missing, or nonpositively priced, even when other payable items remain. The checkout endpoint independently rejects the stale cart; hiding the link is a UX guard, not a security boundary.
+- Direct add-to-cart and public catalogue also reject nonpositive-priced items; tests added for direct POST, catalogue and mixed cart cases.
+- Removed a redundant second product query in the add-to-cart handler.
+- These commits were saved on this **draft** branch only. The GitHub commit-workflow lookup returned no pull-request workflow runs at the time of review; this is **not** evidence of passing or failing tests. Confirm CI via GitHub Actions, then run the full SQLite and PostgreSQL suites before any release.
+- **Operational blocker remains:** the old PDF record defaults to available until an authorised operator verifies its identity and explicitly withdraws it. Never automatically update a guessed product row or remove historical orders.
