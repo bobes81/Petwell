@@ -69,3 +69,11 @@ class ProductAvailabilityTests(TestCase):
         self.assertContains(response, visible.name)
         self.assertNotContains(response, hidden.name)
         self.assertTrue(Product.objects.filter(pk=hidden.pk).exists())
+
+    def test_zero_price_product_is_not_listed(self):
+        hidden = Product.objects.create(name="Unpriced sample", price="0.00")
+        visible = Product.objects.create(name="Priced product", price="7.25")
+        from django.urls import reverse
+        response = self.client.get(reverse("products:product_list"))
+        self.assertContains(response, visible.name)
+        self.assertNotContains(response, hidden.name)
