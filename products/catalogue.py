@@ -79,8 +79,12 @@ def _read_source(directory, filename, entry_number):
     return contents
 
 
-def validate_image_plan(manifest_path, images_directory):
-    """Return checked mappings; owner provenance remains an attestation."""
+def validate_image_plan(manifest_path, images_directory, *, sources_only=False):
+    """Check sources and, by default, require a complete association plan.
+
+    Source-only validation permits declared pending identity/provider fields;
+    it does not construct delivery references or verify owner attestations.
+    """
     try:
         path = Path(manifest_path)
         before = path.lstat()
@@ -122,12 +126,16 @@ def validate_image_plan(manifest_path, images_directory):
         or type(manifest["schema_version"]) is not int
         or manifest["schema_version"] != 1
         or not isinstance(manifest["cloud_name"], str)
-        or not re.fullmatch(r"[a-z0-9][a-z0-9_-]{0,49}", manifest["cloud_name"])
+        or not (
+            re.fullmatch(r"[a-z0-9][a-z0-9_-]{0,49}", manifest["cloud_name"])
+            or (sources_only and manifest["cloud_name"] == "")
+        )
         or not isinstance(manifest["products"], list)
         or len(manifest["products"]) != 9
     ):
         raise ImageMappingError(
-            "Use schema_version 1, a cloud name and exactly nine product entries."
+            "Use schema_version 1, a valid or permitted pending cloud name "
+            "and exactly nine product entries."
         )
     directory = Path(images_directory)
     try:
@@ -142,21 +150,31 @@ def validate_image_plan(manifest_path, images_directory):
     for number, entry in enumerate(manifest["products"], 1):
         if not isinstance(entry, dict) or set(entry) != ENTRY_FIELDS:
             raise ImageMappingError(f"Entry {number}: fields do not match schema 1.")
+        valid_product_id = (
+            type(entry["product_id"]) is int
+            and 0 < entry["product_id"] <= 9223372036854775807
+        )
+        valid_public_id = (
+            isinstance(entry["public_id"], str)
+            and bool(PUBLIC_ID_PATTERN.fullmatch(entry["public_id"]))
+        )
+        valid_version = (
+            type(entry["version"]) is int
+            and 0 < entry["version"] <= 9223372036854775807
+        )
         if (
-            type(entry["product_id"]) is not int or entry["product_id"] <= 0
-            or entry["product_id"] > 9223372036854775807
+            not (valid_product_id or (sources_only and entry["product_id"] is None))
             or not isinstance(entry["product_name"], str)
             or entry["product_name"] not in PHYSICAL_PRODUCT_NAMES
-            or entry["rights_reviewed"] is not True
+            or type(entry["rights_reviewed"]) is not bool
+            or (not sources_only and entry["rights_reviewed"] is not True)
             or entry["ai_generated"] is not True
             or not isinstance(entry["provenance"], str)
             or not 1 <= len(entry["provenance"].strip()) <= 1000
             or not isinstance(entry["sha256"], str)
             or not re.fullmatch(r"[a-f0-9]{64}", entry["sha256"])
-            or not isinstance(entry["public_id"], str)
-            or not PUBLIC_ID_PATTERN.fullmatch(entry["public_id"])
-            or type(entry["version"]) is not int
-            or not 0 < entry["version"] <= 9223372036854775807
+            or not (valid_public_id or (sources_only and entry["public_id"] == ""))
+            or not (valid_version or (sources_only and entry["version"] is None))
             or not isinstance(entry["format"], str)
             or entry["format"] not in {"jpg", "png", "webp"}
         ):
@@ -165,9 +183,9 @@ def validate_image_plan(manifest_path, images_directory):
                 "and versioned AI-image reference."
             )
         if (
-            entry["product_id"] in seen_ids
+            (valid_product_id and entry["product_id"] in seen_ids)
             or entry["product_name"] in seen_names
-            or entry["public_id"] in seen_public_ids
+            or (valid_public_id and entry["public_id"] in seen_public_ids)
             or entry["sha256"] in seen_hashes
         ):
             raise ImageMappingError(
@@ -181,6 +199,7 @@ def validate_image_plan(manifest_path, images_directory):
             with warnings.catch_warnings():
                 warnings.simplefilter("error", Image.DecompressionBombWarning)
                 with Image.open(BytesIO(contents)) as image:
+                    width, height = image.size
                     actual_format = {"JPEG": "jpg", "PNG": "png", "WEBP": "webp"}.get(
                         image.format
                     )
@@ -194,20 +213,30 @@ def validate_image_plan(manifest_path, images_directory):
             raise ImageMappingError(
                 f"Entry {number}: source is not a valid matching JPEG, PNG or WEBP image."
             ) from None
-        reference = CloudinaryResource(
-            public_id=entry["public_id"], version=entry["version"],
-            format=entry["format"], resource_type="image", type="upload",
-        ).get_prep_value()
-        if len(reference) > 255:
-            raise ImageMappingError(f"Entry {number}: image reference is too long.")
-        checked.append({
+        checked_entry = {
             "product_id": entry["product_id"],
             "product_name": entry["product_name"],
-            "reference": reference,
-        })
-        seen_ids.add(entry["product_id"])
+            "source_file": entry["source_file"],
+            "sha256": entry["sha256"],
+            "format": entry["format"],
+            "width": width,
+            "height": height,
+            "rights_reviewed": entry["rights_reviewed"],
+        }
+        if not sources_only:
+            reference = CloudinaryResource(
+                public_id=entry["public_id"], version=entry["version"],
+                format=entry["format"], resource_type="image", type="upload",
+            ).get_prep_value()
+            if len(reference) > 255:
+                raise ImageMappingError(f"Entry {number}: image reference is too long.")
+            checked_entry["reference"] = reference
+        checked.append(checked_entry)
+        if valid_product_id:
+            seen_ids.add(entry["product_id"])
         seen_names.add(entry["product_name"])
-        seen_public_ids.add(entry["public_id"])
+        if valid_public_id:
+            seen_public_ids.add(entry["public_id"])
         seen_hashes.add(entry["sha256"])
     if seen_names != PHYSICAL_PRODUCT_NAMES:
         raise ImageMappingError("The plan must cover the nine physical sample products.")

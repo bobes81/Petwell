@@ -36,6 +36,7 @@ erDiagram
         text description
         decimal price
         string image "Cloudinary resource"
+        boolean is_available "default True; explicit reviewed withdrawal"
     }
     BLOG_POST {
         int id PK
@@ -81,3 +82,5 @@ The UUID migration first adds a nullable field, assigns a distinct value to ever
 Migration `0004` adds JSON snapshots without inferring missing legacy payment data. Legacy no-response/no-payload attempts get fresh keys, and legacy lines without identities are not automatically removed from carts. Admin order deletion is disabled so payable/paid orders retain their webhook/history record.
 
 `accounts.0001` creates the owner-only PetProfile model and frontend feature. `orders.0005` creates CheckoutState: an internal session-scoped lease/pointer, not a substitute for the user-facing custom model. API I/O occurs outside the short database transaction; expired leases can recover durable order snapshots.
+
+`products.0002` adds availability without automatically withdrawing a row. Catalogue/direct cart/stale cart/checkout/reorder reject withdrawn or nonpositive-priced items; OrderItems and legitimate signed payment confirmation remain intact. A new targeted real-data migration check and an approved exact-row withdrawal are separate from the five owner-completed migrations and from schema application.

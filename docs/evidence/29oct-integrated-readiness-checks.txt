@@ -1,0 +1,20 @@
+29 October 2026: integrated PR9/source-preflight checks, sequential after tests and after stopping local browser server. Synthetic Gmail/Cloudinary settings and process-only ephemeral secret; no external providers or production database.
+
+$ venv/bin/python manage.py check --settings=petwell.test_settings
+System check identified no issues (0 silenced).
+
+$ venv/bin/python manage.py makemigrations --check --dry-run --settings=petwell.test_settings
+No changes detected
+
+$ venv/bin/python manage.py check --deploy --fail-level WARNING
+System check identified no issues (0 silenced).
+
+$ venv/bin/python manage.py collectstatic --noinput
+
+1 static file copied to '/workspace/Petwell/staticfiles', 165 unmodified, 413 post-processed.
+
+$ venv/bin/python -m pip check
+WARNING: The directory '/home/agent/.cache/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+No broken requirements found.
+
+$ git diff --check

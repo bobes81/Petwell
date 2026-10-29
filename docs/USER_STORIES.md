@@ -19,3 +19,5 @@ Created **28 October 2026** as a retrospective breakdown of the current work. Th
 | US-13 Published marketing | SHOULD | As an owner, review page copy, publish genuine authorised material and record actual evidence. | docs/EVIDENCE.md | Pending owner decision/access; mockup is not published marketing. |
 
 For GitHub project management, create or link a separate issue for each feature story, add priority labels only after reviewing existing labels, and separate implementation/test completion from outstanding deployment/evidence work. Do not close an entire epic merely because its code portion passes locally. This document is a truthful replacement for missing feature-level planning records, not a fabricated issue history.
+
+US-12 (MUST): As a shopper, I cannot buy withdrawn, missing or nonpositive-priced products through direct URLs, stale carts or Buy Again; historical purchases remain visible. Implemented from PR #9 with endpoint/migration regressions and truthful skipped-item feedback. The real PDF row is not automatically withdrawn; deployed acceptance/approved operator action remain pending.

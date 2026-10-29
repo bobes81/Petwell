@@ -1,0 +1,16 @@
+29 October 2026: actual owner-uploaded source preflight. SQL execution, sockets, provider configuration and remote-reference construction refused during command calls. No identifiers invented or images associated.
+
+SOURCES ONLY: 9 local AI-concept sources validated.
+Calming Lavender Spray: 1000x1000 PNG
+Dental Chew Sticks: 1000x1000 PNG
+Joint Support Treats: 1000x1000 PNG
+Hypoallergenic Shampoo: 1000x1000 PNG
+Organic Paw Balm: 1000x1000 PNG
+Digestive Support Powder: 1000x1000 PNG
+Eco Toy Rope: 1000x1000 PNG
+Herbal Ear Cleaner: 1000x1000 PNG
+Herbal Chill Drops: 1000x1000 PNG
+Rights review pending: 9. Provenance is owner-supplied. Rights, visual accuracy, database identities and remote assets are not verified. This is not a ready-to-apply mapping. No database queries/writes, uploads or fetches performed.
+Expected safe refusal: Use schema_version 1, a valid or permitted pending cloud name and exactly nine product entries.
+Expected safe refusal: Use schema_version 1, a valid or permitted pending cloud name and exactly nine product entries.
+Expected safe refusal: --sources-only cannot be combined with --apply.

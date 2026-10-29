@@ -4,24 +4,25 @@
     <h1 class="h2 text-center mb-5 fw-bold">Your Cart</h1>
 
     {% if items %}
-    <div class="table-responsive">
-        <table class="table table-bordered text-center align-middle shadow-sm">
+    <p class="small text-muted d-sm-none">Scroll the table horizontally to see all cart details.</p>
+    <div class="table-responsive position-relative" tabindex="0" role="region" aria-label="Shopping cart items">
+        <table class="table table-bordered text-center align-middle shadow-sm cart-table">
             <thead class="table-dark">
                 <tr>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Subtotal</th>
-                    <th></th>
+                    <th scope="col">Product</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Subtotal</th>
+                    <th scope="col"><span class="visually-hidden">Actions</span></th>
                 </tr>
             </thead>
             <tbody>
                 {% for item in items %}
                 <tr>
                     <td>{{ item.product.name }}</td>
-                    <td>{% if item.unavailable %}Unavailable{% else %}£{{ item.product.price }}{% endif %}</td>
+                    <td class="cart-money">{% if item.unavailable %}Unavailable{% else %}£{{ item.product.price }}{% endif %}</td>
                     <td>{{ item.quantity }}</td>
-                    <td>{% if item.unavailable %}—{% else %}£{{ item.subtotal }}{% endif %}</td>
+                    <td class="cart-money">{% if item.unavailable %}—{% else %}£{{ item.subtotal }}{% endif %}</td>
                     <td>
                         <form method="post" action="{% url 'cart:remove_from_cart' item.product.id %}">{% csrf_token %}
                           <button class="btn btn-outline-danger btn-sm" type="submit">Remove {{ item.product.name }}</button>

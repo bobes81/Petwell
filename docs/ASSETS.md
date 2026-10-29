@@ -1,6 +1,6 @@
 # Asset inspection and evidence limits
 
-This is an inventory of observations made from repository files on **28 October 2026**, not a licence grant, proof of ownership, or a marketing result. No images were generated, edited, rebranded, or presented as newly captured evidence for this inspection. Preserve visible provenance marks.
+This records the legacy-file inspection on **28 October 2026** and the separately supplied concept-illustration review on **29 October 2026**. It is not a licence grant, proof of ownership, or a marketing result. No images were generated, edited, rebranded, or presented as newly captured website evidence for these inspections. Preserve visible provenance marks.
 
 ## Files actually inspected
 
@@ -27,26 +27,32 @@ The following inventory records the ten names in the seed inspected on 28 Octobe
 
 | Seed product | Image and rights evidence |
 | --- | --- |
-| Calming Lavender Spray | Not supplied |
-| Dental Chew Sticks | Not supplied |
-| Joint Support Treats | Not supplied |
-| Hypoallergenic Shampoo | Not supplied |
+| Calming Lavender Spray | [Owner-supplied AI concept](catalogue/concepts/calming-lavender-spray.png); inspected, usage approval pending |
+| Dental Chew Sticks | [Owner-supplied AI concept](catalogue/concepts/dental-chew-sticks.png); inspected, usage approval pending |
+| Joint Support Treats | [Owner-supplied AI concept](catalogue/concepts/joint-support-treats.png); inspected, usage approval pending |
+| Hypoallergenic Shampoo | [Owner-supplied AI concept](catalogue/concepts/hypoallergenic-shampoo.png); inspected, usage approval pending |
 | Mindful Pet Journal (PDF), legacy seed only | Omitted from new seeding; existing rows preserved. Any existing offer needs an actual file and verified fulfilment process, or removal from the offered catalogue. |
-| Organic Paw Balm | Not supplied |
-| Digestive Support Powder | Not supplied |
-| Eco Toy Rope | Not supplied |
-| Herbal Ear Cleaner | Not supplied |
-| Herbal Chill Drops | Not supplied |
+| Organic Paw Balm | [Owner-supplied AI concept](catalogue/concepts/organic-paw-balm.png); inspected, usage approval pending |
+| Digestive Support Powder | [Owner-supplied AI concept](catalogue/concepts/digestive-support-powder.png); inspected, usage approval pending |
+| Eco Toy Rope | [Owner-supplied AI concept](catalogue/concepts/eco-toy-rope.png); inspected, usage approval pending |
+| Herbal Ear Cleaner | [Owner-supplied AI concept](catalogue/concepts/herbal-ear-cleaner.png); inspected, usage approval pending |
+| Herbal Chill Drops | [Owner-supplied AI concept](catalogue/concepts/herbal-chill-drops.png); inspected, usage approval pending |
 
 For each retained catalogue item, record the exact product name, image creator/source URL or owner reference, permission/licence and any required attribution, the date checked, and its uploaded image reference. Do not publish private supplier agreements or account credentials. Match the image to the actual item; a branded supplier photo requires permission, and a photo of an unrelated item does not resolve the gap. Also review descriptions and wellness claims for accuracy.
 
-After an approved upload, inspect shop/cart/reorder pages on desktop and mobile, confirm the correct image and readable alternative text, and check the missing-image fallback separately. Save actual results and captions with the date and deployed revision. No catalogue image, permission or external upload is marked complete by this document.
+After an approved upload, inspect shop/cart/reorder pages on desktop and mobile, confirm the correct image and readable alternative text, and check the missing-image fallback separately. Save actual results and captions with the date and deployed revision. No production image association, usage approval or external upload is marked complete by this document.
 
-### Nine planned original AI illustrations — 29 October follow-up
+### Nine supplied AI concepts — 29 October follow-up
 
-The owner now plans nine original AI-generated images for the physical catalogue. **Those files were not supplied or inspected in this review.** No filename, uploaded asset, image appearance, generator account or usage permission is invented. The earlier phrase “genuine-photo requirement” overstated the supplied feedback: it identifies placeholders, without specifying photographs. Accurate authorised illustrations can be reviewed as a candidate; do not guarantee assessment acceptance or describe them as actual supplier/product photographs.
+At `d8203e0`, no nine source files had been supplied. The owner subsequently supplied `Petwell_9_product_concepts.zip` on 29 October. Its nine original PNG byte streams are now prepared under [catalogue/concepts](catalogue/README.md), with a [prepared draft manifest](catalogue/catalogue-images.DRAFT.json) and [inspection record](evidence/29oct-uploaded-concepts-inspection.json). All nine images decode successfully as **1000 × 1000 RGB PNGs**, and all nine distinct SHA-256 hashes match the supplied draft. Archive path/member checks and CRC integrity passed.
 
-[CATALOGUE_IMAGES.md](CATALOGUE_IMAGES.md) provides a blank mapping template and a dry-run-first, empty-fields-only association command. A later owner-reviewed upload must retain provenance, use new unique public IDs and preserve existing assets. Mapped `petwell/ai-products/` images are explicitly captioned as AI-generated illustrations. Source hashes validate local files, not ownership or an actual Cloudinary upload. The legacy PDF remains a separate fulfilment decision, with its database/history untouched.
+The visible product names match the nine physical names in the repository exactly. Each image uses an appropriate generic product/container icon, is labelled **AI CONCEPT**, and carries a footer explaining that it is not a real product photograph. This establishes the supplied files' labels and conceptual subject matching, not actual packaging, formulations, efficacy, current production database identities or supplier endorsement.
+
+The package describes them as original AI-concept graphics created on 29 October 2026. That is an owner/package provenance claim: the PNG metadata contains no generator, authorship or licence evidence, and no generation tool/version or applicable usage terms were supplied. Rights and the owner's final accuracy approval remain pending; `rights_reviewed` stays false. Product IDs, cloud name, Cloudinary public IDs and upload versions remain unset. No external upload or existing product image was changed.
+
+The earlier phrase “genuine-photo requirement” overstated the supplied feedback: it identifies placeholders, without specifying photographs. Accurate authorised illustrations can be reviewed as a candidate; do not guarantee assessment acceptance or describe them as actual supplier/product photographs.
+
+[CATALOGUE_IMAGES.md](CATALOGUE_IMAGES.md) separates source-only local validation of the prepared draft from the complete dry-run-first, empty-fields-only association workflow. The blank template remains a general example. A later owner-reviewed upload must retain provenance, use new unique public IDs and preserve existing assets. Mapped `petwell/ai-products/` images are explicitly captioned as AI-generated illustrations. Source hashes validate local files, not ownership or an actual Cloudinary upload. The legacy PDF remains a separate fulfilment decision, with its database/history untouched.
 
 ## Submission and marketing evidence
 

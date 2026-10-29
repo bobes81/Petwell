@@ -1,5 +1,7 @@
 # Isolated restored-database rehearsal on the owner's Mac
 
+The later PR #9 availability migration was introduced **after** this successful rehearsal. It does not invalidate the completed five-migration result. Before release, use a disposable copy of the already-migrated working database to inspect the plan, apply only `products.0002_product_is_available`, and verify preserved product/order/item/blog/subscriber counts, prices, image references and links. All existing products should default to available; no PDF should be automatically withdrawn. Record the genuine result privately. The command examples below remain a historical/reproducible full workflow, not a demand to restore and repeat completed work.
+
 ## Completed owner-reported results — 29 October 2026
 
 The owner reports successful restoration of the **28 October Render backup** into an isolated **PostgreSQL 18 working copy on their MacBook**, followed by successful application of **all five pending project migrations** and **no remaining migrations**. Original records were preserved: **10 products, 5 orders, 5 order items, 2 blog posts and 2 subscribers**. Reported integrity checks found **zero missing UUIDs, duplicate UUIDs, missing order links or incorrectly paid legacy orders**.

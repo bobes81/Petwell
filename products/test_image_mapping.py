@@ -87,12 +87,13 @@ class ProductImageAssociationTests(TestCase):
         self.upload = upload.start()
         self.addCleanup(upload.stop)
 
-    def run_plan(self, *, apply=False, manifest=None):
+    def run_plan(self, *, apply=False, manifest=None, sources_only=False):
         self.manifest_path.write_text(json.dumps(manifest or self.manifest))
         output = StringIO()
         call_command(
             "associate_product_images", str(self.manifest_path),
-            images_dir=str(self.directory), apply=apply, stdout=output,
+            images_dir=str(self.directory), apply=apply,
+            sources_only=sources_only, stdout=output,
         )
         self.network.assert_not_called()
         self.upload.assert_not_called()
@@ -101,6 +102,91 @@ class ProductImageAssociationTests(TestCase):
     def assert_unassigned(self):
         for product in Product.objects.filter(pk__in=[p.pk for p in self.products]):
             self.assertFalse(product.image)
+
+    def pending_draft(self):
+        manifest = deepcopy(self.manifest)
+        manifest["cloud_name"] = ""
+        for entry in manifest["products"]:
+            entry.update(
+                product_id=None, public_id="", version=None,
+                rights_reviewed=False,
+            )
+        return manifest
+
+    def test_source_only_checks_pending_draft_without_database_or_cloud_access(self):
+        draft = self.pending_draft()
+        original = deepcopy(draft)
+        with self.assertNumQueries(0), patch(
+            "products.management.commands.associate_product_images.cloudinary.config",
+            side_effect=AssertionError("Source checks must not use provider config."),
+        ) as config, patch(
+            "products.catalogue.CloudinaryResource",
+            side_effect=AssertionError("Source checks must not construct references."),
+        ) as resource:
+            output = self.run_plan(sources_only=True, manifest=draft)
+        config.assert_not_called()
+        resource.assert_not_called()
+        self.assertIn("SOURCES ONLY: 9 local AI-concept sources validated", output)
+        self.assertEqual(output.count("8x8 PNG"), 9)
+        self.assertIn("Rights review pending: 9", output)
+        self.assertIn("not a ready-to-apply mapping", output)
+        self.assertIn("No database queries/writes, uploads or fetches", output)
+        self.assertEqual(draft, original)
+        self.assertEqual(json.loads(self.manifest_path.read_text()), original)
+        self.assert_unassigned()
+
+    def test_source_only_cannot_apply_and_rejects_before_loading_input(self):
+        with self.assertNumQueries(0), patch(
+            "products.management.commands.associate_product_images.validate_image_plan",
+            side_effect=AssertionError("Incompatible flags must fail before input access."),
+        ) as validate:
+            with self.assertRaisesMessage(CommandError, "cannot be combined"):
+                call_command(
+                    "associate_product_images", "not-opened.json",
+                    images_dir="not-opened", apply=True, sources_only=True,
+                )
+        validate.assert_not_called()
+        self.assert_unassigned()
+
+    def test_pending_draft_remains_invalid_for_normal_dry_run_or_application(self):
+        for apply in (False, True):
+            with self.subTest(apply=apply), self.assertNumQueries(0):
+                with self.assertRaises(CommandError):
+                    self.run_plan(apply=apply, manifest=self.pending_draft())
+        self.assert_unassigned()
+
+    def test_source_only_rejects_wrong_hash_name_and_corrupt_source(self):
+        for key, value in (
+            ("sha256", "0" * 64),
+            ("product_name", "Mindful Pet Journal (PDF)"),
+        ):
+            draft = self.pending_draft()
+            draft["products"][0][key] = value
+            with self.subTest(field=key), self.assertNumQueries(0):
+                with self.assertRaises(CommandError):
+                    self.run_plan(sources_only=True, manifest=draft)
+        contents = b"This is not an image or an owner asset."
+        (self.directory / "fixture-0.png").write_bytes(contents)
+        draft = self.pending_draft()
+        draft["products"][0]["sha256"] = sha256(contents).hexdigest()
+        with self.assertNumQueries(0):
+            with self.assertRaisesMessage(CommandError, "not a valid matching"):
+                self.run_plan(sources_only=True, manifest=draft)
+        self.assert_unassigned()
+
+    def test_source_only_still_requires_distinct_sources_and_valid_attestations(self):
+        for key, value in (
+            ("sha256", self.manifest["products"][0]["sha256"]),
+            ("rights_reviewed", "false"),
+            ("provenance", ""),
+            ("ai_generated", False),
+        ):
+            draft = self.pending_draft()
+            draft["products"][-1][key] = value
+            with self.subTest(field=key), self.assertNumQueries(0):
+                with self.assertRaises(CommandError):
+                    self.run_plan(sources_only=True, manifest=draft)
+        self.assert_unassigned()
 
     def test_default_dry_run_has_no_database_writes_or_provider_actions(self):
         with CaptureQueriesContext(connection) as queries:
@@ -117,9 +203,9 @@ class ProductImageAssociationTests(TestCase):
 
     def test_apply_preserves_existing_data_history_images_and_is_idempotent(self):
         existing = self.products[0]
-        Product.objects.filter(pk=existing.pk).update(image="owner/existing-art")
+        Product.objects.filter(pk=existing.pk).update(image="owner/existing-art", is_available=False)
         catalogue = list(Product.objects.order_by("pk").values(
-            "pk", "name", "description", "price"
+            "pk", "name", "description", "price", "is_available"
         ))
         original_order = list(Order.objects.values())
         original_items = list(OrderItem.objects.values())
@@ -138,7 +224,7 @@ class ProductImageAssociationTests(TestCase):
         self.assertEqual(str(existing.image), "owner/existing-art")
         self.assertEqual(str(self.legacy_pdf.image), "legacy/pdf-cover")
         self.assertEqual(list(Product.objects.order_by("pk").values(
-            "pk", "name", "description", "price"
+            "pk", "name", "description", "price", "is_available"
         )), catalogue)
         self.assertEqual(list(Order.objects.values()), original_order)
         self.assertEqual(list(OrderItem.objects.values()), original_items)

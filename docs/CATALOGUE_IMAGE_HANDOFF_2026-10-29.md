@@ -1,8 +1,8 @@
 # Nine catalogue concept images — verified local handoff (29 Oct 2026)
 
-Status: **local ZIP exists, but image binaries have NOT been committed to GitHub, uploaded to Cloudinary or associated with products**. Do not interpret this file as evidence of remote assets or production readiness.
+Status updated after the attachment was received: **the nine source PNGs are now inspected and preserved unchanged under [catalogue/concepts](catalogue/concepts)**, with a [prepared non-secret draft and inventory](catalogue/README.md). No Cloudinary upload or product association occurred. These are AI-labelled digital concepts, not photographs of physical products or verified packaging/health claims. Owner accuracy/rights review remains pending.
 
-The owner has a ZIP named `Petwell_9_product_concepts.zip` containing nine 1000×1000 PNG concept illustrations, a draft manifest and README. Each image is a digitally drawn Python/Pillow concept illustration, **not a photograph of a physical product**. Generic package shapes and captions are illustrative, not verified packaging or health claims. Source provenance in the draft manifest should be made precise; `rights_reviewed` must remain `false` until actual review.
+The original handoff describes Python/Pillow drawing; this remains a source statement, not independently established by PNG metadata. The source-filled draft now attributes the package without inventing a generator or usage licence. `rights_reviewed` remains false.
 
 | Product | Source filename | SHA-256 |
 | --- | --- | --- |
@@ -18,7 +18,7 @@ The owner has a ZIP named `Petwell_9_product_concepts.zip` containing nine 1000�
 
 ## Safe continuation
 
-1. Obtain the actual ZIP from the owner/chat attachment and verify each PNG hash before use. This GitHub document does not contain the binaries.
+1. Receipt, all nine hashes, dimensions and individual visual checks are complete; do not request or recreate the same files again. Use the documented source-only preflight to reproduce the local checks.
 2. Review accuracy, illustration quality and rights. Do not mark rights reviewed automatically or claim that generated concepts are real stock photos.
 3. Follow `docs/CATALOGUE_IMAGES.md`; keep the private manifest and credentials out of Git. Never guess product primary keys or Cloudinary IDs.
 4. A separately approved upload must use fresh unique Cloudinary IDs with overwrite disabled, then a local dry-run against the correct records. Do not run `--apply` against production without explicit approval.

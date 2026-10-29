@@ -2,11 +2,11 @@
 
 Read-only code review of branch `fix/pp5-resubmission`. **No production data or payment settings were changed.**
 
-## Confirmed gap
+## Historical gap before PR #9
 
-The existing Product model has no `is_active`/`available` field. `products.views.product_list` returns `Product.objects.all()`; `cart.views.add_to_cart` accepts any existing product ID; `orders.views.reorder` accepts products with positive prices; `checkout.views.cart_products` validates existence and positive price but not fulfilment availability. Consequently, an existing `Mindful Pet Journal (PDF)` with a positive price could still be sold even if omitted from future seeding. An old cart or a Buy Again action can reach checkout. Hiding the shop card alone is not a fix.
+At the earlier review, the Product model had no `is_active`/`available` field. `products.views.product_list` returns `Product.objects.all()`; `cart.views.add_to_cart` accepts any existing product ID; `orders.views.reorder` accepts products with positive prices; `checkout.views.cart_products` validates existence and positive price but not fulfilment availability. Consequently, an existing `Mindful Pet Journal (PDF)` with a positive price could still be sold even if omitted from future seeding. An old cart or a Buy Again action can reach checkout. Hiding the shop card alone is not a fix.
 
-## Proposed minimal tested change (NOT yet implemented)
+## Implemented in reviewed PR #9, still awaiting approved release
 
 - Add a backward-compatible Product availability flag with a reviewed migration and safe default for existing physical products; explicitly identify and archive only the undeliverable legacy PDF after verifying the actual production record.
 - Filter unavailable products from the public catalogue.
@@ -23,3 +23,5 @@ The existing Product model has no `is_active`/`available` field. `products.views
 `products/models.py`, `products/views.py`, `cart/views.py`, `orders/views.py`, `checkout/views.py` at the PR branch as of this review. This is a code-path finding, **not** proof of the current production PDF record's price or presence. No credentials or private feedback were published.
 
 This note is a handoff for an implementation/test task; it does not claim the blocker is fixed.
+
+Current code/tests and the targeted migration rehearsal are recorded in [PR9_REVIEW_AND_RELEASE_GATES.md](PR9_REVIEW_AND_RELEASE_GATES.md). No production archive or deployment occurred. The default-true availability migration does not resolve the actual PDF offer until an authorised operator verifies its identity and obligations and explicitly withdraws it, or provides genuine fulfilment.

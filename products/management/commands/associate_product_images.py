@@ -14,21 +14,44 @@ from products.models import Product
 class Command(BaseCommand):
     help = (
         "Validate nine local AI illustrations and existing Cloudinary references. "
-        "Dry-run by default; --apply fills empty image fields only. No upload or fetch."
+        "Dry-run by default; --apply fills empty image fields only. "
+        "--sources-only checks an incomplete draft without database/provider access. "
+        "No upload or fetch."
     )
 
     def add_arguments(self, parser):
         parser.add_argument("manifest")
         parser.add_argument("--images-dir", required=True)
         parser.add_argument("--apply", action="store_true")
+        parser.add_argument("--sources-only", action="store_true")
 
     def handle(self, *args, **options):
+        if options["sources_only"] and options["apply"]:
+            raise CommandError("--sources-only cannot be combined with --apply.")
         try:
             cloud_name, mappings = validate_image_plan(
-                options["manifest"], options["images_dir"]
+                options["manifest"], options["images_dir"],
+                sources_only=options["sources_only"],
             )
         except ImageMappingError as error:
             raise CommandError(str(error)) from None
+        if options["sources_only"]:
+            self.stdout.write(
+                f"SOURCES ONLY: {len(mappings)} local AI-concept sources validated."
+            )
+            for item in mappings:
+                self.stdout.write(
+                    f"{item['product_name']}: {item['width']}x{item['height']} "
+                    f"{item['format'].upper()}"
+                )
+            pending = sum(not item["rights_reviewed"] for item in mappings)
+            self.stdout.write(
+                f"Rights review pending: {pending}. Provenance is owner-supplied. "
+                "Rights, visual accuracy, database identities and remote assets "
+                "are not verified. This is not a ready-to-apply mapping. "
+                "No database queries/writes, uploads or fetches performed."
+            )
+            return
         if (
             cloudinary.config().cloud_name != cloud_name
             or settings.CLOUDINARY_STORAGE.get("CLOUD_NAME") != cloud_name

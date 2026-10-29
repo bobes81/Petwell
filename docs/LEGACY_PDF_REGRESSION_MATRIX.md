@@ -1,6 +1,6 @@
 # Regression acceptance matrix: unavailable legacy products
 
-**Scope:** proposed change, not implemented as of 29 Oct 2026. The current model has no availability flag. No test in this matrix is claimed to have run.
+**Updated scope:** PR #9 implements availability guards and preserves history. The original acceptance matrix below is retained; local automated results are recorded in [the PR #9 review](PR9_REVIEW_AND_RELEASE_GATES.md). A1–A8, A10, A12–A15 have offline regression coverage. A9/A16 retain provider/cutover acceptance work; A11 needs the approved real-record operator check. No production withdrawal or external payment acceptance is claimed.
 
 | ID | Scenario | Expected result |
 | --- | --- | --- |
@@ -31,4 +31,4 @@
 - Keep Stripe disabled until fulfilment decision and real sandbox acceptance; avoid payment-related external calls in unit tests.
 - Update `docs/LEGACY_PDF_CHECKOUT_BLOCKER.md` once implementation and tests actually pass; do not label a proposed test as passed.
 
-This is a precise handoff for the next implementation pass. The only newly verified CI outcome is that the current documentation-only branch passed its existing Django workflow; this matrix has not been executed.
+The code and synthetic migration tests now run; exact-head SQLite/PostgreSQL CI must be verified after push. The existing owner real-data rehearsal completed five earlier migrations, so only the later products.0002 needs a targeted new local real-data check. Actual record withdrawal and issued Stripe Session reconciliation remain separately approved owner actions.

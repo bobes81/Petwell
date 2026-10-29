@@ -1,0 +1,99 @@
+{
+  "date": "2026-10-29",
+  "scope": "Local Chromium with isolated synthetic SQLite products, seeded sessions and manually seeded PAID orders. No actual customer data, image assignment, provider upload/email/payment or deployed acceptance.",
+  "viewports": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "steps": [
+    {
+      "viewport": "desktop",
+      "check": "Shop excludes withdrawn/zero-price fixture; keyboard skip link; mobile navigation toggle",
+      "passed": true
+    },
+    {
+      "viewport": "desktop",
+      "check": "Mixed withdrawn/zero/missing cart blocks checkout POST400; prices remain on one line; keyboard-focusable mobile table scroll; no document overflow",
+      "passed": true
+    },
+    {
+      "viewport": "desktop",
+      "check": "All invalid lines removable; remaining active line recovers checkout navigation",
+      "passed": true
+    },
+    {
+      "viewport": "desktop",
+      "check": "Seeded paid history preserved; all-withdrawn reorder explains no addition, mixed reorder adds only active items at current prices",
+      "passed": true
+    },
+    {
+      "viewport": "mobile",
+      "check": "Shop excludes withdrawn/zero-price fixture; keyboard skip link; mobile navigation toggle",
+      "passed": true
+    },
+    {
+      "viewport": "mobile",
+      "check": "Mixed withdrawn/zero/missing cart blocks checkout POST400; prices remain on one line; keyboard-focusable mobile table scroll; no document overflow",
+      "passed": true
+    },
+    {
+      "viewport": "mobile",
+      "check": "All invalid lines removable; remaining active line recovers checkout navigation",
+      "passed": true
+    },
+    {
+      "viewport": "mobile",
+      "check": "Seeded paid history preserved; all-withdrawn reorder explains no addition, mixed reorder adds only active items at current prices",
+      "passed": true
+    }
+  ],
+  "screenshots": [
+    {
+      "viewport": "desktop",
+      "file": "docs/evidence/29oct-availability-desktop-stale-cart.png",
+      "scope": "Synthetic local fixture, not deployed/payment evidence",
+      "checks": {
+        "overflow": false,
+        "brokenImages": 0
+      }
+    },
+    {
+      "viewport": "desktop",
+      "file": "docs/evidence/29oct-availability-desktop-withdrawn-reorder.png",
+      "scope": "Synthetic local fixture, not deployed/payment evidence",
+      "checks": {
+        "overflow": false,
+        "brokenImages": 0
+      }
+    },
+    {
+      "viewport": "mobile",
+      "file": "docs/evidence/29oct-availability-mobile-stale-cart.png",
+      "scope": "Synthetic local fixture, not deployed/payment evidence",
+      "checks": {
+        "overflow": false,
+        "brokenImages": 0
+      }
+    },
+    {
+      "viewport": "mobile",
+      "file": "docs/evidence/29oct-availability-mobile-withdrawn-reorder.png",
+      "scope": "Synthetic local fixture, not deployed/payment evidence",
+      "checks": {
+        "overflow": false,
+        "brokenImages": 0
+      }
+    }
+  ],
+  "externalRequests": [],
+  "jsErrors": [],
+  "serverOutboundAttempts": 0
+}

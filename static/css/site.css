@@ -34,3 +34,11 @@ input, textarea { max-width: 100%; }
     object-fit: cover;
     height: 250px;
 }
+
+.cart-table {
+    min-width: 36rem;
+    overflow-wrap: normal;
+}
+.cart-table th, .cart-table .cart-money {
+    white-space: nowrap;
+}

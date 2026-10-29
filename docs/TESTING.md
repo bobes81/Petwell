@@ -1,6 +1,6 @@
 # Test record — 29 October 2026, with earlier evidence retained
 
-This record covers `fix/pp5-resubmission`, including safe image mapping and Gmail configuration after `d0bd4b2`, the earlier follow-up after `a6cd86a`, the local restored-copy profile, aged checkout-retry fix, earlier deployment/configuration fixes and the pet-profile feature. It is not a production or external-service test report. Meaningful regressions were added without disabling a failing assertion to obtain a pass.
+This record covers integrated PR #9 availability and supplied-image preflight in `fix/pp5-resubmission`, including safe image mapping and Gmail configuration after `d0bd4b2`, the earlier follow-up after `a6cd86a`, the local restored-copy profile, aged checkout-retry fix, earlier deployment/configuration fixes and the pet-profile feature. It is not a production or external-service test report. Meaningful regressions were added without disabling a failing assertion to obtain a pass.
 
 ## Automated checks actually run
 
@@ -11,13 +11,27 @@ python manage.py makemigrations --check --dry-run --settings=petwell.test_settin
 python -m pip check
 ```
 
-**Latest SQLite result: 155 discovered/executed tests — 154 passed, 1 explicitly skipped, 0 failures.** The skip is the PostgreSQL-only two-worker concurrency test. Deterministic stale-session, busy-lease, lease recovery/takeover, immutable-payload and payment-state tests run locally. Do not describe the SQLite run as proof of simultaneous PostgreSQL workers.
+**Latest SQLite result: 178 discovered/executed tests — 177 passed, 1 explicitly skipped, 0 failures.** The skip is the PostgreSQL-only two-worker concurrency test. Deterministic stale-session, busy-lease, lease recovery/takeover, immutable-payload and payment-state tests run locally. Do not describe the SQLite run as proof of simultaneous PostgreSQL workers.
 
-The test database is isolated and email is in memory. Stripe create/retrieve/expire and Cloudinary uploads are mocked; actual HMAC verification runs against signed fixture payloads. No test processes a payment, uploads an external image or delivers an email. [Latest actual local output](evidence/29oct-catalogue-gmail-tests.txt). Earlier [116-test run](evidence/28oct-confirmed-history-tests.txt), [114-test migration](evidence/28oct-deployment-readiness-tests.txt), [Cloudinary compatibility](evidence/28oct-render-compatibility-tests.txt) and [108-test original](evidence/django-tests.txt) outputs remain preserved.
+The test database is isolated and email is in memory. Stripe create/retrieve/expire and Cloudinary uploads are mocked; actual HMAC verification runs against signed fixture payloads. No test processes a payment, uploads an external image or delivers an email. [Latest actual local output](evidence/29oct-integrated-resubmission-tests.txt). Earlier [116-test run](evidence/28oct-confirmed-history-tests.txt), [114-test migration](evidence/28oct-deployment-readiness-tests.txt), [Cloudinary compatibility](evidence/28oct-render-compatibility-tests.txt) and [108-test original](evidence/django-tests.txt) outputs remain preserved.
 
 System checks, migration consistency and installed dependency checks passed. Selected Python error/import lint and whitespace checks passed. The repository changes were reviewed for English content, common real credential patterns, private-correspondence copying and broken relative documentation links; no matching accidental credentials/private text were found. Test passwords and the disposable CI PostgreSQL password are explicitly synthetic fixtures, not deployment credentials.
 
-## 29 October: image-association safety and Gmail configuration
+## Latest: reviewed PR #9 and supplied concept sources
+
+The fetched PR #9 `b39ec91` passed 164 SQLite tests (163 passed/one skip). The reviewed `e1dcc1e` passed 172 (171 passed/one skip), with successful SQLite/PostgreSQL 16/18 CI: [PR #9 run](https://github.com/bobes81/Petwell/actions/runs/40897334783). [Detailed review and raw outputs](PR9_REVIEW_AND_RELEASE_GATES.md). PR #9 history is incorporated into the main feature branch; production main remains unchanged.
+
+The integrated suite passed **178 tests: 177 passed, 1 PostgreSQL-only skip, 0 failures**. [Raw output](evidence/29oct-integrated-resubmission-tests.txt). New coverage verifies unavailable/missing/zero/negative checkout rejection for guests and members before order/lease/API creation, stale mixed-cart recovery, honest all-unavailable/mixed reorder feedback, seed preservation, the one-field migration from the owner-rehearsed schema and valid signed confirmation for an already-issued Session after withdrawal. The latter records payment evidence without creating a transaction or assuming withdrawal expires a hosted URL.
+
+Six image-source regressions cover incomplete source-only validation with zero SQL/provider calls, refusal of source-only application, unchanged strict default validation, damaged/mismatched sources and the actual committed draft/PNGs. [20 focused mapping/source tests](evidence/29oct-source-preflight-tests.txt) passed before integration; the complete suite additionally checks the real bundle and preservation of withdrawal flags. [Actual owner-file preflight](evidence/29oct-uploaded-concepts-preflight.txt) accepted all nine unchanged 1000×1000 PNGs/hashes with all operational identifiers unset and rights pending. Normal dry-run/application and incompatible flags were deliberately refused. No Cloudinary ID, version or product primary key was invented.
+
+A new [local Chromium check](evidence/29oct-availability-browser.json) passed eight grouped checks at 1440×1000 and 390×844, with four genuine screenshots: [mobile stale cart](evidence/29oct-availability-mobile-stale-cart.png), [desktop stale cart](evidence/29oct-availability-desktop-stale-cart.png), [mobile withdrawn reorder](evidence/29oct-availability-mobile-withdrawn-reorder.png), [desktop withdrawn reorder](evidence/29oct-availability-desktop-withdrawn-reorder.png). It uses a separate temporary SQLite database, synthetic catalogue, seeded sessions and manually seeded PAID history fixtures, not a provider payment. Shop visibility, stale-cart POST400/removal recovery, current-price reorder and truthful skipped/no-add feedback passed. Initial visual inspection found broken price/header wrapping; scoped horizontal table scrolling now preserves single-line amounts, focusable labelled scroll access and body width. Final checks detected no document overflow, broken image, JS error, external page request or server provider attempt. No full accessibility/cross-browser or deployed pass is claimed.
+
+[Final system/migration/deployment/static/dependency checks](evidence/29oct-integrated-readiness-checks.txt) passed sequentially after the test suite and after stopping the local browser server. No model changes were missing migrations; production-style checks used synthetic credentials and an ephemeral key, not actual services. The pip cache-ownership warning was non-blocking.
+
+The availability migration is new relative to the owner's completed five-migration real-data rehearsal. Synthetic initial-to-six and incremental-products.0002 fixtures preserve fields/links/default availability; old Product writers demonstrably fail after the new required field. Only this later migration needs a targeted new owner real-data check. No production migration or automatic PDF withdrawal occurred. The owner-provided concept files are repository review assets, not uploaded catalogue imagery or product photographs. Earlier results below retain their dates/counts and scope.
+
+## Earlier 29 October: image-association safety and Gmail configuration before ZIP receipt
 
 The new full SQLite run discovered **155 tests: 154 passed, 1 PostgreSQL-only skip, 0 failures**. Twenty regressions were added after `d0bd4b2`, without changing the database schema or disabling assertions.
 
@@ -95,7 +109,7 @@ The deployment checklist requests the two documented successful checkout events;
 | Signed webhooks | Valid signature and exact amount/currency/order/reference/mode; invalid/stale signature and malformed signed structures; cookieless CSRF-enforcing delivery; distinct success IDs and delayed failure/expiry/unpaid events; timestamp/cart preservation; late mapping retry; no return-URL payment confirmation |
 | Cart/orders | Clear once only after confirmation; keep newly re-added lines/additional quantities; own history only; owner-only POST reorder at current prices; historical totals preserved; protected product/order deletion |
 | SEO/markup | Render crawler URLs, public blog entries, private-page noindex and no canonical, trusted configured canonical host without query parameters, escaped metadata, public/form links and fallback images, complete heading outline and no body style blocks |
-| Migrations | Upgrade from confirmed order/product initial plus complete blog history/dependencies; exactly five pending project migrations with no blog/product replay; preserved member/guest orders/items, product/article images, story and subscriber fields; unique pending UUIDs; usable new tables/protected references; old-worker cutover constraint; consistent completed history |
+| Migrations | Upgrade from confirmed order/product initial plus complete blog history/dependencies; six pending project migrations from the original baseline, including new products.0002; no replay of applied blog/product initial history; preserved member/guest orders/items, product/article images, story and subscriber fields; unique pending UUIDs; usable new tables/protected references; old-worker cutover constraint; consistent completed history |
 
 ## Local browser/manual acceptance actually performed
 
@@ -164,7 +178,7 @@ The cloud runtime has no Stripe, Cloudinary, SMTP, production database or strong
 | Real decline/cancellation/duplicate/retry | Correct unpaid/cart handling and one confirmed order | Offline logic tested; actual sandbox delivery pending |
 | Cloudinary | Correct authorised images, real upload/replace/clear and outage recovery | Offline adapter/fallbacks tested; external upload pending |
 | SMTP/reset delivery | Verified sender and actual received reset email | Local email/token flow tested; real delivery pending |
-| Product images | Accurate item matching, authorised and honestly labelled image/source record | Nine planned AI originals not supplied/verified; no actual upload/association claimed |
+| Product images | Accurate item matching, authorised and honestly labelled image/source record | Nine actual source concepts inspected with matching hashes/names; owner rights/accuracy approval and actual upload/association pending |
 | Deployed browser/accessibility | Repeat matrix on actual released site; keyboard/contrast/zoom and other browsers | Local Chromium/markup checks completed; deployed/cross-browser checks pending |
 | Marketing/design | Clearly labelled mockup or genuine page evidence, accurate original/retrospective design provenance | New mockup and retrospective diagrams rendered locally; no live campaign/page claimed |
 
