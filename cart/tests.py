@@ -54,6 +54,33 @@ class UnavailableCartTests(TestCase):
         session = self.client.session
         session["cart"] = {str(self.hidden.pk): 1}
         session.save()
-        self.assertContains(self.client.get(reverse("cart:view_cart")), "Unavailable product")
+        response = self.client.get(reverse("cart:view_cart"))
+        self.assertContains(response, "Unavailable product")
+        self.assertContains(response, "Remove unavailable items before checkout.")
+        self.assertNotContains(response, "Proceed to Checkout")
         self.client.post(reverse("cart:remove_from_cart", args=[self.hidden.pk]))
         self.assertEqual(self.client.session["cart"], {})
+
+
+class MixedAvailabilityCartTests(TestCase):
+    def test_active_item_cannot_checkout_until_withdrawn_line_removed(self):
+        active = Product.objects.create(name="Active", price="7.25")
+        withdrawn = Product.objects.create(name="Withdrawn", price="4.99", is_available=False)
+        session = self.client.session
+        session["cart"] = {str(active.pk): 1, str(withdrawn.pk): 1}
+        session.save()
+        response = self.client.get(reverse("cart:view_cart"))
+        self.assertContains(response, "Active")
+        self.assertContains(response, "Remove unavailable items before checkout.")
+        self.assertNotContains(response, "Proceed to Checkout")
+        self.client.post(reverse("cart:remove_from_cart", args=[withdrawn.pk]))
+        self.assertContains(self.client.get(reverse("cart:view_cart")), "Proceed to Checkout")
+
+    def test_zero_price_line_is_not_counted_as_payable(self):
+        invalid = Product.objects.create(name="No price", price="0.00")
+        session = self.client.session
+        session["cart"] = {str(invalid.pk): 1}
+        session.save()
+        response = self.client.get(reverse("cart:view_cart"))
+        self.assertContains(response, "Unavailable product")
+        self.assertNotContains(response, "Proceed to Checkout")
