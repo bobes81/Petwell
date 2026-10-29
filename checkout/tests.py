@@ -1319,3 +1319,12 @@ class CheckoutTests(TestCase):
         self.assertEqual(Order.objects.count(), 1)
         order.refresh_from_db()
         self.assertEqual(order.stripe_session_id, "cs_durable")
+
+
+class UnavailableCheckoutTests(TestCase):
+    def test_archived_product_rejected_before_stripe_or_order(self):
+        from checkout.views import cart_products
+        hidden = Product.objects.create(name="Withdrawn", price="4.99", is_available=False)
+        with self.assertRaisesRegex(ValueError, "no longer available"):
+            cart_products({str(hidden.pk): 1})
+        self.assertFalse(Order.objects.exists())
