@@ -51,12 +51,11 @@ def view_cart(request):
 def add_to_cart(request, product_id):
     clear_paid_purchases(request)
     cart = request.session.get("cart", {})
-    get_object_or_404(Product, pk=product_id, is_available=True)
+    product = get_object_or_404(Product, pk=product_id, is_available=True)
     cart[str(product_id)] = min(cart.get(str(product_id), 0) + 1, 99)
     request.session["cart"] = cart
     cart_line_tokens(request)
 
-    product = get_object_or_404(Product, pk=product_id)
     messages.success(request, f"🛒 '{product.name}' added to your cart!")
     return redirect("products:product_list")
 
