@@ -44,6 +44,10 @@ def cart_products(cart):
                 "A product is no longer available. "
                 "Please remove it from your cart."
             )
+        if not product.is_available:
+            raise ValueError(
+                'A product is no longer available. Please remove it from your cart.'
+            )
         if product.price <= 0:
             raise ValueError(
                 "A product price is unavailable. Please contact the shop."
