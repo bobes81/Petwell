@@ -15,7 +15,7 @@ def view_cart(request):
 
     for product_id, quantity in cart.items():
         product = Product.objects.filter(pk=product_id).first()
-        if product is None:
+        if product is None or not product.is_available:
             items.append(
                 {
                     "unavailable": True,
@@ -51,7 +51,7 @@ def view_cart(request):
 def add_to_cart(request, product_id):
     clear_paid_purchases(request)
     cart = request.session.get("cart", {})
-    get_object_or_404(Product, pk=product_id)
+    get_object_or_404(Product, pk=product_id, is_available=True)
     cart[str(product_id)] = min(cart.get(str(product_id), 0) + 1, 99)
     request.session["cart"] = cart
     cart_line_tokens(request)
