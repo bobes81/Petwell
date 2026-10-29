@@ -63,6 +63,20 @@ class UnavailableCartTests(TestCase):
 
 
 class MixedAvailabilityCartTests(TestCase):
+    def test_missing_line_blocks_mixed_cart_until_removed(self):
+        active = Product.objects.create(name="Available fixture", price="7.25")
+        missing_id = active.pk + 100000
+        session = self.client.session
+        session["cart"] = {str(active.pk): 2, str(missing_id): 1}
+        session.save()
+        response = self.client.get(reverse("cart:view_cart"))
+        self.assertContains(response, "Unavailable product")
+        self.assertContains(response, "14.50")
+        self.assertNotContains(response, "Proceed to Checkout")
+        self.client.post(reverse("cart:remove_from_cart", args=[missing_id]))
+        self.assertEqual(self.client.session["cart"], {str(active.pk): 2})
+        self.assertContains(self.client.get(reverse("cart:view_cart")), "Proceed to Checkout")
+
     def test_active_item_cannot_checkout_until_withdrawn_line_removed(self):
         active = Product.objects.create(name="Active", price="7.25")
         withdrawn = Product.objects.create(name="Withdrawn", price="4.99", is_available=False)

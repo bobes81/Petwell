@@ -61,6 +61,29 @@ class SampleCatalogueTests(TestCase):
 
 
 class ProductAvailabilityTests(TestCase):
+    def test_negative_price_is_hidden_and_cannot_be_added_directly(self):
+        from django.urls import reverse
+
+        product = Product.objects.create(name="Invalid price fixture", price="-1.00")
+        self.assertNotContains(self.client.get(reverse("products:product_list")), product.name)
+        self.assertEqual(
+            self.client.post(reverse("cart:add_to_cart", args=[product.pk])).status_code,
+            404,
+        )
+        self.assertEqual(self.client.session.get("cart", {}), {})
+
+    def test_reseeding_does_not_reactivate_withdrawn_rows(self):
+        products = [
+            Product.objects.create(name=name, price="4.99", is_available=False)
+            for name in ("Calming Lavender Spray", "Mindful Pet Journal (PDF)")
+        ]
+        with redirect_stdout(StringIO()):
+            run()
+        for product in products:
+            product.refresh_from_db()
+            self.assertFalse(product.is_available)
+            self.assertEqual(product.price, Decimal("4.99"))
+
     def test_unavailable_product_is_not_listed_but_preserved(self):
         hidden = Product.objects.create(name="Mindful Pet Journal (PDF)", price="4.99", is_available=False)
         visible = Product.objects.create(name="Physical balm", price="7.25")

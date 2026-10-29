@@ -1321,6 +1321,20 @@ class CheckoutTests(TestCase):
         self.assertEqual(order.stripe_session_id, "cs_durable")
 
 
+    def test_signed_payment_for_previously_issued_session_survives_withdrawal(self):
+        order, create = self.create_order()
+        Product.objects.filter(pk=self.product.pk).update(is_available=False)
+        self.assertEqual(self.webhook(self.event(order)).status_code, 200)
+        order.refresh_from_db()
+        self.assertEqual(order.status, "paid")
+        self.assertIsNotNone(order.paid_at)
+        self.assertEqual(order.items.get().product_id, self.product.pk)
+        self.assertEqual(order.total_price, Decimal("14.50"))
+        create.assert_called_once()
+        # Withdrawal cannot invalidate an already-issued hosted URL or discard
+        # genuine signed payment evidence. Provider reconciliation is separate.
+
+
 class UnavailableCheckoutTests(TestCase):
     def test_archived_product_rejected_before_stripe_or_order(self):
         from checkout.views import cart_products
@@ -1328,3 +1342,39 @@ class UnavailableCheckoutTests(TestCase):
         with self.assertRaisesRegex(ValueError, "no longer available"):
             cart_products({str(hidden.pk): 1})
         self.assertFalse(Order.objects.exists())
+
+    def test_checkout_route_rejects_stale_products_for_guests_and_members(self):
+        from django.contrib.auth import get_user_model
+
+        product = Product.objects.create(name="Stale fixture", price="7.25")
+        member = get_user_model().objects.create_user("availability-member")
+        data = {"name": "Fixture", "email": "fixture@example.test", "address": "Test"}
+        for signed_in in (False, True):
+            self.client.force_login(member) if signed_in else self.client.logout()
+            for available, price, missing in (
+                (False, "7.25", False), (True, "0.00", False),
+                (True, "-1.00", False), (True, "7.25", True),
+            ):
+                Product.objects.filter(pk=product.pk).update(
+                    is_available=available, price=price
+                )
+                key = str(product.pk + 100000 if missing else product.pk)
+                session = self.client.session
+                session["cart"] = {key: 1}
+                session.save()
+                with self.subTest(member=signed_in, available=available,
+                                  price=price, missing=missing), patch(
+                    "checkout.views.stripe.checkout.Session.create"
+                ) as create, patch(
+                    "checkout.views.stripe.checkout.Session.retrieve"
+                ) as retrieve, patch(
+                    "checkout.views.stripe.checkout.Session.expire"
+                ) as expire:
+                    response = self.client.post(reverse("checkout:checkout"), data)
+                    self.assertEqual(response.status_code, 400)
+                    self.assertFalse(Order.objects.exists())
+                    self.assertFalse(CheckoutState.objects.exists())
+                    self.assertEqual(self.client.session["cart"], {key: 1})
+                    create.assert_not_called()
+                    retrieve.assert_not_called()
+                    expire.assert_not_called()

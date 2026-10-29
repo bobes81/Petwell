@@ -23,15 +23,26 @@ def reorder(request, public_id):
         Order, public_id=public_id, user=request.user, status="paid"
     )
     cart = request.session.get("cart", {}).copy()
+    added = 0
+    skipped = False
     for item in order.items.select_related("product"):
         if item.product.is_available and item.product.price > 0:
             key = str(item.product_id)
-            cart[key] = min(cart.get(key, 0) + item.quantity, 99)
+            before = cart.get(key, 0)
+            cart[key] = min(before + item.quantity, 99)
+            added += cart[key] - before
+        else:
+            skipped = True
     request.session["cart"] = cart
     cart_line_tokens(request)
-    messages.success(
-        request,
-        "Available items added to your cart at current prices. "
-        "Review before paying.",
-    )
+    if added:
+        messages.success(
+            request,
+            "Available items added to your cart at current prices. "
+            "Review before paying.",
+        )
+    else:
+        messages.info(request, "No items were added. Your cart has been kept.")
+    if skipped:
+        messages.warning(request, "Unavailable or unpriced items were not added.")
     return redirect("cart:view_cart")

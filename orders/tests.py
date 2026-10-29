@@ -309,3 +309,80 @@ class ArchivedReorderTests(TestCase):
         self.client.post(reverse("orders:reorder", args=[order.public_id]))
         self.assertNotIn(str(hidden.pk), self.client.session.get("cart", {}))
         self.assertEqual(OrderItem.objects.filter(order=order, product=hidden).count(), 1)
+
+    def test_only_ineligible_reorder_explains_no_add_and_preserves_cart(self):
+        user = get_user_model().objects.create_user("no-items-buyer")
+        hidden = Product.objects.create(name="Withdrawn fixture", price="4.99", is_available=False)
+        active = Product.objects.create(name="Existing cart fixture", price="7.25")
+        order = Order.objects.create(user=user, full_name="Fixture", email="fixture@example.test", address="Test", status="paid", total_price="4.99")
+        OrderItem.objects.create(order=order, product=hidden, quantity=1, price="4.99")
+        self.client.force_login(user)
+        session = self.client.session
+        session["cart"] = {str(active.pk): 2}
+        session.save()
+        response = self.client.post(reverse("orders:reorder", args=[order.public_id]), follow=True)
+        self.assertContains(response, "No items were added. Your cart has been kept.")
+        self.assertContains(response, "Unavailable or unpriced items were not added.")
+        self.assertNotContains(response, "Available items added to your cart")
+        self.assertEqual(self.client.session["cart"], {str(active.pk): 2})
+        self.assertEqual(order.items.count(), 1)
+
+    def test_mixed_reorder_skips_withdrawn_and_unpriced_items(self):
+        user = get_user_model().objects.create_user("mixed-items-buyer")
+        order = Order.objects.create(user=user, full_name="Fixture", email="fixture@example.test", address="Test", status="paid", total_price="12.00")
+        products = [
+            Product.objects.create(name="Available fixture", price="7.25"),
+            Product.objects.create(name="Withdrawn fixture", price="8.00", is_available=False),
+            Product.objects.create(name="Unpriced fixture", price="0.00"),
+        ]
+        for product in products:
+            OrderItem.objects.create(order=order, product=product, quantity=2, price="2.00")
+        before = list(order.items.order_by("pk").values())
+        self.client.force_login(user)
+        response = self.client.post(reverse("orders:reorder", args=[order.public_id]), follow=True)
+        self.assertEqual(self.client.session["cart"], {str(products[0].pk): 2})
+        self.assertContains(response, "Unavailable or unpriced items were not added.")
+        self.assertContains(response, "14.50")
+        self.assertEqual(list(order.items.order_by("pk").values()), before)
+        order.refresh_from_db()
+        self.assertEqual(order.total_price, Decimal("12.00"))
+
+
+class AvailabilityMigrationTests(TransactionTestCase):
+    def test_upgrade_from_rehearsed_schema_preserves_rows_without_auto_withdrawal(self):
+        executor = MigrationExecutor(connection)
+        after = executor.loader.graph.leaf_nodes()
+        before = [node for node in after if node[0] != "products"]
+        before.append(("products", "0001_initial"))
+        try:
+            executor.migrate(before)
+            executor = MigrationExecutor(connection)
+            apps = executor.loader.project_state(before).apps
+            LegacyProduct = apps.get_model("products", "Product")
+            LegacyOrder = apps.get_model("orders", "Order")
+            LegacyItem = apps.get_model("orders", "OrderItem")
+            products = [LegacyProduct.objects.create(
+                name=name, description="Existing fixture", price="4.99", image="legacy/image"
+            ) for name in ("Physical fixture", "Mindful Pet Journal (PDF)")]
+            order = LegacyOrder.objects.create(full_name="Fixture", email="fixture@example.test", address="Test", total_price="4.99")
+            item = LegacyItem.objects.create(order_id=order.pk, product_id=products[1].pk, quantity=1, price="4.99")
+            snapshot = {p.pk: (p.name, p.description, Decimal(p.price), str(p.image)) for p in products}
+            plan = executor.migration_plan(after)
+            self.assertEqual([(m.app_label, m.name, backwards) for m, backwards in plan], [("products", "0002_product_is_available", False)])
+            executor.migrate(after)
+            apps = executor.loader.project_state(after).apps
+            MigratedProduct = apps.get_model("products", "Product")
+            for product in MigratedProduct.objects.all():
+                self.assertEqual((product.name, product.description, product.price, str(product.image)), snapshot[product.pk])
+                self.assertTrue(product.is_available)
+            migrated_item = apps.get_model("orders", "OrderItem").objects.get(pk=item.pk)
+            self.assertEqual((migrated_item.order_id, migrated_item.product_id, migrated_item.quantity, migrated_item.price), (order.pk, products[1].pk, 1, Decimal("4.99")))
+            migrated_order = apps.get_model("orders", "Order").objects.get(pk=order.pk)
+            self.assertEqual(migrated_order.status, "pending")
+            self.assertIsNone(migrated_order.paid_at)
+            # default=True preserves rows; it is not a persistent DB default
+            # for old workers. The approved cutover must stop old writers.
+            with self.assertRaises(IntegrityError), transaction.atomic():
+                LegacyProduct.objects.create(name="Old worker fixture", price="1.00")
+        finally:
+            MigrationExecutor(connection).migrate(after)
