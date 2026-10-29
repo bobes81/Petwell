@@ -12,7 +12,7 @@
         <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 d-flex">
             <div class="card shadow-sm border-0 h-100 w-100 product-card">
                 {% if product.image %}
-                    <img onerror="this.onerror=null;this.src='{% static 'images/placeholder.svg' %}'" src="{{ product.image|image_url }}" class="card-img-top img-fluid" alt="{{ product.name }}">
+                    <img onerror="this.onerror=null;this.src='{% static 'images/placeholder.svg' %}'" src="{{ product.image|image_url }}" class="card-img-top img-fluid{% if product.image_is_ai_illustration %} product-concept-image{% endif %}" alt="{{ product.name }}">
                 {% else %}
                     <img src="{% static 'images/placeholder.svg' %}"
                          class="card-img-top img-fluid"

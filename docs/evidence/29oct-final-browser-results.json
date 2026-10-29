@@ -1,0 +1,267 @@
+{
+  "checkedOn": "2026-10-29",
+  "scope": "Genuine local Chromium checks using an isolated temporary SQLite database and synthetic users/content. Paid orders were manually seeded fixtures, NOT Stripe confirmation or payment evidence. No Stripe API, Cloudinary upload or SMTP delivery is exercised.",
+  "viewports": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 1000,
+      "passed": true
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "passed": true
+    }
+  ],
+  "steps": [
+    {
+      "viewport": "desktop",
+      "step": "Login/signup preserve internal next; invalid reset link explains recovery without password inputs",
+      "passed": true
+    },
+    {
+      "viewport": "desktop",
+      "step": "Public product POST add/cart current price and unconfigured checkout error retain cart",
+      "passed": true
+    },
+    {
+      "viewport": "desktop",
+      "step": "Author blog create/edit/delete, invalid image recovery, non-author GET/POST403, anonymous login requirement, staff edit-form access",
+      "passed": true
+    },
+    {
+      "viewport": "desktop",
+      "step": "My pets navigation; profile create/edit/delete; 501-character server validation/recovery; focus reminder; non-owner/staff GET/POST404; non-destructive delete confirmation",
+      "passed": true
+    },
+    {
+      "viewport": "desktop",
+      "step": "Own order-history privacy; non-owner reorder404; GET405; POST reorder current7.25×2=14.50 while historical fixture12.00 retained",
+      "passed": true,
+      "fixturePaymentStatus": "manually seeded paid, NOT Stripe confirmation"
+    },
+    {
+      "viewport": "desktop",
+      "step": "Actual local signup, logout, login and generic reset request; dummy email backend means no delivery",
+      "passed": true,
+      "emailScope": "dummy backend, no SMTP acceptance"
+    },
+    {
+      "viewport": "mobile",
+      "step": "Login/signup preserve internal next; invalid reset link explains recovery without password inputs",
+      "passed": true
+    },
+    {
+      "viewport": "mobile",
+      "step": "Public product POST add/cart current price and unconfigured checkout error retain cart",
+      "passed": true
+    },
+    {
+      "viewport": "mobile",
+      "step": "Author blog create/edit/delete, invalid image recovery, non-author GET/POST403, anonymous login requirement, staff edit-form access",
+      "passed": true
+    },
+    {
+      "viewport": "mobile",
+      "step": "My pets navigation; profile create/edit/delete; 501-character server validation/recovery; focus reminder; non-owner/staff GET/POST404; non-destructive delete confirmation",
+      "passed": true
+    },
+    {
+      "viewport": "mobile",
+      "step": "Own order-history privacy; non-owner reorder404; GET405; POST reorder current7.25×2=14.50 while historical fixture12.00 retained",
+      "passed": true,
+      "fixturePaymentStatus": "manually seeded paid, NOT Stripe confirmation"
+    },
+    {
+      "viewport": "mobile",
+      "step": "Actual local signup, logout, login and generic reset request; dummy email backend means no delivery",
+      "passed": true,
+      "emailScope": "dummy backend, no SMTP acceptance"
+    }
+  ],
+  "screenshots": [
+    {
+      "viewport": "desktop",
+      "path": "docs/evidence/29oct-final-desktop-home.png",
+      "note": "Genuine local homepage render after semantic heading and stylesheet relocation fixes; not deployed evidence."
+    },
+    {
+      "viewport": "desktop",
+      "path": "docs/evidence/29oct-final-desktop-shop.png",
+      "note": "Genuine local shop render with a synthetic catalogue product after stylesheet relocation; not deployed evidence."
+    },
+    {
+      "viewport": "desktop",
+      "path": "docs/evidence/29oct-final-desktop-invalid-reset.png",
+      "note": "Invalid-token recovery on localhost; no email delivery or real token used."
+    },
+    {
+      "viewport": "desktop",
+      "path": "docs/evidence/29oct-final-desktop-checkout-unconfigured.png",
+      "note": "Synthetic local checkout form; payment credentials absent, no Stripe Session created."
+    },
+    {
+      "viewport": "desktop",
+      "path": "docs/evidence/29oct-final-desktop-blog-edited.png",
+      "note": "Author-owned synthetic blog post; genuine local CRUD rendering, no Cloudinary upload."
+    },
+    {
+      "viewport": "desktop",
+      "path": "docs/evidence/29oct-final-desktop-pet-notes-validation.png",
+      "note": "Synthetic fixture profile form; deliberately submitted501-character notes to exercise server validation."
+    },
+    {
+      "viewport": "desktop",
+      "path": "docs/evidence/29oct-final-desktop-pet-profile.png",
+      "note": "Owner-only synthetic pet data; genuine local rendering, not veterinary advice or customer evidence."
+    },
+    {
+      "viewport": "desktop",
+      "path": "docs/evidence/29oct-final-desktop-own-orders-synthetic.png",
+      "note": "Manually seeded synthetic PAID order for order-history/reorder testing only; NOT Stripe or payment-confirmation evidence."
+    },
+    {
+      "viewport": "mobile",
+      "path": "docs/evidence/29oct-final-mobile-home.png",
+      "note": "Genuine local homepage render after semantic heading and stylesheet relocation fixes; not deployed evidence."
+    },
+    {
+      "viewport": "mobile",
+      "path": "docs/evidence/29oct-final-mobile-shop.png",
+      "note": "Genuine local shop render with a synthetic catalogue product after stylesheet relocation; not deployed evidence."
+    },
+    {
+      "viewport": "mobile",
+      "path": "docs/evidence/29oct-final-mobile-invalid-reset.png",
+      "note": "Invalid-token recovery on localhost; no email delivery or real token used."
+    },
+    {
+      "viewport": "mobile",
+      "path": "docs/evidence/29oct-final-mobile-checkout-unconfigured.png",
+      "note": "Synthetic local checkout form; payment credentials absent, no Stripe Session created."
+    },
+    {
+      "viewport": "mobile",
+      "path": "docs/evidence/29oct-final-mobile-blog-edited.png",
+      "note": "Author-owned synthetic blog post; genuine local CRUD rendering, no Cloudinary upload."
+    },
+    {
+      "viewport": "mobile",
+      "path": "docs/evidence/29oct-final-mobile-pet-notes-validation.png",
+      "note": "Synthetic fixture profile form; deliberately submitted501-character notes to exercise server validation."
+    },
+    {
+      "viewport": "mobile",
+      "path": "docs/evidence/29oct-final-mobile-pet-profile.png",
+      "note": "Owner-only synthetic pet data; genuine local rendering, not veterinary advice or customer evidence."
+    },
+    {
+      "viewport": "mobile",
+      "path": "docs/evidence/29oct-final-mobile-own-orders-synthetic.png",
+      "note": "Manually seeded synthetic PAID order for order-history/reorder testing only; NOT Stripe or payment-confirmation evidence."
+    }
+  ],
+  "externalRequests": [],
+  "jsErrors": [],
+  "styleRegressionChecks": [
+    {
+      "viewport": "desktop",
+      "home": {
+        "heroGradient": "linear-gradient(rgb(255, 255, 255) 0%, rgb(248, 249, 250) 100%)",
+        "cardRadius": "12px",
+        "ctaGradient": "linear-gradient(90deg, rgb(248, 249, 250) 0%, rgb(255, 255, 255) 100%)",
+        "bodyStyleTags": 0,
+        "headings": [
+          {
+            "tag": "H1",
+            "size": "48px"
+          },
+          {
+            "tag": "H2",
+            "size": "24px"
+          },
+          {
+            "tag": "H2",
+            "size": "24px"
+          },
+          {
+            "tag": "H2",
+            "size": "24px"
+          },
+          {
+            "tag": "H2",
+            "size": "32px"
+          }
+        ]
+      },
+      "shop": {
+        "imageHeight": "250px",
+        "imageFit": "cover",
+        "bodyStyleTags": 0,
+        "headings": [
+          {
+            "tag": "H1",
+            "size": "32px"
+          },
+          {
+            "tag": "H2",
+            "size": "20px"
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "viewport": "mobile",
+      "home": {
+        "heroGradient": "linear-gradient(rgb(255, 255, 255) 0%, rgb(248, 249, 250) 100%)",
+        "cardRadius": "12px",
+        "ctaGradient": "linear-gradient(90deg, rgb(248, 249, 250) 0%, rgb(255, 255, 255) 100%)",
+        "bodyStyleTags": 0,
+        "headings": [
+          {
+            "tag": "H1",
+            "size": "30.99px"
+          },
+          {
+            "tag": "H2",
+            "size": "21.57px"
+          },
+          {
+            "tag": "H2",
+            "size": "21.57px"
+          },
+          {
+            "tag": "H2",
+            "size": "21.57px"
+          },
+          {
+            "tag": "H2",
+            "size": "24.71px"
+          }
+        ]
+      },
+      "shop": {
+        "imageHeight": "250px",
+        "imageFit": "cover",
+        "bodyStyleTags": 0,
+        "headings": [
+          {
+            "tag": "H1",
+            "size": "24.71px"
+          },
+          {
+            "tag": "H2",
+            "size": "20px"
+          }
+        ]
+      },
+      "passed": true
+    }
+  ],
+  "serverOutboundAttempts": 0,
+  "basicAccessibilityScope": "Main h1, image alt presence, form labels on captured states; no full WCAG/screen-reader/contrast pass claimed",
+  "passed": true
+}

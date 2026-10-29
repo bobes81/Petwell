@@ -2,6 +2,7 @@
 
 from copy import deepcopy
 from hashlib import sha256
+from html.parser import HTMLParser
 from io import StringIO
 import json
 import os
@@ -412,3 +413,30 @@ class ProductImageAssociationTests(TestCase):
         for product in Product.objects.filter(pk__in=[p.pk for p in self.products]):
             self.assertTrue(product.image_is_ai_illustration)
         self.assertFalse(Product.objects.get(pk=self.legacy_pdf.pk).image_is_ai_illustration)
+
+    def test_full_concept_display_is_scoped_to_ai_images(self):
+        Product.objects.filter(pk=self.products[0].pk).update(image="owner/existing-art")
+        self.run_plan(apply=True)
+        response = self.client.get(reverse("products:product_list"))
+
+        class Images(HTMLParser):
+            def __init__(self):
+                super().__init__()
+                self.images = []
+
+            def handle_starttag(self, tag, attrs):
+                if tag == "img":
+                    self.images.append(dict(attrs))
+
+        parser = Images()
+        parser.feed(response.content.decode())
+        concepts = [image for image in parser.images
+                    if "petwell/ai-products/" in image.get("src", "")]
+        ordinary = [image for image in parser.images
+                    if "owner/existing-art" in image.get("src", "")]
+        self.assertEqual(len(concepts), 8)
+        self.assertEqual(len(ordinary), 1)
+        self.assertTrue(all("product-concept-image" in image.get("class", "").split()
+                            for image in concepts))
+        self.assertNotIn("product-concept-image", ordinary[0].get("class", "").split())
+        self.assertContains(response, "AI-generated product illustration", count=8)

@@ -11,13 +11,44 @@ python manage.py makemigrations --check --dry-run --settings=petwell.test_settin
 python -m pip check
 ```
 
-**Latest SQLite result: 178 discovered/executed tests — 177 passed, 1 explicitly skipped, 0 failures.** The skip is the PostgreSQL-only two-worker concurrency test. Deterministic stale-session, busy-lease, lease recovery/takeover, immutable-payload and payment-state tests run locally. Do not describe the SQLite run as proof of simultaneous PostgreSQL workers.
+**Latest SQLite result: 179 discovered/executed tests — 178 passed, 1 explicitly skipped, 0 failures.** The skip is the PostgreSQL-only two-worker concurrency test. Deterministic stale-session, busy-lease, lease recovery/takeover, immutable-payload and payment-state tests run locally. Do not describe the SQLite run as proof of simultaneous PostgreSQL workers.
 
-The test database is isolated and email is in memory. Stripe create/retrieve/expire and Cloudinary uploads are mocked; actual HMAC verification runs against signed fixture payloads. No test processes a payment, uploads an external image or delivers an email. [Latest actual local output](evidence/29oct-integrated-resubmission-tests.txt). Earlier [116-test run](evidence/28oct-confirmed-history-tests.txt), [114-test migration](evidence/28oct-deployment-readiness-tests.txt), [Cloudinary compatibility](evidence/28oct-render-compatibility-tests.txt) and [108-test original](evidence/django-tests.txt) outputs remain preserved.
+The test database is isolated and email is in memory. Stripe create/retrieve/expire and Cloudinary uploads are mocked; actual HMAC verification runs against signed fixture payloads. No test processes a payment, uploads an external image or delivers an email. [Latest actual SQLite output](evidence/29oct-final-sqlite-tests.txt). Earlier [116-test run](evidence/28oct-confirmed-history-tests.txt), [114-test migration](evidence/28oct-deployment-readiness-tests.txt), [Cloudinary compatibility](evidence/28oct-render-compatibility-tests.txt) and [108-test original](evidence/django-tests.txt) outputs remain preserved.
 
 System checks, migration consistency and installed dependency checks passed. Selected Python error/import lint and whitespace checks passed. The repository changes were reviewed for English content, common real credential patterns, private-correspondence copying and broken relative documentation links; no matching accidental credentials/private text were found. Test passwords and the disposable CI PostgreSQL password are explicitly synthetic fixtures, not deployment credentials.
 
-## Latest: reviewed PR #9 and supplied concept sources
+## Final independent pre-deployment review
+
+Starting from `ecf0b92`, independent assessment, asset and payment/auth reviews found no additional required feature gap in the supplied feedback. The full official guide remains unavailable. Story IDs/statuses were corrected, and one confirmed presentation defect was fixed: cover fitting cropped square concept artwork/footer on mobile. A scoped AI-only contain fit preserves the whole source; ordinary images retain their styling. The new regression verifies that scope. [33 focused asset/configuration tests passed](evidence/29oct-final-asset-tests.txt); [97 payment/auth tests: 96 passed, one PostgreSQL-only skip](evidence/29oct-final-payment-auth-audit.txt).
+
+**Final complete suite:** SQLite **179 tests, 178 passed, one PostgreSQL-only skip, zero failures** ([raw output](evidence/29oct-final-sqlite-tests.txt)); local Docker PostgreSQL **18.6: 179 passed, zero skips/failures** ([raw output](evidence/29oct-final-postgresql18-tests.txt)). The overlapping-worker test actually ran on PostgreSQL. This is real database/ORM testing with synthetic fixtures, not Stripe/Cloudinary/SMTP acceptance.
+
+**Local PostgreSQL migration rehearsal:** an isolated loopback-only Docker service with no existing-data mounts ran both historical/incremental migration regressions: **two passed, zero failures/skips** ([raw output](evidence/29oct-final-postgresql18-migrations.txt), [observed environment/scope/cleanup](evidence/29oct-final-postgresql-rehearsal.json)). The incremental case starts after the five owner-rehearsed migrations, requires only products.0002 and preserves two synthetic products (including PDF), one pending order/item and field/link state without automatic withdrawal; the other case preserves the full synthetic original commerce/blog/subscriber history. No owner backup, Mac or production data was accessed. The test database and temporary container were removed.
+
+Reproduction uses an already available local Docker daemon and a new disposable container, not a paid database or an existing valuable database:
+
+```bash
+docker run --name petwell-review-pg --rm -d -p 127.0.0.1:55438:5432 -e POSTGRES_DB=petwell_review -e POSTGRES_USER=petwell_review -e POSTGRES_PASSWORD=synthetic_local_rehearsal_only postgres:18
+# Wait for this exact disposable service to report ready before tests.
+docker exec petwell-review-pg pg_isready -U petwell_review -d petwell_review
+export TEST_DATABASE_URL=postgres://petwell_review:synthetic_local_rehearsal_only@127.0.0.1:55438/petwell_review
+python manage.py test orders.tests.AvailabilityMigrationTests orders.tests.ExistingOrdersMigrationTests --settings=petwell.postgres_test_settings --verbosity=2
+python manage.py test --settings=petwell.postgres_test_settings --verbosity=2
+docker stop petwell-review-pg
+unset TEST_DATABASE_URL
+```
+
+The password above is an explicit disposable fixture, not a deployment credential. Never substitute a production/valuable restored URL. The recorded image digest/version identifies the actual run; a later floating tag can differ. Local synthetic rehearsal does not establish real-data compatibility, release-time state or downtime on Render; the one targeted owner working-copy check remains separate from the already completed restore/five migrations.
+
+**Final running-app Chromium review:** [actual report](evidence/29oct-final-browser-results.json), 1440×1000 and 390×844, **12 grouped checks and 16 genuine screenshots**. It exercises actual local signup/login/logout and reset-request UX, auth destinations/invalid-reset recovery, navigation, unavailable-payment form behavior, blog CRUD/image validation/direct permissions, owner-only pet CRUD/validation/reminders and order privacy/current-price reorder. Forms have labels, captured main pages have one H1, images have alt attributes and no document overflow/broken images/JS exceptions/external page requests were detected. Email is dummy, provider calls are refused and paid orders are manually seeded fixtures; no delivery/payment/customer/deployed evidence is implied. The local server was stopped. These basic checks are not full WCAG, contrast, zoom or other-browser certification.
+
+**Concept CSS preview:** [measured before/after report](evidence/29oct-concept-css-preview.json), [desktop](evidence/29oct-concept-css-preview-desktop.png), [mobile](evidence/29oct-concept-css-preview-mobile.png). All nine unchanged originals were rendered in data URLs with project CSS at 390/430/768/1440 widths. The measured crop disappears after contain fitting. This is an explicitly labelled isolated CSS preview, not a Django product assignment, Cloudinary asset or deployed shop. No source bytes/operational IDs/rights flags were changed.
+
+**Final validation:** local Nu Html Checker 26.10.12 (973e40b): **22 HTML documents** (20 actual rendered fixture pages plus two labelled design artifacts), **two project CSS files**, **zero messages**. [Summary](evidence/29oct-final-validation-summary.json), [raw HTML result](evidence/29oct-final-nu-html.json), [raw CSS result](evidence/29oct-final-nu-css.json). Raw HTML/tokens remain outside Git. This is not a new external validator or full-accessibility pass. [Final system/migration/deployment/static/dependency checks](evidence/29oct-final-readiness-checks.txt) passed sequentially with synthetic/process-only configuration; the pip cache ownership warning was non-blocking.
+
+The candidate is ready for owner-controlled cutover review, with normal release/checkout/submission still NO-GO until actual catalogue decisions, private configuration, backup/pause/approval and genuine provider/deployed acceptance. Follow [the short ordered owner checklist](OWNER_RELEASE_CHECKLIST.md). Earlier records below retain their original counts, dates and scope; verify the final submitted head's CI rather than attributing older results to it.
+
+## Earlier integrated PR #9 and supplied concept sources
 
 The fetched PR #9 `b39ec91` passed 164 SQLite tests (163 passed/one skip). The reviewed `e1dcc1e` passed 172 (171 passed/one skip), with successful SQLite/PostgreSQL 16/18 CI: [PR #9 run](https://github.com/bobes81/Petwell/actions/runs/40897334783). [Detailed review and raw outputs](PR9_REVIEW_AND_RELEASE_GATES.md). PR #9 history is incorporated into the main feature branch; production main remains unchanged.
 

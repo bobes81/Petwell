@@ -63,3 +63,5 @@ The earlier phrase “genuine-photo requirement” overstated the supplied feedb
 - Check each used asset's rights and add real attribution where required. No guessed licence, fabricated supplier claim or removed provenance mark should be used to fill an evidence gap.
 
 See [TESTING.md](TESTING.md) for tested behaviour and the outstanding deployed checks, and [EVIDENCE.md](EVIDENCE.md) for the remaining submission checklist.
+
+Final framing check: the existing cover fit cropped source concepts at phone widths. A scoped AI-image contain fit now preserves all source pixels at 390/430/768/1440 in [the isolated CSS preview](evidence/29oct-concept-css-preview.json). The readable external AI caption remains. This is local presentation evidence, not actual Cloudinary upload/association, product accuracy or rights approval.

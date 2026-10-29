@@ -1,0 +1,183 @@
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+Found 97 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: allauth, cloudinary, cloudinary_storage, crispy_bootstrap5, crispy_forms, messages, staticfiles, widget_tweaks
+  Apply all migrations: account, accounts, admin, auth, blog, contenttypes, orders, products, sessions, sites, socialaccount
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying account.0001_initial... OK
+  Applying account.0002_email_max_length... OK
+  Applying account.0003_alter_emailaddress_create_unique_verified_email... OK
+  Applying account.0004_alter_emailaddress_drop_unique_email... OK
+  Applying account.0005_emailaddress_idx_upper_email... OK
+  Applying account.0006_emailaddress_lower... OK
+  Applying account.0007_emailaddress_idx_email... OK
+  Applying account.0008_emailaddress_unique_primary_email_fixup... OK
+  Applying account.0009_emailaddress_unique_primary_email... OK
+  Applying accounts.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying blog.0001_initial... OK
+  Applying blog.0002_create_subscriber_table... OK
+  Applying blog.0003_create_subscriber_table... OK
+  Applying blog.0002_reset_subscriber_conflict... OK
+  Applying blog.0004_merge_20260213_0814... OK
+  Applying products.0001_initial... OK
+  Applying orders.0001_initial... OK
+  Applying orders.0002_order_paid_at_order_public_id_order_status_and_more... OK
+  Applying orders.0003_alter_orderitem_product... OK
+  Applying orders.0004_order_cart_line_tokens_order_stripe_checkout_payload... OK
+  Applying orders.0005_checkoutstate... OK
+  Applying products.0002_product_is_available... OK
+  Applying sessions.0001_initial... OK
+  Applying sites.0001_initial... OK
+  Applying sites.0002_alter_domain_unique... OK
+  Applying socialaccount.0001_initial... OK
+  Applying socialaccount.0002_token_max_lengths... OK
+  Applying socialaccount.0003_extra_data_default_dict... OK
+  Applying socialaccount.0004_app_provider_id_settings... OK
+  Applying socialaccount.0005_socialtoken_nullable_app... OK
+  Applying socialaccount.0006_alter_socialaccount_extra_data...test_busy_lease_does_not_start_a_second_checkout (checkout.test_coordination.CheckoutCoordinationTests.test_busy_lease_does_not_start_a_second_checkout) ... ok
+test_exception_releases_lease_and_keeps_durable_order_pointer (checkout.test_coordination.CheckoutCoordinationTests.test_exception_releases_lease_and_keeps_durable_order_pointer) ... ok
+test_expired_lease_can_be_recovered_and_is_released (checkout.test_coordination.CheckoutCoordinationTests.test_expired_lease_can_be_recovered_and_is_released) ... ok
+test_preloaded_requests_share_active_order_before_middleware_save (checkout.test_coordination.CheckoutCoordinationTests.test_preloaded_requests_share_active_order_before_middleware_save) ... ok
+test_stale_holder_cannot_overwrite_or_release_new_holder (checkout.test_coordination.CheckoutCoordinationTests.test_stale_holder_cannot_overwrite_or_release_new_holder) ... ok
+test_async_success_confirms_but_unrelated_event_is_ignored (checkout.tests.CheckoutTests.test_async_success_confirms_but_unrelated_event_is_ignored) ... ok
+test_bad_signature_and_malformed_payload_rejected (checkout.tests.CheckoutTests.test_bad_signature_and_malformed_payload_rejected) ... ok
+test_cached_expired_create_response_is_renewed_after_lost_response (checkout.tests.CheckoutTests.test_cached_expired_create_response_is_renewed_after_lost_response) ... Stripe checkout failed for order d7da0b58-9bd2-44cd-adfe-3d74e9a5a6d9
+ok
+test_changed_cart_expires_existing_session_before_creating_replacement (checkout.tests.CheckoutTests.test_changed_cart_expires_existing_session_before_creating_replacement) ... ok
+test_changed_cart_with_recovered_completed_session_does_not_pay_again (checkout.tests.CheckoutTests.test_changed_cart_with_recovered_completed_session_does_not_pay_again) ... Stripe checkout failed for order 13d51ff7-a02f-4a04-9dca-0766e470292c
+ok
+test_changed_contact_expiration_failure_preserves_existing_attempt (checkout.tests.CheckoutTests.test_changed_contact_expiration_failure_preserves_existing_attempt) ... Stripe checkout failed for order 2598494a-cafd-4ad9-bcbc-727dbdf6b733
+ok
+test_changed_contact_recovers_lost_create_response_before_expiring_it (checkout.tests.CheckoutTests.test_changed_contact_recovers_lost_create_response_before_expiring_it) ... Stripe checkout failed for order d774b706-e43f-43ea-91bd-f0e4fc3e1751
+ok
+test_checkout_requires_csrf_but_signed_webhook_does_not (checkout.tests.CheckoutTests.test_checkout_requires_csrf_but_signed_webhook_does_not) ... ok
+test_checkout_uses_server_prices_and_leaves_order_unpaid (checkout.tests.CheckoutTests.test_checkout_uses_server_prices_and_leaves_order_unpaid) ... ok
+test_completed_session_waits_for_webhook_without_new_payment (checkout.tests.CheckoutTests.test_completed_session_waits_for_webhook_without_new_payment) ... ok
+test_completed_session_with_changed_cart_cannot_start_new_payment (checkout.tests.CheckoutTests.test_completed_session_with_changed_cart_cannot_start_new_payment) ... ok
+test_completed_session_with_changed_contact_cannot_start_new_payment (checkout.tests.CheckoutTests.test_completed_session_with_changed_contact_cannot_start_new_payment) ... ok
+test_cookieless_webhook_with_csrf_checks_requires_valid_signature (checkout.tests.CheckoutTests.test_cookieless_webhook_with_csrf_checks_requires_valid_signature) ... ok
+test_delayed_failure_and_distinct_success_events_preserve_paid_order (checkout.tests.CheckoutTests.test_delayed_failure_and_distinct_success_events_preserve_paid_order) ... ok
+test_delayed_payment_does_not_remove_newly_readded_product (checkout.tests.CheckoutTests.test_delayed_payment_does_not_remove_newly_readded_product) ... ok
+test_empty_stale_negative_and_noninteger_cart_rejected (checkout.tests.CheckoutTests.test_empty_stale_negative_and_noninteger_cart_rejected) ... ok
+test_expiration_racing_completion_waits_for_original_webhook (checkout.tests.CheckoutTests.test_expiration_racing_completion_waits_for_original_webhook) ... ok
+test_expiration_with_unknown_result_never_starts_replacement (checkout.tests.CheckoutTests.test_expiration_with_unknown_result_never_starts_replacement) ... Stripe checkout failed for order 7ff34db8-c580-41f2-af96-0879bf12a753
+ok
+test_expired_session_renews_order_without_overwriting_old_mapping (checkout.tests.CheckoutTests.test_expired_session_renews_order_without_overwriting_old_mapping) ... ok
+test_expired_signature_is_rejected (checkout.tests.CheckoutTests.test_expired_signature_is_rejected) ... ok
+test_invalid_form_does_not_create_order (checkout.tests.CheckoutTests.test_invalid_form_does_not_create_order) ... ok
+test_legacy_attempt_without_payload_gets_fresh_order_and_key (checkout.tests.CheckoutTests.test_legacy_attempt_without_payload_gets_fresh_order_and_key) ... ok
+test_live_key_is_blocked_when_test_mode_configured (checkout.tests.CheckoutTests.test_live_key_is_blocked_when_test_mode_configured) ... ok
+test_lost_expiration_response_can_recover_confirmed_expiry (checkout.tests.CheckoutTests.test_lost_expiration_response_can_recover_confirmed_expiry) ... ok
+test_lost_lease_after_creation_recovers_same_durable_attempt (checkout.tests.CheckoutTests.test_lost_lease_after_creation_recovers_same_durable_attempt) ... ok
+test_lost_session_response_retry_uses_frozen_product_name (checkout.tests.CheckoutTests.test_lost_session_response_retry_uses_frozen_product_name) ... Stripe checkout failed for order c0b10557-2b8a-4012-a636-9e7166fc89ed
+ok
+test_maximum_order_email_length_can_start_checkout (checkout.tests.CheckoutTests.test_maximum_order_email_length_can_start_checkout) ... ok
+test_missing_key_keeps_cart_and_shows_error (checkout.tests.CheckoutTests.test_missing_key_keeps_cart_and_shows_error) ... ok
+test_missing_live_mode_or_order_metadata_cannot_confirm_payment (checkout.tests.CheckoutTests.test_missing_live_mode_or_order_metadata_cannot_confirm_payment) ... Payment details mismatch for order 40fda513-a9da-4775-88f4-d7f708a0870d
+Payment details mismatch for order 40fda513-a9da-4775-88f4-d7f708a0870d
+Payment details mismatch for order 40fda513-a9da-4775-88f4-d7f708a0870d
+ok
+test_missing_webhook_configuration_blocks_checkout (checkout.tests.CheckoutTests.test_missing_webhook_configuration_blocks_checkout) ... ok
+test_new_purchase_after_confirmed_cart_clear_starts_fresh_checkout (checkout.tests.CheckoutTests.test_new_purchase_after_confirmed_cart_clear_starts_fresh_checkout) ... ok
+test_old_mapped_attempt_retrieves_original_completed_session (checkout.tests.CheckoutTests.test_old_mapped_attempt_retrieves_original_completed_session) ... ok
+test_old_unmapped_attempt_cannot_be_bypassed_with_changed_details (checkout.tests.CheckoutTests.test_old_unmapped_attempt_cannot_be_bypassed_with_changed_details) ... Stripe checkout failed for order 555b5253-9156-44fc-9486-2444560d3e4d
+ok
+test_other_browser_cannot_read_guest_order (checkout.tests.CheckoutTests.test_other_browser_cannot_read_guest_order) ... ok
+test_overlong_valid_email_is_rejected_before_order_or_stripe (checkout.tests.CheckoutTests.test_overlong_valid_email_is_rejected_before_order_or_stripe) ... ok
+test_paid_active_order_with_lost_session_list_does_not_charge_again (checkout.tests.CheckoutTests.test_paid_active_order_with_lost_session_list_does_not_charge_again) ... ok
+test_paid_cart_clears_on_cart_visit_without_return_url (checkout.tests.CheckoutTests.test_paid_cart_clears_on_cart_visit_without_return_url) ... ok
+test_paid_return_preserves_additional_cart_items (checkout.tests.CheckoutTests.test_paid_return_preserves_additional_cart_items) ... ok
+test_rate_limit_preserves_attempt_and_retries_without_leaking_diagnostics (checkout.tests.CheckoutTests.test_rate_limit_preserves_attempt_and_retries_without_leaking_diagnostics) ... Stripe checkout failed for order 0632c071-cc63-423d-8289-5d9d13c6ad10
+ok
+test_repeat_submission_reuses_order_and_idempotency_key (checkout.tests.CheckoutTests.test_repeat_submission_reuses_order_and_idempotency_key) ... ok
+test_retry_after_cart_key_reordering_uses_original_payload (checkout.tests.CheckoutTests.test_retry_after_cart_key_reordering_uses_original_payload) ... Stripe checkout failed for order 374269aa-21da-4f96-8206-019fc3582417
+ok
+test_return_url_does_not_confirm_payment_or_clear_cart (checkout.tests.CheckoutTests.test_return_url_does_not_confirm_payment_or_clear_cart) ... ok
+test_same_browser_can_recover_confirmation_list_from_checkout_state (checkout.tests.CheckoutTests.test_same_browser_can_recover_confirmation_list_from_checkout_state) ... ok
+test_session_retrieval_error_preserves_existing_attempt (checkout.tests.CheckoutTests.test_session_retrieval_error_preserves_existing_attempt) ... Stripe checkout failed for order 8d338755-49c9-4b6c-97b0-5ec73c1780f6
+ok
+test_signed_malformed_event_is_rejected_without_server_error (checkout.tests.CheckoutTests.test_signed_malformed_event_is_rejected_without_server_error) ... ok
+test_signed_payment_for_previously_issued_session_survives_withdrawal (checkout.tests.CheckoutTests.test_signed_payment_for_previously_issued_session_survives_withdrawal) ... ok
+test_stripe_error_is_recoverable (checkout.tests.CheckoutTests.test_stripe_error_is_recoverable) ... Stripe checkout failed for order b3ae9395-9954-4a19-9609-9f8715ab9c86
+ok
+test_unknown_session_requests_retry (checkout.tests.CheckoutTests.test_unknown_session_requests_retry) ... ok
+test_unmapped_retry_stops_at_conservative_recovery_deadline (checkout.tests.CheckoutTests.test_unmapped_retry_stops_at_conservative_recovery_deadline) ... Stripe checkout failed for order abdc6a76-b3d1-43cf-b1f9-392572f3ee6e
+Stripe checkout failed for order abdc6a76-b3d1-43cf-b1f9-392572f3ee6e
+ok
+test_unpaid_event_never_marks_paid (checkout.tests.CheckoutTests.test_unpaid_event_never_marks_paid) ... ok
+test_valid_signed_webhook_confirms_once_and_return_clears_once (checkout.tests.CheckoutTests.test_valid_signed_webhook_confirms_once_and_return_clears_once) ... ok
+test_webhook_racing_session_save_retries_then_confirms_same_order (checkout.tests.CheckoutTests.test_webhook_racing_session_save_retries_then_confirms_same_order) ... ok
+test_wrong_amount_currency_order_reference_and_mode_rejected (checkout.tests.CheckoutTests.test_wrong_amount_currency_order_reference_and_mode_rejected) ... Payment details mismatch for order d705aeb3-38ee-4cb7-a10f-00ce52283c8e
+Payment details mismatch for order d705aeb3-38ee-4cb7-a10f-00ce52283c8e
+Payment details mismatch for order d705aeb3-38ee-4cb7-a10f-00ce52283c8e
+Payment details mismatch for order d705aeb3-38ee-4cb7-a10f-00ce52283c8e
+Payment details mismatch for order d705aeb3-38ee-4cb7-a10f-00ce52283c8e
+Payment details mismatch for order d705aeb3-38ee-4cb7-a10f-00ce52283c8e
+ok
+test_archived_product_rejected_before_stripe_or_order (checkout.tests.UnavailableCheckoutTests.test_archived_product_rejected_before_stripe_or_order) ... ok
+test_checkout_route_rejects_stale_products_for_guests_and_members (checkout.tests.UnavailableCheckoutTests.test_checkout_route_rejects_stale_products_for_guests_and_members) ... ok
+test_archived_product_stays_in_history_but_is_not_reordered (orders.tests.ArchivedReorderTests.test_archived_product_stays_in_history_but_is_not_reordered) ... ok
+test_mixed_reorder_skips_withdrawn_and_unpriced_items (orders.tests.ArchivedReorderTests.test_mixed_reorder_skips_withdrawn_and_unpriced_items) ... ok
+test_only_ineligible_reorder_explains_no_add_and_preserves_cart (orders.tests.ArchivedReorderTests.test_only_ineligible_reorder_explains_no_add_and_preserves_cart) ... ok
+test_payment_order_cannot_be_deleted_even_by_superuser (orders.tests.OrderAdminProtectionTests.test_payment_order_cannot_be_deleted_even_by_superuser) ... ok
+test_login_required (orders.tests.OrderHistoryTests.test_login_required) ... ok
+test_only_own_orders_displayed (orders.tests.OrderHistoryTests.test_only_own_orders_displayed) ... ok
+test_order_items_prevent_destructive_product_deletion (orders.tests.OrderHistoryTests.test_order_items_prevent_destructive_product_deletion) ... ok
+test_pending_order_cannot_be_reordered (orders.tests.OrderHistoryTests.test_pending_order_cannot_be_reordered) ... ok
+test_reorder_post_adds_items_using_current_product_price (orders.tests.OrderHistoryTests.test_reorder_post_adds_items_using_current_product_price) ... ok
+test_staff_shop_account_cannot_browse_or_reorder_another_users_order (orders.tests.OrderHistoryTests.test_staff_shop_account_cannot_browse_or_reorder_another_users_order) ... ok
+test_all_profile_routes_require_login (accounts.test_profiles.PetProfileTests.test_all_profile_routes_require_login) ... ok
+test_create_uses_authenticated_owner_and_shows_saved_frontend_data (accounts.test_profiles.PetProfileTests.test_create_uses_authenticated_owner_and_shows_saved_frontend_data) ... ok
+test_delete_get_is_confirmation_only_and_owner_post_deletes (accounts.test_profiles.PetProfileTests.test_delete_get_is_confirmation_only_and_owner_post_deletes) ... ok
+test_empty_list_explains_how_to_add_first_pet (accounts.test_profiles.PetProfileTests.test_empty_list_explains_how_to_add_first_pet) ... ok
+test_invalid_create_and_edit_inputs_do_not_persist (accounts.test_profiles.PetProfileTests.test_invalid_create_and_edit_inputs_do_not_persist) ... ok
+test_list_only_shows_own_profiles_and_focus_reminder (accounts.test_profiles.PetProfileTests.test_list_only_shows_own_profiles_and_focus_reminder) ... ok
+test_mutations_require_csrf_and_valid_form_token_works (accounts.test_profiles.PetProfileTests.test_mutations_require_csrf_and_valid_form_token_works) ... ok
+test_notes_are_optional_and_all_supported_focuses_have_reminders (accounts.test_profiles.PetProfileTests.test_notes_are_optional_and_all_supported_focuses_have_reminders) ... ok
+test_other_users_and_staff_cannot_access_or_change_owner_profile (accounts.test_profiles.PetProfileTests.test_other_users_and_staff_cannot_access_or_change_owner_profile) ... ok
+test_owner_can_edit_without_reassigning_profile (accounts.test_profiles.PetProfileTests.test_owner_can_edit_without_reassigning_profile) ... ok
+test_profile_text_is_escaped_in_frontend (accounts.test_profiles.PetProfileTests.test_profile_text_is_escaped_in_frontend) ... ok
+test_external_next_never_turns_into_an_external_switch_or_redirect (accounts.tests.AccountRedirectTests.test_external_next_never_turns_into_an_external_switch_or_redirect) ... ok
+test_login_finishes_at_internal_next_destination (accounts.tests.AccountRedirectTests.test_login_finishes_at_internal_next_destination) ... ok
+test_login_signup_switch_preserves_internal_next_in_both_directions (accounts.tests.AccountRedirectTests.test_login_signup_switch_preserves_internal_next_in_both_directions) ... ok
+test_signup_finishes_at_internal_next_destination (accounts.tests.AccountRedirectTests.test_signup_finishes_at_internal_next_destination) ... ok
+test_signup_and_login_work_with_current_allauth (accounts.tests.AccountTests.test_signup_and_login_work_with_current_allauth) ... ok
+test_signup_rejects_weak_password (accounts.tests.AccountTests.test_signup_rejects_weak_password) ... ok
+test_clean_reset_url_without_original_browser_session_is_unavailable (accounts.tests.PasswordResetTests.test_clean_reset_url_without_original_browser_session_is_unavailable) ... ok
+test_expired_reset_link_offers_fresh_request (accounts.tests.PasswordResetTests.test_expired_reset_link_offers_fresh_request) ... ok
+test_invalid_reset_link_explains_recovery_without_password_form (accounts.tests.PasswordResetTests.test_invalid_reset_link_explains_recovery_without_password_form) ... ok
+test_password_reset_invalidates_other_authenticated_browser_session (accounts.tests.PasswordResetTests.test_password_reset_invalidates_other_authenticated_browser_session) ... ok
+test_requested_reset_email_and_valid_password_change_progression (accounts.tests.PasswordResetTests.test_requested_reset_email_and_valid_password_change_progression) ... ok
+test_reset_completion_does_not_disclose_whether_an_account_exists (accounts.tests.PasswordResetTests.test_reset_completion_does_not_disclose_whether_an_account_exists) ... ok
+test_reset_email_uses_https_render_host_behind_trusted_proxy (accounts.tests.PasswordResetTests.test_reset_email_uses_https_render_host_behind_trusted_proxy) ... ok
+test_overlapping_workers_cannot_create_two_payable_sessions (checkout.test_coordination.CheckoutPostgresConcurrencyTests.test_overlapping_workers_cannot_create_two_payable_sessions) ... skipped 'PostgreSQL concurrency check'
+test_upgrade_from_rehearsed_schema_preserves_rows_without_auto_withdrawal (orders.tests.AvailabilityMigrationTests.test_upgrade_from_rehearsed_schema_preserves_rows_without_auto_withdrawal) ... ok
+test_confirmed_commerce_and_blog_history_upgrades_without_data_loss (orders.tests.ExistingOrdersMigrationTests.test_confirmed_commerce_and_blog_history_upgrades_without_data_loss) ... ok
+
+----------------------------------------------------------------------
+Ran 97 tests in 4.483s
+
+OK (skipped=1)
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+ OK
+System check identified no issues (0 silenced).

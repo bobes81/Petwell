@@ -1,0 +1,9 @@
+{
+  "date": "2026-10-29",
+  "tool": "Nu Html Checker 26.10.12 (973e40b)",
+  "scope": "Offline validation of 20 actual rendered local fixture pages plus the labelled Facebook mockup and retrospective wireframes; two project CSS files. Raw rendered HTML/CSRF values are outside Git. No external-validator, provider, deployed or full-WCAG acceptance is claimed.",
+  "html_documents": 22,
+  "html_messages": 0,
+  "css_files": 2,
+  "css_messages": 0
+}

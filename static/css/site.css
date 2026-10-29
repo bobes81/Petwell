@@ -34,6 +34,9 @@ input, textarea { max-width: 100%; }
     object-fit: cover;
     height: 250px;
 }
+.product-card .product-concept-image {
+    object-fit: contain;
+}
 
 .cart-table {
     min-width: 36rem;

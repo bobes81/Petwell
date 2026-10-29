@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-29",
+  "baseline": "ecf0b92 plus final AI concept framing fix",
+  "scope": "Disposable local Docker PostgreSQL with synthetic historical fixture data only. No production, owner backup or Mac database access.",
+  "postgresql_server_version_observed": "PostgreSQL 18.6 (Debian 18.6-1.pgdg13+2), x86_64",
+  "image_reference": "postgres:18",
+  "image_digest": "sha256:979bccfde35445db618c65107d27d08c6c21339d8dc3ad4c830c6633947be0e4",
+  "network": "Loopback-only published port 55438; no host-data mounts. Synthetic fixture credentials only.",
+  "migration_commands": [
+    "manage.py test orders.tests.AvailabilityMigrationTests orders.tests.ExistingOrdersMigrationTests --settings=petwell.postgres_test_settings --verbosity=2"
+  ],
+  "migration_result": {
+    "tests": 2,
+    "passed": 2,
+    "skipped": 0,
+    "failures": 0
+  },
+  "migration_scopes": [
+    "Incremental products.0002 from already-rehearsed schema: two synthetic products including a PDF, one pending order/item; exact plan, fields/links/default true preserved, no automatic withdrawal, old Product writer rejection.",
+    "Full synthetic historical commerce/blog baseline upgrade: member/guest orders/items, article/image and subscriber data preserved, new fields/tables usable."
+  ],
+  "complete_suite": {
+    "tests": 179,
+    "passed": 179,
+    "skipped": 0,
+    "failures": 0,
+    "postgresql_concurrency_test": "executed, not skipped"
+  },
+  "limitations": [
+    "No real-data or production lock-duration/server/config verification.",
+    "The owner-completed five-migration real-data rehearsal is separate; later products.0002 on that working copy remains owner-controlled.",
+    "No Stripe, Cloudinary or SMTP acceptance."
+  ],
+  "cleanup": "Docker --rm container stopped and absent from subsequent docker ps -a query; temporary test database destroyed by Django."
+}
