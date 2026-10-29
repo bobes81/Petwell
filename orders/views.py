@@ -24,7 +24,7 @@ def reorder(request, public_id):
     )
     cart = request.session.get("cart", {}).copy()
     for item in order.items.select_related("product"):
-        if item.product.price > 0:
+        if item.product.is_available and item.product.price > 0:
             key = str(item.product_id)
             cart[key] = min(cart.get(key, 0) + item.quantity, 99)
     request.session["cart"] = cart
