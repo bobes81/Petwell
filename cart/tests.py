@@ -84,3 +84,9 @@ class MixedAvailabilityCartTests(TestCase):
         response = self.client.get(reverse("cart:view_cart"))
         self.assertContains(response, "Unavailable product")
         self.assertNotContains(response, "Proceed to Checkout")
+
+    def test_zero_price_cannot_be_added_directly(self):
+        invalid = Product.objects.create(name="Not for sale", price="0.00")
+        response = self.client.post(reverse("cart:add_to_cart", args=[invalid.pk]))
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(self.client.session.get("cart", {}), {})
