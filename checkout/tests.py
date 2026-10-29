@@ -411,6 +411,136 @@ class CheckoutTests(TestCase):
         self.assertEqual(Order.objects.get().pk, order.pk)
         self.assertEqual(first.call_args.kwargs, retry.call_args.kwargs)
 
+    def test_unmapped_retry_stops_at_conservative_recovery_deadline(self):
+        with patch(
+            "checkout.views.stripe.checkout.Session.create",
+            side_effect=stripe.APIConnectionError("lost response"),
+        ):
+            self.client.post(self.url, self.data)
+        order = Order.objects.get()
+        payload = order.stripe_checkout_payload.copy()
+        now = timezone.now()
+        Order.objects.filter(pk=order.pk).update(
+            created_at=now - timedelta(hours=22, minutes=59)
+        )
+        with (
+            patch("checkout.views.timezone.now", return_value=now),
+            patch(
+                "checkout.views.stripe.checkout.Session.create",
+                side_effect=stripe.APIConnectionError("still lost"),
+            ) as within_window,
+        ):
+            self.assertContains(
+                self.client.post(self.url, self.data),
+                "We could not start payment",
+            )
+        within_window.assert_called_once()
+        self.assertEqual(
+            within_window.call_args.kwargs["idempotency_key"],
+            f"order-{order.public_id}",
+        )
+
+        Order.objects.filter(pk=order.pk).update(
+            created_at=now - timedelta(hours=23)
+        )
+        with (
+            patch("checkout.views.timezone.now", return_value=now),
+            patch(
+                "checkout.views.stripe.checkout.Session.create",
+                return_value=SimpleNamespace(
+                    id="cs_duplicate_after_retention",
+                    status="open",
+                    url="https://checkout.stripe.com/duplicate",
+                ),
+            ) as unsafe_retry,
+        ):
+            response = self.client.post(self.url, self.data)
+        self.assertEqual(unsafe_retry.call_count, 0)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(b"needs review" in response.content)
+        order.refresh_from_db()
+        self.assertIsNone(order.stripe_session_id)
+        self.assertEqual(order.status, "pending")
+        self.assertIsNone(order.paid_at)
+        self.assertEqual(order.stripe_checkout_payload, payload)
+        self.assertEqual(Order.objects.count(), 1)
+        self.assertEqual(
+            CheckoutState.objects.get().active_order_id, order.pk
+        )
+        self.assertIsNone(CheckoutState.objects.get().processing_token)
+        self.assertEqual(
+            self.client.session["cart"], {str(self.product.pk): 2}
+        )
+
+    def test_old_unmapped_attempt_cannot_be_bypassed_with_changed_details(self):
+        with patch(
+            "checkout.views.stripe.checkout.Session.create",
+            side_effect=stripe.APIConnectionError("lost response"),
+        ):
+            self.client.post(self.url, self.data)
+        order = Order.objects.get()
+        payload = order.stripe_checkout_payload.copy()
+        Order.objects.filter(pk=order.pk).update(
+            created_at=timezone.now() - timedelta(hours=25)
+        )
+        self.data["email"] = "changed@example.test"
+        session = self.client.session
+        session["cart"] = {str(self.product.pk): 3}
+        session.save()
+        with (
+            patch(
+                "checkout.views.stripe.checkout.Session.create",
+                return_value=SimpleNamespace(
+                    id="cs_duplicate_changed_details",
+                    status="open",
+                    url="https://checkout.stripe.com/duplicate",
+                ),
+            ) as unsafe_retry,
+            patch("checkout.views.stripe.checkout.Session.expire") as expire,
+        ):
+            response = self.client.post(self.url, self.data)
+        self.assertEqual(unsafe_retry.call_count, 0)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(b"needs review" in response.content)
+        expire.assert_not_called()
+        self.retrieve.assert_not_called()
+        order.refresh_from_db()
+        self.assertIsNone(order.stripe_session_id)
+        self.assertEqual(order.email, "customer@example.test")
+        self.assertEqual(order.total_price, Decimal("14.50"))
+        self.assertEqual(order.stripe_checkout_payload, payload)
+        self.assertEqual(Order.objects.count(), 1)
+        self.assertEqual(
+            self.client.session["cart"], {str(self.product.pk): 3}
+        )
+
+    def test_old_mapped_attempt_retrieves_original_completed_session(self):
+        order, _ = self.create_order()
+        Order.objects.filter(pk=order.pk).update(
+            created_at=timezone.now() - timedelta(hours=25)
+        )
+        self.retrieve.return_value = SimpleNamespace(
+            id=order.stripe_session_id,
+            status="complete",
+            payment_status="paid",
+            url=None,
+        )
+        with patch("checkout.views.stripe.checkout.Session.create") as create:
+            response = self.client.post(self.url, self.data)
+        self.assertRedirects(
+            response,
+            reverse("checkout:success", args=[order.public_id]),
+        )
+        self.retrieve.assert_called_once()
+        create.assert_not_called()
+        order.refresh_from_db()
+        self.assertEqual(order.status, "pending")
+        self.assertIsNone(order.paid_at)
+        self.assertEqual(Order.objects.count(), 1)
+        self.assertEqual(
+            self.client.session["cart"], {str(self.product.pk): 2}
+        )
+
     def test_delayed_payment_does_not_remove_newly_readded_product(self):
         order, _ = self.create_order()
         self.client.post(

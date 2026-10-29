@@ -1,0 +1,75 @@
+{
+  "checkedAtUtc": "2026-10-29T09:50:56.810Z",
+  "scope": "Genuine local Chromium rendering using a NEW isolated synthetic SQLite fixture, not the owner's Mac backup or any production database. Each manually seeded 25-hour pending order has a saved request payload and no Stripe Session ID, simulating an unresolved lost response. Fake test settings only; Stripe API methods are refusal stubs and outbound server socket connections are blocked. No payment, provider delivery, restore or external acceptance was performed.",
+  "results": [
+    {
+      "viewport": "desktop",
+      "width": 1440,
+      "height": 1000,
+      "checkoutPostStatus": 200,
+      "reviewMessageVisible": true,
+      "cartPreservationMessageVisible": true,
+      "cartRemainedOnBrowserVisit": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "brokenImages": []
+      },
+      "screenshot": "docs/evidence/29oct-aged-retry-desktop.png",
+      "caption": "Genuine localhost rendering of an aged unresolved synthetic checkout; no Stripe Session, payment or restored backup was used.",
+      "passed": true
+    },
+    {
+      "viewport": "mobile",
+      "width": 390,
+      "height": 844,
+      "checkoutPostStatus": 200,
+      "reviewMessageVisible": true,
+      "cartPreservationMessageVisible": true,
+      "cartRemainedOnBrowserVisit": true,
+      "layout": {
+        "width": 390,
+        "scrollWidth": 390,
+        "horizontalOverflow": false,
+        "brokenImages": []
+      },
+      "screenshot": "docs/evidence/29oct-aged-retry-mobile.png",
+      "caption": "Genuine localhost rendering of an aged unresolved synthetic checkout; no Stripe Session, payment or restored backup was used.",
+      "passed": true
+    }
+  ],
+  "externalRequests": [],
+  "javascriptErrors": [],
+  "passed": true,
+  "syntheticDatabaseChecks": [
+    {
+      "viewport": "desktop",
+      "status": "pending",
+      "paidAtMissing": true,
+      "stripeSessionIdMissing": true,
+      "payloadPreserved": true,
+      "cartQuantity": 2,
+      "activeOrderPreserved": true,
+      "leaseReleased": true
+    },
+    {
+      "viewport": "mobile",
+      "status": "pending",
+      "paidAtMissing": true,
+      "stripeSessionIdMissing": true,
+      "payloadPreserved": true,
+      "cartQuantity": 2,
+      "activeOrderPreserved": true,
+      "leaseReleased": true
+    }
+  ],
+  "syntheticFixtureCounts": {
+    "products": 1,
+    "orders": 2,
+    "source": "New manually seeded SQLite fixture, unrelated to owner-restored database."
+  },
+  "blockedStripeApiAttempts": 0,
+  "blockedOutboundServerAttempts": 0,
+  "temporaryServerStoppedAfterCapture": true
+}

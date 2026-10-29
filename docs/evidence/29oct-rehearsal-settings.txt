@@ -1,0 +1,14 @@
+test_ipv6_loopback_is_supported_without_connecting (petwell.test_rehearsal_settings.RehearsalSettingsTests.test_ipv6_loopback_is_supported_without_connecting) ... ok
+test_local_restored_copy_does_not_force_ssl_or_inherit_providers (petwell.test_rehearsal_settings.RehearsalSettingsTests.test_local_restored_copy_does_not_force_ssl_or_inherit_providers) ... ok
+test_missing_local_url_never_falls_back_to_production_database (petwell.test_rehearsal_settings.RehearsalSettingsTests.test_missing_local_url_never_falls_back_to_production_database) ... ok
+test_query_or_libpq_routing_overrides_are_rejected (petwell.test_rehearsal_settings.RehearsalSettingsTests.test_query_or_libpq_routing_overrides_are_rejected) ... ok
+test_rehearsal_secret_is_required_instead_of_production_secret (petwell.test_rehearsal_settings.RehearsalSettingsTests.test_rehearsal_secret_is_required_instead_of_production_secret) ... ok
+test_remote_non_postgres_and_maintenance_targets_are_rejected (petwell.test_rehearsal_settings.RehearsalSettingsTests.test_remote_non_postgres_and_maintenance_targets_are_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 3.151s
+
+OK
+Found 6 test(s).
+Skipping setup of unused database(s): default.
+System check identified no issues (0 silenced).

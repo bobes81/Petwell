@@ -1,4 +1,5 @@
 import logging
+from datetime import timedelta
 from decimal import Decimal
 
 import stripe
@@ -19,6 +20,7 @@ from .coordination import CheckoutBusy, checkout_lease, session_digest
 from .forms import CheckoutForm
 
 logger = logging.getLogger(__name__)
+UNMAPPED_RETRY_WINDOW = timedelta(hours=23)
 
 
 def cart_products(cart):
@@ -168,6 +170,17 @@ def start_checkout(request, form, items, total, tokens, lease):
                 api_key=settings.STRIPE_SECRET_KEY,
             )
         else:
+            # Stripe may prune idempotency keys after 24 hours. An unmapped
+            # Session might already have been paid while its webhooks retried.
+            # Leave a margin before that retention boundary; never risk creating
+            # a second payable Session because the original response was lost.
+            if order.created_at <= timezone.now() - UNMAPPED_RETRY_WINDOW:
+                form.add_error(
+                    None,
+                    "This payment attempt needs review before you can retry. "
+                    "Your cart has been kept. Please contact the shop.",
+                )
+                return None
             # Recover an ambiguous create response before replacing it, even
             # if the customer has since changed their cart or contact details.
             session = stripe.checkout.Session.create(

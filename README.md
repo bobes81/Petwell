@@ -6,6 +6,8 @@ Deployment target: **https://petwell-u0cr.onrender.com**. This branch has not be
 
 Deployment readiness: **NO-GO pending the release gates** for complete migration/schema agreement, backup and write-pause/cutover plan, actual configuration and sandbox integrations. The owner confirms applied `orders.0001`, `products.0001` and the complete `blog.0001`–`0004` history, including both branches and the merge. The isolated upgrade preserves existing commerce/blog data and applies the pending `orders.0002`–`0005` and `accounts.0001`; see the [release checklist](docs/RENDER_CHECKLIST.md) and [forward/abort/recovery runbook](docs/RELEASE_RUNBOOK.md).
 
+On 29 October, the owner reported successfully restoring the 28 October Render backup into an isolated PostgreSQL 18 database on their Mac: 10 products, 5 orders and 2 posts. This advances the restore gate; migration/content verification on a disposable working copy remains pending. The [local restored-copy rehearsal](docs/RESTORED_DB_REHEARSAL.md) provides an explicit loopback-only configuration with payment/upload/email actions disabled. It does not deploy or prove external acceptance.
+
 Resubmission deadline: **31 October 2026, 12:00 noon Irish and UK time (GMT)**. The focus is a working, testable submission. A private feedback summary supplied by the owner guides this review. The private correspondence is not published; the official assessment guide was not available in the checkout. The evidence map is not an assessor decision.
 
 ## Features and user stories
@@ -96,7 +98,9 @@ python manage.py test --settings=petwell.test_settings
 
 Default test settings always use an isolated in-memory SQLite database and in-memory email backend, not a configured production database. Stripe and Cloudinary upload calls in tests are mocked. The public Cloudinary cloud name used in tests is a dummy for URL rendering, not an account credential.
 
-CI also runs the suite against a disposable PostgreSQL 16 service with `petwell.postgres_test_settings` and `TEST_DATABASE_URL`. This test-only module must never serve the app or point to a production database. The PostgreSQL-specific overlapping-worker test is explicitly skipped on local SQLite; report the backend and skip count rather than treating it as a local concurrency pass.
+CI runs the suite against disposable PostgreSQL 16 and 18 services with `petwell.postgres_test_settings` and `TEST_DATABASE_URL`. The original `postgres` check name is retained for 16;18 uses `postgres-18`. This test-only module must never serve the app or point to a production/valuable restored database. The PostgreSQL-specific overlapping-worker test is explicitly skipped on local SQLite; report the backend and skip count rather than treating it as a local concurrency pass.
+
+For the owner's restored local database, use [petwell.rehearsal_settings](docs/RESTORED_DB_REHEARSAL.md), which requires private `REHEARSAL_DATABASE_URL` and a separate `REHEARSAL_SECRET_KEY`. It has no production URL fallback, rejects remote/routing-override targets, permits local PostgreSQL without forcing SSL and disables Stripe/Cloudinary/SMTP. Keep automated tests separate from this restored-copy workflow. Never use this profile on Render; production database SSL remains required.
 
 ## Environment variables
 
@@ -130,6 +134,8 @@ Hosted Stripe Checkout does not require a publishable key or Stripe.js in this a
 6. On the return page or next cart/checkout visit, subtract purchased quantities once. Additional cart quantities are kept. Each cart line has an identity that changes when removed and re-added, so delayed confirmation cannot remove a newly added line. A webhook cannot directly change a browser's session cookie; cart reconciliation occurs on a subsequent browser request.
 
 Checkout is disabled until both the Stripe API key and webhook signing secret are configured. Cancellation, failed cards and Stripe connection errors keep the cart. Pending orders are not fulfilled and may remain in history after abandoned payment. A delayed webhook is retried by Stripe; a session not yet stored locally returns 503 to request retry. Do not fulfill orders based on a browser screenshot or return URL.
+
+If a create response was lost and the saved attempt still has no Stripe Session ID after **23 hours**, automatic retry is held for review. Stripe idempotency keys are not permanent; blindly repeating an old create could produce another payable Session. The order, exact payload and cart remain intact, including when contact/cart details change. An operator must reconcile the original attempt through an approved provider procedure; do not create a replacement or mark it paid manually. Known Session IDs remain retrievable regardless of age. The 23-hour guard is conservative, not evidence that a payment failed or succeeded.
 
 The in-app paid result and account history are payment confirmation. Automatic order-confirmation email dispatch is deliberately not part of the webhook: SMTP availability cannot determine whether an order is paid. Welcome/password-reset email can use SendGrid when configured. Newsletter subscriptions are stored; no campaign automation is implemented. Refunds, tax/shipping rules, inventory and fulfilment automation are outside this revision.
 

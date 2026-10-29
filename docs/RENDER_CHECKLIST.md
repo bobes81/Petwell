@@ -2,6 +2,12 @@
 
 The owner reported these existing Render environment-variable **names** on 28 October 2026: `CLOUDINARY_URL`, `DATABASE_URL`, `DEBUG` and `SECRET_KEY`. Their secret values, current deployed revision and external-service operation were not inspected. This review changes repository code and documentation only; it does not modify Render, deploy, merge, create resources or enable live payments.
 
+## Backup restoration reported on 29 October
+
+The owner reports successfully restoring the **28 October Render PostgreSQL backup** into an isolated **PostgreSQL 18 database on their MacBook**, containing **10 products, 5 orders and 2 blog posts**. This is useful owner-performed restore evidence; no dump, connection string, customer record or screenshot is published here. The repository review did not connect to that database or independently repeat the restore.
+
+The selected counts confirm reported restored content, not completion of the pending migrations, all-table/relationship checks, safe code cutover, production-version compatibility or external acceptance. Preserve the restored baseline and rehearse the upgrade on a separate local working copy using the [local-only rehearsal instructions](RESTORED_DB_REHEARSAL.md). Do not repeat the completed restore merely to satisfy this checklist. Record the private backup/restore reference, selected revision and genuine before/after results; the [runbook](RELEASE_RUNBOOK.md) separates that rehearsal from an approved production recovery.
+
 ## Existing configuration compatibility
 
 | Variable | Expected configuration | Review boundary |
@@ -20,6 +26,8 @@ The four reported variables do not configure payment processing. Checkout remain
 For an approved deployment, use the sandbox destination `https://petwell-u0cr.onrender.com/checkout/webhook/` with `checkout.session.completed` and `checkout.session.async_payment_succeeded`. A CLI listener has its own signing secret; it cannot substitute for the deployed endpoint's secret. Never copy either secret into Git, chat or evidence.
 
 Offline tests verify key/mode guards, signed fixture validation, exact order/Session/amount/currency/mode matching and idempotent pending-to-paid handling. They do not verify real Stripe API access or webhook delivery. After deployment approval, record a genuine sandbox success, decline/cancellation, retry and duplicate delivery. Confirm that the return URL alone cannot mark paid and that cart reconciliation follows webhook confirmation. Do not use a real card or turn on live mode.
+
+Unmapped attempts with a saved payload are automatically retried only while younger than 23 hours. At that boundary the app preserves the pending order/cart/payload and requests review, including after changed customer/cart data. Stripe's [idempotency documentation](https://docs.stripe.com/api/idempotent_requests) describes key pruning after at least 24 hours; the guard leaves a margin rather than assuming permanent deduplication. Known Session IDs can still be retrieved. Reconcile a held attempt under approved provider access before any replacement; a browser return or an empty local mapping is not proof of payment outcome.
 
 ## SMTP — delivery is not enabled by the four reported variables
 
@@ -66,7 +74,8 @@ The current recommendation is **NO-GO for a production release or a claim that e
 | Gate | Evidence required before release | Current boundary |
 | --- | --- | --- |
 | Submitted revision | Current PR head, successful SQLite/PostgreSQL CI and actual local test output | Use the final reviewed commit's results; an earlier green run does not establish a later commit's status. |
-| Complete migration state and cutover | Full migration/schema agreement, recoverable PostgreSQL backup, reviewed forward/recovery plan and prevention of old-code order writes during cutover | Owner confirms order/product initial migrations and complete blog history; `orders.0002`–`0005` and `accounts.0001` remain pending. Other installed apps/schema, backup and service cutover still need verification. The isolated upgrade preserves existing blog/commerce data; old-model order writes fail after it. |
+| Backup restore rehearsal | Private backup/restore reference and actual target/version/content checks | Owner reports a successful isolated PostgreSQL 18 restore of the 28 October backup with 10 products, 5 orders and 2 blog posts. This advances the restore gate; all-table integrity, post-backup write accounting and suitability of the release-time backup still need verification. |
+| Complete migration state and cutover | Full migration/schema agreement, reviewed forward/recovery plan and prevention of old-code order writes during cutover | Owner confirms order/product initial migrations and complete blog history; `orders.0002`–`0005` and `accounts.0001` remain pending. Upgrade of a working copy of the restored data, other installed-app/schema checks and service cutover are not yet reported complete. The synthetic regression preserves existing blog/commerce data; old-model order writes fail after it. |
 | Production configuration | Correct existing database, strong existing secret, DEBUG off, HTTPS host and valid Cloudinary account/upload access | Variable-name compatibility is tested; private values and external access are not verified. |
 | Stripe sandbox | Same-account test API key and exact endpoint signing secret, live mode off, actual signed delivery and success/decline/cancel/retry acceptance | The route and offline signature/state logic are tested. The four reported variables alone do not configure Stripe, and no real sandbox checkout/delivery is claimed. |
 | Customer email | Configured SMTP backend, authorised sender and actually received password-reset email | Local token/email tests pass separately; console output is not delivery. Payment state remains independent of SMTP. |

@@ -1,6 +1,6 @@
 # Owner-controlled release and recovery runbook
 
-Prepared on 28 October 2026. **Current release decision: NO-GO until the outstanding gates in [RENDER_CHECKLIST.md](RENDER_CHECKLIST.md) are verified and the owner explicitly approves the exact release.** This document is a plan, not evidence that a deployment, backup, restore, payment or external check occurred. No production access or service change was performed to prepare it.
+Prepared on 28 October and updated on 29 October 2026. **Current release decision: NO-GO until the outstanding gates in [RENDER_CHECKLIST.md](RENDER_CHECKLIST.md) are verified and the owner explicitly approves the exact release.** This document is a plan. The owner's separately reported isolated backup restoration is recorded below; it is not a claim that this review deployed, restored production, processed a payment or verified external integrations. No production access or service change was performed to prepare it.
 
 ## Starting point and required preparation
 
@@ -9,6 +9,20 @@ The owner confirms applied `orders.0001_initial`, `products.0001_initial` and th
 Before a later approved release, record the selected commit, successful SQLite/PostgreSQL CI, private backup reference and recovery verification, full applied/pending migration labels, existing service cutover method, and the owner's approval. Keep configuration values, connection strings, reset links and customer information out of Git and public evidence. Reuse existing resources; this plan does not require a paid plan, new service or secret rotation.
 
 Arrange a maintenance/write-pause method using the existing service's available controls, and verify it before migration. The pause must cover every process capable of writing to the database, not just the browser checkout button. Old workers cannot insert orders after the required new order fields are added. `build.sh` applies migrations during build, so it is a write operation and cannot serve as a read-only readiness check. A pre-deploy migration command does not remove the need to coordinate old writers and code cutover.
+
+## Isolated restore completed; upgrade rehearsal still pending
+
+On 29 October the owner reports successfully restoring the 28 October Render backup into an isolated PostgreSQL 18 database on their MacBook, with **10 products, 5 orders and 2 blog posts**. Treat that as owner-performed restore evidence, not a new task to redo or a repository-run test. No restored database, credentials or private rows were supplied to this review, and no migration on that restored data is claimed complete.
+
+For the next owner-controlled local rehearsal:
+
+1. Preserve the restored baseline and use a separate working copy on the existing local PostgreSQL instance. Verify the active connection is that local copy, never Render. Keep its connection details private.
+2. Follow [the local restored-database rehearsal instructions](RESTORED_DB_REHEARSAL.md) to inspect complete applied/pending labels. The dedicated settings require an explicit loopback-only `REHEARSAL_DATABASE_URL` and separate private `REHEARSAL_SECRET_KEY`; they do not fall back to production `DATABASE_URL`. Do not run `build.sh`, seed products, fake migration records or apply schema changes as a diagnostic shortcut. This local profile can use a local server without SSL while ordinary production settings retain required SSL. Never serve the app with `petwell.test_settings` or `petwell.postgres_test_settings`.
+3. Once the local target and plan are verified, rehearse the five pending project migrations on the working copy. Compare the reported 10/5/2 counts and privately check original IDs, order items, prices, timestamps, blog content/images, subscribers and relationships. Existing orders must receive distinct UUIDs and remain pending without fabricated paid status; new pet-profile/coordinator tables must exist. Retain genuine results and failures rather than inferring success from a migration plan alone.
+4. Keep automated tests on their separate disposable test database. Their synthetic migration regression deliberately rebuilds migration history; it is not the command for validating or preserving the restored records. Do not point a test runner at a valuable restored database.
+5. Verify the new code against the migrated local copy with external payment/upload/email actions disabled by the rehearsal profile. Collect static files before starting that local app as documented. Local rendering, restored-row counts and synthetic webhook tests remain separate from actual Stripe, Cloudinary, SMTP and deployed acceptance. Keep customer data, reset links and secret values out of public logs/screenshots.
+
+A restore onto PostgreSQL 18 does not establish the production server version or prove an in-place production upgrade. Before a later approved release, confirm the actual target/version, release-time backup and accepted writes since the 28 October snapshot; the existing external-payment reconciliation requirements below still apply.
 
 ## Forward release or abort
 
