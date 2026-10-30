@@ -1,5 +1,15 @@
 # Remaining owner acceptance and submission checklist
 
+**Status update — 30 October 2026, after PR #8 merge.** Source code `main` release `dde85fe0c9b9be2c7e562a077e310ce8bf6024aa` is confirmed **LIVE** on Render, maintenance disabled, auto-deploy disabled. The owner-confirmed GBP 11.49 Stripe **sandbox** checkout and paid database order need not be repeated. Ten production product image references were subsequently updated and confirmed in PostgreSQL; the storefront was owner-reviewed. Prior maintenance/image placeholder observations elsewhere in these records are **historical** and must not be mistaken for the release's latest state.
+
+**Outstanding before claiming full functional readiness:** the Gmail SMTP account-specific App Password has not been corrected, and actual welcome/password-reset email delivery fails; detailed provider-side webhook/replay/failed-card checks are not independently confirmed. A live site and a sandbox success do not demonstrate live-card payment or every browser workflow.
+
+**School submission:** on **31 October 2026, before 12:00 noon Irish/UK time**, submit the deployed site `https://petwell-u0cr.onrender.com` and the updated source `https://github.com/bobes81/Petwell` (`main`). The old `Code-Institute-Submissions/Petwell-1` checkout is outdated, and the GitHub integration has no push permission there. Follow any official LMS repository rule if it requires a different handoff. Save confirmation and complete the €50 resubmission payment.
+
+## Archived pre-merge release checklist (historical)
+
+The following checklist is retained as the **pre-merge, pre-image-update planning record**, not a current set of instructions to repeat completed work:
+
 Updated **30 October 2026**. **Deployment completed:** owner-verified `f75dbe1c6fb9c16f3895a5b01451e2de4d9b9160`, successful build and six project migrations. The owner subsequently verified public shop/cart and one GBP 11.49 sandbox Checkout/paid result; auto-deploy is disabled. The earlier maintenance state was not reinspected. [Exact facts/sources](evidence/30oct-production-deployment.md). The actual uploaded-backup PostgreSQL 18.6 rehearsal also passed with historical data preserved. Do not repeat deployment, the five earlier migrations or the later availability rehearsal by default.
 
 1. **Resolve the actual offers.** Review the correct legacy PDF row and outstanding obligations/Sessions. Confirm genuine fulfilment or separately approve the guarded exact-row withdrawal while preserving history. Default-true migration did not withdraw it; its actual production state is unverified. Confirm physical offers can genuinely be supplied. [PDF procedure](LEGACY_PDF_WITHDRAWAL.md).
