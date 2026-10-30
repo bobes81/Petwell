@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}My pets | PetWell{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap gap-3 align-items-center justify-content-between mb-3">
+    <h1>My pets</h1>
+    <a href="{% url 'pets:create' %}" class="btn btn-primary">Add a pet</a>
+</div>
+<p>Keep your pets' everyday routines and reminders together. These profiles and notes are private to your account.</p>
+<div class="row g-3">
+    {% for pet in pets %}
+    <div class="col-12 col-lg-6">
+        <article class="card h-100">
+            <div class="card-body">
+                <h2 class="h4">{{ pet.name }}</h2>
+                <p>{{ pet.get_species_display }} · {{ pet.get_care_focus_display }}</p>
+                <h3 class="h6">Routine reminder</h3>
+                <p>{{ pet.routine_reminder }}</p>
+                {% if pet.notes %}
+                <h3 class="h6">Your care notes</h3>
+                <p>{{ pet.notes|linebreaksbr }}</p>
+                {% else %}
+                <p class="text-muted">No care notes yet. You can add reminders when you edit this profile.</p>
+                {% endif %}
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{% url 'pets:edit' pet.pk %}" class="btn btn-outline-primary" aria-label="Edit {{ pet.name }}">Edit</a>
+                    <a href="{% url 'pets:delete' pet.pk %}" class="btn btn-outline-danger" aria-label="Delete {{ pet.name }}">Delete</a>
+                </div>
+            </div>
+        </article>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <p>You have not added any pets yet. Add your first pet to save a care focus and everyday reminders.</p>
+    </div>
+    {% endfor %}
+</div>
+<p class="small text-muted mt-4">For questions about your pet's health or care needs, speak to your veterinary team.</p>
+{% endblock %}

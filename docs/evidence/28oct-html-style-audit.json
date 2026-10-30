@@ -1,0 +1,11 @@
+{
+  "checked_on": "2026-10-28",
+  "tool": "html-validate10.3.0 recommended profile",
+  "scope": "Initial local14-page check before Nu fixes; style-policy failures, not an HTML conformance pass. Rules were not disabled. Nu subsequently checked HTML independently.",
+  "exit_code": 1,
+  "error_count": 168,
+  "rule_ids": [
+    "no-inline-style",
+    "no-trailing-whitespace"
+  ]
+}

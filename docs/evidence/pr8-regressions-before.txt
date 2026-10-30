@@ -1,0 +1,29 @@
+Creating test database for alias 'default'...
+Stripe checkout creation failed for order 6e32d22c-ba79-4064-bd98-181d2968d58a
+FF
+======================================================================
+FAIL: test_lost_session_response_retry_uses_frozen_product_name (checkout.tests.CheckoutTests.test_lost_session_response_retry_uses_frozen_product_name)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/Petwell/checkout/tests.py", line 314, in test_lost_session_response_retry_uses_frozen_product_name
+    self.assertEqual(first.call_args.kwargs, retry.call_args.kwargs)
+AssertionError: {'api[387 chars]e': 'Paw balm'}, 'unit_amount': 725}, 'quantit[171 chars]ut/'} != {'api[387 chars]e': 'Renamed balm'}, 'unit_amount': 725}, 'qua[175 chars]ut/'}
+Diff is 941 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_delayed_payment_does_not_remove_newly_readded_product (checkout.tests.CheckoutTests.test_delayed_payment_does_not_remove_newly_readded_product)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/Petwell/checkout/tests.py", line 322, in test_delayed_payment_does_not_remove_newly_readded_product
+    self.assertEqual(
+AssertionError: {} != {'1': 1}
+- {}
++ {'1': 1}
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.105s
+
+FAILED (failures=2)
+Destroying test database for alias 'default'...
+Found 2 test(s).
+System check identified no issues (0 silenced).

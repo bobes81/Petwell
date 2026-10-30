@@ -1,0 +1,143 @@
+{
+  "date": "2026-10-29",
+  "scope": "Genuine local Chromium CSS preview of all nine original supplied PNGs in data URLs, with actual repository Bootstrap/site CSS. Not a running Django shop, product association, Cloudinary asset, deployed screenshot or rights/packaging verification.",
+  "baselineCommit": "ecf0b92",
+  "beforeCssSha256": "b97c8d8bda7fb4f4881266464a97fe2b711afed5c77be84974a9e4ddbee80d38",
+  "afterCssSha256": "b747bb4c7c723c8cca1976fcaf907ed85bd6c67f6b574554e5a7f2720907e343",
+  "cases": [
+    {
+      "state": "before",
+      "width": 390,
+      "concepts": 9,
+      "firstImage": {
+        "fit": "cover",
+        "width": 342,
+        "height": 250,
+        "sourceCropX": 0,
+        "sourceCropY": 134.50292397660817,
+        "fullSourceVisible": false
+      },
+      "allFullSourceVisible": false,
+      "documentOverflow": false
+    },
+    {
+      "state": "before",
+      "width": 430,
+      "concepts": 9,
+      "firstImage": {
+        "fit": "cover",
+        "width": 382,
+        "height": 250,
+        "sourceCropX": 0,
+        "sourceCropY": 172.77486910994764,
+        "fullSourceVisible": false
+      },
+      "allFullSourceVisible": false,
+      "documentOverflow": false
+    },
+    {
+      "state": "before",
+      "width": 768,
+      "concepts": 9,
+      "firstImage": {
+        "fit": "cover",
+        "width": 208,
+        "height": 250,
+        "sourceCropX": 84,
+        "sourceCropY": 0,
+        "fullSourceVisible": false
+      },
+      "allFullSourceVisible": false,
+      "documentOverflow": false
+    },
+    {
+      "state": "before",
+      "width": 1440,
+      "concepts": 9,
+      "firstImage": {
+        "fit": "cover",
+        "width": 300,
+        "height": 250,
+        "sourceCropX": 0,
+        "sourceCropY": 83.33333333333334,
+        "fullSourceVisible": false
+      },
+      "allFullSourceVisible": false,
+      "documentOverflow": false
+    },
+    {
+      "state": "after",
+      "width": 390,
+      "concepts": 9,
+      "firstImage": {
+        "fit": "contain",
+        "width": 342,
+        "height": 250,
+        "sourceCropX": 0,
+        "sourceCropY": 0,
+        "fullSourceVisible": true
+      },
+      "allFullSourceVisible": true,
+      "documentOverflow": false
+    },
+    {
+      "state": "after",
+      "width": 430,
+      "concepts": 9,
+      "firstImage": {
+        "fit": "contain",
+        "width": 382,
+        "height": 250,
+        "sourceCropX": 0,
+        "sourceCropY": 0,
+        "fullSourceVisible": true
+      },
+      "allFullSourceVisible": true,
+      "documentOverflow": false
+    },
+    {
+      "state": "after",
+      "width": 768,
+      "concepts": 9,
+      "firstImage": {
+        "fit": "contain",
+        "width": 208,
+        "height": 250,
+        "sourceCropX": 0,
+        "sourceCropY": 0,
+        "fullSourceVisible": true
+      },
+      "allFullSourceVisible": true,
+      "documentOverflow": false
+    },
+    {
+      "state": "after",
+      "width": 1440,
+      "concepts": 9,
+      "firstImage": {
+        "fit": "contain",
+        "width": 300,
+        "height": 250,
+        "sourceCropX": 0,
+        "sourceCropY": 0,
+        "fullSourceVisible": true
+      },
+      "allFullSourceVisible": true,
+      "documentOverflow": false
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "29oct-concept-css-preview-mobile.png",
+      "viewport": 390,
+      "scope": "Local CSS preview only; no product records/provider assets or deployment"
+    },
+    {
+      "file": "29oct-concept-css-preview-desktop.png",
+      "viewport": 1440,
+      "scope": "Local CSS preview only; no product records/provider assets or deployment"
+    }
+  ],
+  "externalRequests": [],
+  "jsErrors": []
+}

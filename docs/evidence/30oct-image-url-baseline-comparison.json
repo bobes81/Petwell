@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-30",
+  "scope": "Offline rendering only, synthetic public cloud and asset name; no provider or production access.",
+  "baseline_commit": "076bb93a76d7212a9f02f25210ed31b576d8045f",
+  "baseline_string_src": "/static/images/placeholder.svg",
+  "baseline_database_resource_src": "https://res.cloudinary.com/offline-test/image/upload/v1771237247/fixture-product.png",
+  "fixed_string_src": "https://res.cloudinary.com/offline-test/image/upload/v1771237247/fixture-product.png",
+  "fixed_database_resource_src": "https://res.cloudinary.com/offline-test/image/upload/v1771237247/fixture-product.png",
+  "production_cause": "Unverified. The reported stored reference format already renders correctly when loaded as CloudinaryResource with a configured cloud. Missing/inaccessible assets have not been established."
+}

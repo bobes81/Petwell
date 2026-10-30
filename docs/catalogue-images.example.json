@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "cloud_name": "",
+  "products": [
+    {
+      "product_id": null,
+      "product_name": "Calming Lavender Spray",
+      "source_file": "",
+      "sha256": "",
+      "provenance": "",
+      "rights_reviewed": false,
+      "ai_generated": true,
+      "public_id": "",
+      "version": null,
+      "format": ""
+    },
+    {
+      "product_id": null,
+      "product_name": "Dental Chew Sticks",
+      "source_file": "",
+      "sha256": "",
+      "provenance": "",
+      "rights_reviewed": false,
+      "ai_generated": true,
+      "public_id": "",
+      "version": null,
+      "format": ""
+    },
+    {
+      "product_id": null,
+      "product_name": "Joint Support Treats",
+      "source_file": "",
+      "sha256": "",
+      "provenance": "",
+      "rights_reviewed": false,
+      "ai_generated": true,
+      "public_id": "",
+      "version": null,
+      "format": ""
+    },
+    {
+      "product_id": null,
+      "product_name": "Hypoallergenic Shampoo",
+      "source_file": "",
+      "sha256": "",
+      "provenance": "",
+      "rights_reviewed": false,
+      "ai_generated": true,
+      "public_id": "",
+      "version": null,
+      "format": ""
+    },
+    {
+      "product_id": null,
+      "product_name": "Organic Paw Balm",
+      "source_file": "",
+      "sha256": "",
+      "provenance": "",
+      "rights_reviewed": false,
+      "ai_generated": true,
+      "public_id": "",
+      "version": null,
+      "format": ""
+    },
+    {
+      "product_id": null,
+      "product_name": "Digestive Support Powder",
+      "source_file": "",
+      "sha256": "",
+      "provenance": "",
+      "rights_reviewed": false,
+      "ai_generated": true,
+      "public_id": "",
+      "version": null,
+      "format": ""
+    },
+    {
+      "product_id": null,
+      "product_name": "Eco Toy Rope",
+      "source_file": "",
+      "sha256": "",
+      "provenance": "",
+      "rights_reviewed": false,
+      "ai_generated": true,
+      "public_id": "",
+      "version": null,
+      "format": ""
+    },
+    {
+      "product_id": null,
+      "product_name": "Herbal Ear Cleaner",
+      "source_file": "",
+      "sha256": "",
+      "provenance": "",
+      "rights_reviewed": false,
+      "ai_generated": true,
+      "public_id": "",
+      "version": null,
+      "format": ""
+    },
+    {
+      "product_id": null,
+      "product_name": "Herbal Chill Drops",
+      "source_file": "",
+      "sha256": "",
+      "provenance": "",
+      "rights_reviewed": false,
+      "ai_generated": true,
+      "public_id": "",
+      "version": null,
+      "format": ""
+    }
+  ]
+}

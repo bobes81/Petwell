@@ -1,0 +1,41 @@
+test_existing_render_url_only_configuration_survives_storage_import (petwell.test_configuration.ProductionConfigurationTests.test_existing_render_url_only_configuration_survives_storage_import) ... FAIL
+test_explicit_sendgrid_settings_use_tls_without_sending (petwell.test_configuration.ProductionConfigurationTests.test_explicit_sendgrid_settings_use_tls_without_sending) ... ok
+test_missing_optional_services_keep_startup_and_safe_defaults (petwell.test_configuration.ProductionConfigurationTests.test_missing_optional_services_keep_startup_and_safe_defaults) ... FAIL
+test_mixed_sources_follow_sdk_separate_variable_precedence (petwell.test_configuration.ProductionConfigurationTests.test_mixed_sources_follow_sdk_separate_variable_precedence) ... ok
+test_separate_cloudinary_variables_remain_supported (petwell.test_configuration.ProductionConfigurationTests.test_separate_cloudinary_variables_remain_supported) ... ok
+test_url_query_cannot_disable_https_images (petwell.test_configuration.ProductionConfigurationTests.test_url_query_cannot_disable_https_images) ... FAIL
+
+======================================================================
+FAIL: test_existing_render_url_only_configuration_survives_storage_import (petwell.test_configuration.ProductionConfigurationTests.test_existing_render_url_only_configuration_survives_storage_import)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/Petwell/petwell/test_configuration.py", line 111, in test_existing_render_url_only_configuration_survives_storage_import
+    self.assertEqual(config["cloud_name"], "url-fixture-cloud")
+AssertionError: None != 'url-fixture-cloud'
+
+======================================================================
+FAIL: test_missing_optional_services_keep_startup_and_safe_defaults (petwell.test_configuration.ProductionConfigurationTests.test_missing_optional_services_keep_startup_and_safe_defaults)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/Petwell/petwell/test_configuration.py", line 172, in test_missing_optional_services_keep_startup_and_safe_defaults
+    self.assertEqual(config["media_url"], "/media/")
+AssertionError: 'https://res.cloudinary.com//image/upload/' != '/media/'
+- https://res.cloudinary.com//image/upload/
++ /media/
+
+
+======================================================================
+FAIL: test_url_query_cannot_disable_https_images (petwell.test_configuration.ProductionConfigurationTests.test_url_query_cannot_disable_https_images)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/Petwell/petwell/test_configuration.py", line 162, in test_url_query_cannot_disable_https_images
+    self.assertEqual(config["cloud_name"], "url-fixture-cloud")
+AssertionError: None != 'url-fixture-cloud'
+
+----------------------------------------------------------------------
+Ran 6 tests in 4.770s
+
+FAILED (failures=3)
+Found 6 test(s).
+Skipping setup of unused database(s): default.
+System check identified no issues (0 silenced).

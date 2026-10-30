@@ -1,0 +1,95 @@
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+Found 32 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: allauth, cloudinary, cloudinary_storage, crispy_bootstrap5, crispy_forms, messages, staticfiles, widget_tweaks
+  Apply all migrations: account, accounts, admin, auth, blog, contenttypes, orders, products, sessions, sites, socialaccount
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying account.0001_initial... OK
+  Applying account.0002_email_max_length... OK
+  Applying account.0003_alter_emailaddress_create_unique_verified_email... OK
+  Applying account.0004_alter_emailaddress_drop_unique_email... OK
+  Applying account.0005_emailaddress_idx_upper_email... OK
+  Applying account.0006_emailaddress_lower... OK
+  Applying account.0007_emailaddress_idx_email... OK
+  Applying account.0008_emailaddress_unique_primary_email_fixup... OK
+  Applying account.0009_emailaddress_unique_primary_email... OK
+  Applying accounts.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying blog.0001_initial... OK
+  Applying blog.0002_create_subscriber_table... OK
+  Applying blog.0003_create_subscriber_table... OK
+  Applying blog.0002_reset_subscriber_conflict... OK
+  Applying blog.0004_merge_20260213_0814... OK
+  Applying products.0001_initial... OK
+  Applying orders.0001_initial... OK
+  Applying orders.0002_order_paid_at_order_public_id_order_status_and_more... OK
+  Applying orders.0003_alter_orderitem_product... OK
+  Applying orders.0004_order_cart_line_tokens_order_stripe_checkout_payload... OK
+  Applying orders.0005_checkoutstate... OK
+  Applying sessions.0001_initial... OK
+  Applying sites.0001_initial... OK
+  Applying sites.0002_alter_domain_unique... OK
+  Applying socialaccount.0001_initial... OK
+  Applying socialaccount.0002_token_max_lengths... OK
+  Applying socialaccount.0003_extra_data_default_dict... OK
+  Applying socialaccount.0004_app_provider_id_settings... OK
+  Applying socialaccount.0005_socialtoken_nullable_app... OK
+  Applying socialaccount.0006_alter_socialaccount_extra_data...test_all_profile_routes_require_login (accounts.test_profiles.PetProfileTests.test_all_profile_routes_require_login) ... ok
+test_create_uses_authenticated_owner_and_shows_saved_frontend_data (accounts.test_profiles.PetProfileTests.test_create_uses_authenticated_owner_and_shows_saved_frontend_data) ... ok
+test_delete_get_is_confirmation_only_and_owner_post_deletes (accounts.test_profiles.PetProfileTests.test_delete_get_is_confirmation_only_and_owner_post_deletes) ... ok
+test_empty_list_explains_how_to_add_first_pet (accounts.test_profiles.PetProfileTests.test_empty_list_explains_how_to_add_first_pet) ... ok
+test_invalid_create_and_edit_inputs_do_not_persist (accounts.test_profiles.PetProfileTests.test_invalid_create_and_edit_inputs_do_not_persist) ... ok
+test_list_only_shows_own_profiles_and_focus_reminder (accounts.test_profiles.PetProfileTests.test_list_only_shows_own_profiles_and_focus_reminder) ... ok
+test_mutations_require_csrf_and_valid_form_token_works (accounts.test_profiles.PetProfileTests.test_mutations_require_csrf_and_valid_form_token_works) ... ok
+test_notes_are_optional_and_all_supported_focuses_have_reminders (accounts.test_profiles.PetProfileTests.test_notes_are_optional_and_all_supported_focuses_have_reminders) ... ok
+test_other_users_and_staff_cannot_access_or_change_owner_profile (accounts.test_profiles.PetProfileTests.test_other_users_and_staff_cannot_access_or_change_owner_profile) ... ok
+test_owner_can_edit_without_reassigning_profile (accounts.test_profiles.PetProfileTests.test_owner_can_edit_without_reassigning_profile) ... ok
+test_profile_text_is_escaped_in_frontend (accounts.test_profiles.PetProfileTests.test_profile_text_is_escaped_in_frontend) ... ok
+test_external_next_never_turns_into_an_external_switch_or_redirect (accounts.tests.AccountRedirectTests.test_external_next_never_turns_into_an_external_switch_or_redirect) ... ok
+test_login_finishes_at_internal_next_destination (accounts.tests.AccountRedirectTests.test_login_finishes_at_internal_next_destination) ... ok
+test_login_signup_switch_preserves_internal_next_in_both_directions (accounts.tests.AccountRedirectTests.test_login_signup_switch_preserves_internal_next_in_both_directions) ... ok
+test_signup_finishes_at_internal_next_destination (accounts.tests.AccountRedirectTests.test_signup_finishes_at_internal_next_destination) ... ok
+test_signup_and_login_work_with_current_allauth (accounts.tests.AccountTests.test_signup_and_login_work_with_current_allauth) ... ok
+test_signup_rejects_weak_password (accounts.tests.AccountTests.test_signup_rejects_weak_password) ... ok
+test_clean_reset_url_without_original_browser_session_is_unavailable (accounts.tests.PasswordResetTests.test_clean_reset_url_without_original_browser_session_is_unavailable) ... ok
+test_expired_reset_link_offers_fresh_request (accounts.tests.PasswordResetTests.test_expired_reset_link_offers_fresh_request) ... ok
+test_invalid_reset_link_explains_recovery_without_password_form (accounts.tests.PasswordResetTests.test_invalid_reset_link_explains_recovery_without_password_form) ... ok
+test_password_reset_invalidates_other_authenticated_browser_session (accounts.tests.PasswordResetTests.test_password_reset_invalidates_other_authenticated_browser_session) ... ok
+test_requested_reset_email_and_valid_password_change_progression (accounts.tests.PasswordResetTests.test_requested_reset_email_and_valid_password_change_progression) ... ok
+test_reset_completion_does_not_disclose_whether_an_account_exists (accounts.tests.PasswordResetTests.test_reset_completion_does_not_disclose_whether_an_account_exists) ... ok
+test_reset_email_uses_https_render_host_behind_trusted_proxy (accounts.tests.PasswordResetTests.test_reset_email_uses_https_render_host_behind_trusted_proxy) ... ok
+test_fresh_seed_does_not_offer_unimplemented_download_fulfilment (products.tests.SampleCatalogueTests.test_fresh_seed_does_not_offer_unimplemented_download_fulfilment) ... ok
+test_reseeding_preserves_existing_catalogue_and_legacy_pdf (products.tests.SampleCatalogueTests.test_reseeding_preserves_existing_catalogue_and_legacy_pdf) ... ok
+test_existing_render_url_only_configuration_survives_storage_import (petwell.test_configuration.ProductionConfigurationTests.test_existing_render_url_only_configuration_survives_storage_import) ... ok
+test_explicit_sendgrid_settings_use_tls_without_sending (petwell.test_configuration.ProductionConfigurationTests.test_explicit_sendgrid_settings_use_tls_without_sending) ... ok
+test_missing_optional_services_keep_startup_and_safe_defaults (petwell.test_configuration.ProductionConfigurationTests.test_missing_optional_services_keep_startup_and_safe_defaults) ... ok
+test_mixed_sources_follow_sdk_separate_variable_precedence (petwell.test_configuration.ProductionConfigurationTests.test_mixed_sources_follow_sdk_separate_variable_precedence) ... ok
+test_separate_cloudinary_variables_remain_supported (petwell.test_configuration.ProductionConfigurationTests.test_separate_cloudinary_variables_remain_supported) ... ok
+test_url_query_cannot_disable_https_images (petwell.test_configuration.ProductionConfigurationTests.test_url_query_cannot_disable_https_images) ... ok
+
+----------------------------------------------------------------------
+Ran 32 tests in 5.828s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+ OK
+System check identified no issues (0 silenced).

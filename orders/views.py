@@ -1,9 +1,48 @@
-from django.shortcuts import render
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 
-# Create your views here.
-from django.shortcuts import render
-from .models import BlogPost
+from .cart import cart_line_tokens, clear_paid_purchases
+from .models import Order
 
-def blog_list(request):
-    posts = BlogPost.objects.all().order_by('-created_at')
-    return render(request, 'blog/blog_list.html', {'posts': posts})
+
+@login_required
+def history(request):
+    orders = Order.objects.filter(user=request.user).prefetch_related(
+        "items__product"
+    )
+    return render(request, "orders/history.html", {"orders": orders})
+
+
+@login_required
+@require_POST
+def reorder(request, public_id):
+    clear_paid_purchases(request)
+    order = get_object_or_404(
+        Order, public_id=public_id, user=request.user, status="paid"
+    )
+    cart = request.session.get("cart", {}).copy()
+    added = 0
+    skipped = False
+    for item in order.items.select_related("product"):
+        if item.product.is_available and item.product.price > 0:
+            key = str(item.product_id)
+            before = cart.get(key, 0)
+            cart[key] = min(before + item.quantity, 99)
+            added += cart[key] - before
+        else:
+            skipped = True
+    request.session["cart"] = cart
+    cart_line_tokens(request)
+    if added:
+        messages.success(
+            request,
+            "Available items added to your cart at current prices. "
+            "Review before paying.",
+        )
+    else:
+        messages.info(request, "No items were added. Your cart has been kept.")
+    if skipped:
+        messages.warning(request, "Unavailable or unpriced items were not added.")
+    return redirect("cart:view_cart")

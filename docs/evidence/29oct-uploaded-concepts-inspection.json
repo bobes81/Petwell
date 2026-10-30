@@ -1,0 +1,152 @@
+{
+  "scope": "Local inspection of owner-uploaded AI concept source files only. No provider, database or product assignment.",
+  "zip_sha256": "1e6a83cbd8d3d80b956b0819adfaa6d654941d6ef68b89fdb962a337ea858560",
+  "zip_crc": "passed",
+  "source_manifest": "catalogue-images.DRAFT.json",
+  "images": [
+    {
+      "product_name": "Calming Lavender Spray",
+      "source_file": "calming-lavender-spray.png",
+      "sha256": "751d698735054428e9a4cbbcf9b627c998be02a68b308b0442c7ed44221a090b",
+      "bytes": 29108,
+      "format": "PNG",
+      "mode": "RGB",
+      "width": 1000,
+      "height": 1000,
+      "metadata": {},
+      "manifest_hash_matches": true
+    },
+    {
+      "product_name": "Dental Chew Sticks",
+      "source_file": "dental-chew-sticks.png",
+      "sha256": "ceace0fc221f4f20be4cf99315de845561f10815ca93c14f3d2ea28ca7fe59c4",
+      "bytes": 22478,
+      "format": "PNG",
+      "mode": "RGB",
+      "width": 1000,
+      "height": 1000,
+      "metadata": {},
+      "manifest_hash_matches": true
+    },
+    {
+      "product_name": "Joint Support Treats",
+      "source_file": "joint-support-treats.png",
+      "sha256": "f21fcaddae7265a9871f399c149af0ec2395dd33393095736fb72e0455608d08",
+      "bytes": 27915,
+      "format": "PNG",
+      "mode": "RGB",
+      "width": 1000,
+      "height": 1000,
+      "metadata": {},
+      "manifest_hash_matches": true
+    },
+    {
+      "product_name": "Hypoallergenic Shampoo",
+      "source_file": "hypoallergenic-shampoo.png",
+      "sha256": "1ac288c3a0d0d97549081781a2eeabd2cd8016a3b000c83c7313a7a678642a61",
+      "bytes": 28665,
+      "format": "PNG",
+      "mode": "RGB",
+      "width": 1000,
+      "height": 1000,
+      "metadata": {},
+      "manifest_hash_matches": true
+    },
+    {
+      "product_name": "Organic Paw Balm",
+      "source_file": "organic-paw-balm.png",
+      "sha256": "244ee652fedb21a24e5e32840afe0a384bde724af6a59dbe79654acbeff12b01",
+      "bytes": 28099,
+      "format": "PNG",
+      "mode": "RGB",
+      "width": 1000,
+      "height": 1000,
+      "metadata": {},
+      "manifest_hash_matches": true
+    },
+    {
+      "product_name": "Digestive Support Powder",
+      "source_file": "digestive-support-powder.png",
+      "sha256": "7a237790604e740da45b398790fc9deb1b4e4d5b5b943eb8d50d150900aa7a01",
+      "bytes": 31814,
+      "format": "PNG",
+      "mode": "RGB",
+      "width": 1000,
+      "height": 1000,
+      "metadata": {},
+      "manifest_hash_matches": true
+    },
+    {
+      "product_name": "Eco Toy Rope",
+      "source_file": "eco-toy-rope.png",
+      "sha256": "c0ae9f9aa0fa4fa79424b1b9204a604a2adf9d1215f9e78660ec259690b63be0",
+      "bytes": 22926,
+      "format": "PNG",
+      "mode": "RGB",
+      "width": 1000,
+      "height": 1000,
+      "metadata": {},
+      "manifest_hash_matches": true
+    },
+    {
+      "product_name": "Herbal Ear Cleaner",
+      "source_file": "herbal-ear-cleaner.png",
+      "sha256": "d3d928bf3fce82ce1f240ae5bfe966066218b4db2e2684f5ae61a5308a32ea55",
+      "bytes": 24229,
+      "format": "PNG",
+      "mode": "RGB",
+      "width": 1000,
+      "height": 1000,
+      "metadata": {},
+      "manifest_hash_matches": true
+    },
+    {
+      "product_name": "Herbal Chill Drops",
+      "source_file": "herbal-chill-drops.png",
+      "sha256": "573fb722af647d7f73a77fb87e7cf892df435feb8870dbf0e7b28aad000a0039",
+      "bytes": 27742,
+      "format": "PNG",
+      "mode": "RGB",
+      "width": 1000,
+      "height": 1000,
+      "metadata": {},
+      "manifest_hash_matches": true
+    }
+  ],
+  "date": "2026-10-29",
+  "archive_name": "Petwell_9_product_concepts.zip",
+  "repository_source_directory": "docs/catalogue/concepts",
+  "prepared_manifest": "docs/catalogue/catalogue-images.DRAFT.json",
+  "catalogue_name_set_matches": true,
+  "visual_review": {
+    "performed": true,
+    "scope": "All nine original PNGs viewed individually at native resolution; exact visible catalogue titles, concept icons and AI disclosures checked. Not a product, supplier, packaging or rights verification.",
+    "all_visible_titles_match_manifest": true,
+    "all_have_product_concept_header": true,
+    "all_have_ai_generated_not_a_real_photograph_footer": true,
+    "observations": {
+      "Calming Lavender Spray": "Stylised purple-accented dispenser bottle labelled Lavender.",
+      "Dental Chew Sticks": "Four brown chew-stick shapes in a generic pack.",
+      "Joint Support Treats": "Generic pouch labelled Joint Support.",
+      "Hypoallergenic Shampoo": "Generic dispenser bottle labelled Gentle Care.",
+      "Organic Paw Balm": "Generic lidded jar labelled Paw Care.",
+      "Digestive Support Powder": "Generic pouch labelled Digestive Care.",
+      "Eco Toy Rope": "Abstract rope loops and connecting knotted shapes.",
+      "Herbal Ear Cleaner": "Generic narrow-nozzle bottle labelled Ear Care.",
+      "Herbal Chill Drops": "Generic narrow-nozzle bottle labelled Calming Care."
+    }
+  },
+  "provenance": {
+    "owner_description": "AI-generated product concept illustrations",
+    "archive_creation_date_claim": "2026-10-29",
+    "existing_handoff_tool_claim": "The existing owner-authored repository handoff describes Python/Pillow drawing; not established by PNG metadata.",
+    "embedded_metadata": false,
+    "generator_and_usage_terms_independently_verified": false,
+    "rights_reviewed": false
+  },
+  "unchanged_png_bytes": true,
+  "cloudinary_upload_performed": false,
+  "remote_asset_or_product_id_verification": false,
+  "product_assignment_performed": false,
+  "database_access_performed": false
+}

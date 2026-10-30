@@ -1,22 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container py-5">
-  <h2 class="text-center mb-4 fw-bold">💳 Checkout</h2>
-  <form method="POST" class="mx-auto" style="max-width:500px;">
-    {% csrf_token %}
-    <div class="mb-3">
-      <label class="form-label">Full name</label>
-      <input type="text" name="name" class="form-control" required>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Email address</label>
-      <input type="email" name="email" class="form-control" required>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Delivery address</label>
-      <textarea name="address" class="form-control" rows="3" required></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary w-100">Submit Order</button>
-  </form>
-</div>
+<h1>Checkout</h1>
+{% if cart_error %}
+<p role="alert">{{ cart_error }}</p><a href="{% url 'cart:view_cart' %}">Return to cart</a>
+{% else %}
+<p>Total: <strong>£{{ total }}</strong>. Card details are entered securely on Stripe.</p>
+<form method="post" class="mx-auto" style="max-width: 600px">
+  {% csrf_token %}{{ form.as_p }}
+  <button class="btn btn-primary" type="submit">Continue to secure payment</button>
+  <a href="{% url 'cart:view_cart' %}" class="btn btn-secondary">Back to cart</a>
+</form>
+{% endif %}
 {% endblock %}

@@ -1,0 +1,10 @@
+{
+  "checked_on": "2026-10-28",
+  "tool": "Nu Html Checker",
+  "version": "26.10.12 (973e40b)",
+  "scope": "17 locally rendered application pages, Facebook proposal HTML, retrospective wireframes HTML; not deployed pages or hosted Stripe UI",
+  "pages_checked": 19,
+  "messages": [],
+  "command": "vnu --format json <17 locally rendered .html files> docs/marketing/facebook-mockup.html docs/design/wireframes.html",
+  "exit_code": 0
+}

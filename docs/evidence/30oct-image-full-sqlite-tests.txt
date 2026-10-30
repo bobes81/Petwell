@@ -1,0 +1,31 @@
+Creating test database for alias 'default'...
+............................................................Stripe checkout failed for order 95e4c2aa-27de-4933-9c1a-451931c2b845
+..Stripe checkout failed for order 21be51bb-c6a8-47b8-a8f2-c800ff05a0d2
+.Stripe checkout failed for order 9761ce6f-0aab-4a5d-8abd-db8d64642df7
+.Stripe checkout failed for order f28576ed-4573-4cdc-8462-ca35a7a20c36
+...........Stripe checkout failed for order 0f0d0785-e258-4826-ad95-2fb5157f8d0e
+........Stripe checkout failed for order 8a98ecdd-c8f0-4239-b39c-804ae50d1672
+...Payment details mismatch for order 369976e3-6722-4a78-a33e-a5339e5c2581
+Payment details mismatch for order 369976e3-6722-4a78-a33e-a5339e5c2581
+Payment details mismatch for order 369976e3-6722-4a78-a33e-a5339e5c2581
+....Stripe checkout failed for order 91ce2855-1a80-4a5b-bf82-1a8ed941916d
+......Stripe checkout failed for order 05595306-9880-4dfb-b981-1ae87eb107ef
+..Stripe checkout failed for order ff86cf92-cfd8-463c-aaa0-27193adcf162
+...Stripe checkout failed for order d1c7dcc0-1648-4534-bd71-46c881f81ac3
+...Stripe checkout failed for order 890d510c-36ec-44e2-aa3e-7110a1293fdb
+..Stripe checkout failed for order c1b21591-f8b2-4b05-848f-5c2aef46a136
+Stripe checkout failed for order c1b21591-f8b2-4b05-848f-5c2aef46a136
+....Payment details mismatch for order f8b2856b-24d9-44ea-bd54-5e70b8a27ff8
+Payment details mismatch for order f8b2856b-24d9-44ea-bd54-5e70b8a27ff8
+Payment details mismatch for order f8b2856b-24d9-44ea-bd54-5e70b8a27ff8
+Payment details mismatch for order f8b2856b-24d9-44ea-bd54-5e70b8a27ff8
+Payment details mismatch for order f8b2856b-24d9-44ea-bd54-5e70b8a27ff8
+Payment details mismatch for order f8b2856b-24d9-44ea-bd54-5e70b8a27ff8
+..........................................................................s....................
+----------------------------------------------------------------------
+Ran 205 tests in 20.156s
+
+OK (skipped=1)
+Destroying test database for alias 'default'...
+Found 205 test(s).
+System check identified no issues (0 silenced).

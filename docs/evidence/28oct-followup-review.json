@@ -1,0 +1,57 @@
+{
+  "verified_at_utc": "2026-10-28T13:09:17.985034+00:00",
+  "reviewed_application_commit": "1f95d4bc0c75dafae042913a0b1d19862e0bf7db",
+  "followup_scope": "Documentation and truthful test evidence only; no application code, migration, secret or external service changes.",
+  "local_suite": {
+    "command": "python manage.py test --settings=petwell.test_settings --verbosity=2",
+    "backend": "SQLite",
+    "tests": 108,
+    "passed": 107,
+    "skipped": 1,
+    "failures": 0,
+    "skip_reason": "PostgreSQL-only simultaneous-worker test",
+    "output": "28oct-followup-django-tests.txt"
+  },
+  "other_rerun_checks": {
+    "django_system_check": "passed",
+    "migration_consistency": "No changes detected",
+    "production_style_deploy_check": "passed with an ephemeral process-only secret and Render host; does not verify deployed services",
+    "pip_check": "No broken requirements found"
+  },
+  "existing_ci_runs": [
+    {
+      "url": "https://github.com/bobes81/Petwell/actions/runs/40667036153",
+      "event": "push",
+      "source_head": "1f95d4bc0c75dafae042913a0b1d19862e0bf7db",
+      "displayed_status": "Success",
+      "displayed_jobs": [
+        "test",
+        "postgres"
+      ],
+      "verification": "Public GitHub Actions run summary; not a downloaded job log."
+    },
+    {
+      "url": "https://github.com/bobes81/Petwell/actions/runs/40667043374",
+      "event": "pull_request",
+      "source_head": "1f95d4bc0c75dafae042913a0b1d19862e0bf7db",
+      "displayed_status": "Success",
+      "displayed_jobs": [
+        "test",
+        "postgres"
+      ],
+      "verification": "Public GitHub Actions run summary; not a downloaded job log."
+    }
+  ],
+  "evidence_boundaries": [
+    "Stripe and upload API calls in automated tests are mocked; HMAC verification is local.",
+    "Previous browser, design render and Nu reports were reviewed, not rerun or recaptured in this follow-up.",
+    "No external integration, deployment, product-photo rights or digital delivery is marked verified.",
+    "The pushed follow-up commit has separate CI runs; statuses here apply only to the stated application commit."
+  ],
+  "remaining_blockers": [
+    "Accurate authorised catalogue images and source/rights records.",
+    "Review or remove the seeded downloadable-PDF claim unless genuine fulfilment is verified.",
+    "Owner configuration and explicit approval before deployment; then genuine sandbox Stripe, webhook, Cloudinary, SMTP and persistent-database acceptance.",
+    "Final comparison with the official assessment guide and genuine deployed evidence."
+  ]
+}

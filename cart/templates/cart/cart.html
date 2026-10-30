@@ -1,31 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container py-5">
-    <h2 class="text-center mb-5 fw-bold"><i class="fas fa-shopping-cart"></i> Your Cart</h2>
+    <h1 class="h2 text-center mb-5 fw-bold">Your Cart</h1>
 
     {% if items %}
-    <div class="table-responsive">
-        <table class="table table-bordered text-center align-middle shadow-sm">
+    <p class="small text-muted d-sm-none">Scroll the table horizontally to see all cart details.</p>
+    <div class="table-responsive position-relative" tabindex="0" role="region" aria-label="Shopping cart items">
+        <table class="table table-bordered text-center align-middle shadow-sm cart-table">
             <thead class="table-dark">
                 <tr>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Subtotal</th>
-                    <th></th>
+                    <th scope="col">Product</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Subtotal</th>
+                    <th scope="col"><span class="visually-hidden">Actions</span></th>
                 </tr>
             </thead>
             <tbody>
                 {% for item in items %}
                 <tr>
                     <td>{{ item.product.name }}</td>
-                    <td>£{{ item.product.price }}</td>
+                    <td class="cart-money">{% if item.unavailable %}Unavailable{% else %}£{{ item.product.price }}{% endif %}</td>
                     <td>{{ item.quantity }}</td>
-                    <td>£{{ item.subtotal }}</td>
+                    <td class="cart-money">{% if item.unavailable %}—{% else %}£{{ item.subtotal }}{% endif %}</td>
                     <td>
-                        <a href="{% url 'cart:remove_from_cart' item.product.id %}" class="btn btn-outline-danger btn-sm">
-                            ✖ Remove
-                        </a>
+                        <form method="post" action="{% url 'cart:remove_from_cart' item.product.id %}">{% csrf_token %}
+                          <button class="btn btn-outline-danger btn-sm" type="submit">Remove {{ item.product.name }}</button>
+                        </form>
                     </td>
                 </tr>
                 {% endfor %}
@@ -34,11 +35,12 @@
     </div>
 
     <div class="text-end mt-4">
-        <h5 class="fw-semibold">Items in cart: <span class="text-primary">{{ total_quantity }}</span></h5>
-        <h4 class="fw-bold">Total: <span class="text-success">£{{ total }}</span></h4>
-        <a href="{% url 'checkout:checkout' %}" class="btn btn-primary mt-3">
+        <h2 class="h5 fw-semibold">Items in cart: <span class="text-primary">{{ total_quantity }}</span></h2>
+        <h2 class="h4 fw-bold">Total: <span class="text-success">£{{ total }}</span></h2>
+        {% if total_quantity > 0 and not has_unavailable %}<a href="{% url 'checkout:checkout' %}" class="btn btn-primary mt-3">
             💳 Proceed to Checkout
-        </a>
+        </a>{% elif has_unavailable %}
+        <p class="text-danger mt-3">Remove unavailable items before checkout.</p>{% endif %}
     </div>
     {% else %}
     <p class="text-center text-muted fs-5">Your cart is empty 🐾</p>

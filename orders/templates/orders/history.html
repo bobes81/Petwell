@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>My orders</h1>
+<p>Review your previous orders and add paid orders to your cart again at current prices.</p>
+{% for order in orders %}
+<article class="card mb-3"><div class="card-body">
+<h2 class="h5">Order {{ order.public_id }}</h2>
+<p>{{ order.created_at|date:"j M Y H:i" }} · {{ order.get_status_display }} · £{{ order.total_price }}</p>
+<ul>{% for item in order.items.all %}<li>{{ item.quantity }} × {{ item.product.name }} at £{{ item.price }}</li>{% endfor %}</ul>
+{% if order.status == 'paid' %}
+<form method="post" action="{% url 'orders:reorder' order.public_id %}">{% csrf_token %}<button class="btn btn-primary" type="submit">Buy again</button></form>
+{% endif %}
+</div></article>
+{% empty %}<p>You have no orders yet.</p><a href="{% url 'products:product_list' %}">Browse products</a>{% endfor %}
+{% endblock %}

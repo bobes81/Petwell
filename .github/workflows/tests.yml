@@ -1,0 +1,88 @@
+name: Django tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - run: python manage.py check --settings=petwell.test_settings
+      - run: python manage.py makemigrations --check --dry-run --settings=petwell.test_settings
+      - run: python manage.py test --settings=petwell.test_settings
+      - name: Check production settings and collect static assets
+        env:
+          DEBUG: 'False'
+          SITE_URL: https://petwell-u0cr.onrender.com
+          ALLOWED_HOSTS: petwell-u0cr.onrender.com
+        run: |
+          python - <<'PY'
+          import os
+          import secrets
+          import subprocess
+          runtime = os.environ.copy()
+          runtime['SECRET_KEY'] = secrets.token_urlsafe(64)
+          for args in (
+              ['check', '--deploy', '--fail-level', 'WARNING'],
+              ['collectstatic', '--noinput'],
+          ):
+              subprocess.run(['python', 'manage.py', *args], env=runtime, check=True)
+          PY
+  postgres:
+    name: ${{ matrix.check }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - version: '16'
+            check: postgres
+          - version: '18'
+            check: postgres-18
+    services:
+      postgres:
+        image: postgres:${{ matrix.version }}
+        env:
+          POSTGRES_USER: petwell_test
+          # Disposable CI service fixture, not a deployment credential.
+          POSTGRES_PASSWORD: local_ci_fixture_only
+          POSTGRES_DB: petwell_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U petwell_test -d petwell_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgres://petwell_test:local_ci_fixture_only@localhost:5432/petwell_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - run: python manage.py test --settings=petwell.postgres_test_settings
+      - name: Check local rehearsal profile against the disposable service
+        run: |
+          python - <<'PY'
+          import os
+          import secrets
+          import subprocess
+          runtime = os.environ.copy()
+          runtime['REHEARSAL_DATABASE_URL'] = runtime['TEST_DATABASE_URL']
+          runtime['REHEARSAL_SECRET_KEY'] = secrets.token_urlsafe(64)
+          runtime['PGOPTIONS'] = '-c default_transaction_read_only=on'
+          for args in (
+              ['check'],
+              ['migrate', '--plan'],
+          ):
+              subprocess.run(
+                  ['python', 'manage.py', *args, '--settings=petwell.rehearsal_settings'],
+                  env=runtime, check=True,
+              )
+          PY

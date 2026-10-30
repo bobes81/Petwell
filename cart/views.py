@@ -1,42 +1,75 @@
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
+
+from orders.cart import cart_line_tokens, clear_paid_purchases
 from products.models import Product
 
+
 def view_cart(request):
-    cart = request.session.get('cart', {})
+    clear_paid_purchases(request)
+    cart = request.session.get("cart", {})
     items = []
     total = 0
     total_quantity = 0
+    has_unavailable = False
 
     for product_id, quantity in cart.items():
-        product = get_object_or_404(Product, pk=product_id)
+        product = Product.objects.filter(pk=product_id).first()
+        if product is None or not product.is_available or product.price <= 0:
+            has_unavailable = True
+            items.append(
+                {
+                    "unavailable": True,
+                    "product": {
+                        "id": product_id,
+                        "name": "Unavailable product",
+                    },
+                    "quantity": quantity,
+                    "subtotal": 0,
+                }
+            )
+            continue
         subtotal = product.price * quantity
         total += subtotal
         total_quantity += quantity
-        items.append({
-            'product': product,
-            'quantity': quantity,
-            'subtotal': subtotal,
-        })
+        items.append(
+            {
+                "product": product,
+                "quantity": quantity,
+                "subtotal": subtotal,
+            }
+        )
 
-    context = {'items': items, 'total': total, 'total_quantity': total_quantity}
-    return render(request, 'cart/cart.html', context)
+    context = {
+        "items": items,
+        "total": total,
+        "total_quantity": total_quantity,
+        "has_unavailable": has_unavailable,
+    }
+    return render(request, "cart/cart.html", context)
 
 
+@require_POST
 def add_to_cart(request, product_id):
-    cart = request.session.get('cart', {})
-    cart[str(product_id)] = cart.get(str(product_id), 0) + 1
-    request.session['cart'] = cart
+    clear_paid_purchases(request)
+    cart = request.session.get("cart", {})
+    product = get_object_or_404(Product, pk=product_id, is_available=True, price__gt=0)
+    cart[str(product_id)] = min(cart.get(str(product_id), 0) + 1, 99)
+    request.session["cart"] = cart
+    cart_line_tokens(request)
 
-    product = get_object_or_404(Product, pk=product_id)
     messages.success(request, f"🛒 '{product.name}' added to your cart!")
-    return redirect('products:product_list')
+    return redirect("products:product_list")
 
 
+@require_POST
 def remove_from_cart(request, product_id):
-    cart = request.session.get('cart', {})
+    clear_paid_purchases(request)
+    cart = request.session.get("cart", {})
     if str(product_id) in cart:
         del cart[str(product_id)]
-        request.session['cart'] = cart
+        request.session["cart"] = cart
+        cart_line_tokens(request)
         messages.info(request, "❌ Item removed from cart.")
-    return redirect('cart:view_cart')
+    return redirect("cart:view_cart")

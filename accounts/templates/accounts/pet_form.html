@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{% if pet %}Edit pet{% else %}Add a pet{% endif %} | PetWell{% endblock %}
+{% block content %}
+<div class="mx-auto" style="max-width: 650px;">
+    <h1>{% if pet %}Edit {{ pet.name }}{% else %}Add a pet{% endif %}</h1>
+    <p>Choose an everyday care focus and keep notes about your pet's routine.</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="d-flex flex-wrap gap-2">
+            <button type="submit" class="btn btn-primary">{% if pet %}Save changes{% else %}Add pet{% endif %}</button>
+            <a href="{% url 'pets:list' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "cloud_name": "",
+  "products": [
+    {
+      "product_name": "Calming Lavender Spray",
+      "source_file": "calming-lavender-spray.png",
+      "sha256": "751d698735054428e9a4cbbcf9b627c998be02a68b308b0442c7ed44221a090b",
+      "provenance": "Owner-supplied AI-labelled concept illustration from Petwell_9_product_concepts.zip, received 2026-10-29. Archive claims creation on 2026-10-29; generator and usage terms are not verified. Not a real product photograph.",
+      "rights_reviewed": false,
+      "ai_generated": true,
+      "product_id": null,
+      "public_id": "",
+      "version": null,
+      "format": "png"
+    },
+    {
+      "product_name": "Dental Chew Sticks",
+      "source_file": "dental-chew-sticks.png",
+      "sha256": "ceace0fc221f4f20be4cf99315de845561f10815ca93c14f3d2ea28ca7fe59c4",
+      "provenance": "Owner-supplied AI-labelled concept illustration from Petwell_9_product_concepts.zip, received 2026-10-29. Archive claims creation on 2026-10-29; generator and usage terms are not verified. Not a real product photograph.",
+      "rights_reviewed": false,
+      "ai_generated": true,
+      "product_id": null,
+      "public_id": "",
+      "version": null,
+      "format": "png"
+    },
+    {
+      "product_name": "Joint Support Treats",
+      "source_file": "joint-support-treats.png",
+      "sha256": "f21fcaddae7265a9871f399c149af0ec2395dd33393095736fb72e0455608d08",
+      "provenance": "Owner-supplied AI-labelled concept illustration from Petwell_9_product_concepts.zip, received 2026-10-29. Archive claims creation on 2026-10-29; generator and usage terms are not verified. Not a real product photograph.",
+      "rights_reviewed": false,
+      "ai_generated": true,
+      "product_id": null,
+      "public_id": "",
+      "version": null,
+      "format": "png"
+    },
+    {
+      "product_name": "Hypoallergenic Shampoo",
+      "source_file": "hypoallergenic-shampoo.png",
+      "sha256": "1ac288c3a0d0d97549081781a2eeabd2cd8016a3b000c83c7313a7a678642a61",
+      "provenance": "Owner-supplied AI-labelled concept illustration from Petwell_9_product_concepts.zip, received 2026-10-29. Archive claims creation on 2026-10-29; generator and usage terms are not verified. Not a real product photograph.",
+      "rights_reviewed": false,
+      "ai_generated": true,
+      "product_id": null,
+      "public_id": "",
+      "version": null,
+      "format": "png"
+    },
+    {
+      "product_name": "Organic Paw Balm",
+      "source_file": "organic-paw-balm.png",
+      "sha256": "244ee652fedb21a24e5e32840afe0a384bde724af6a59dbe79654acbeff12b01",
+      "provenance": "Owner-supplied AI-labelled concept illustration from Petwell_9_product_concepts.zip, received 2026-10-29. Archive claims creation on 2026-10-29; generator and usage terms are not verified. Not a real product photograph.",
+      "rights_reviewed": false,
+      "ai_generated": true,
+      "product_id": null,
+      "public_id": "",
+      "version": null,
+      "format": "png"
+    },
+    {
+      "product_name": "Digestive Support Powder",
+      "source_file": "digestive-support-powder.png",
+      "sha256": "7a237790604e740da45b398790fc9deb1b4e4d5b5b943eb8d50d150900aa7a01",
+      "provenance": "Owner-supplied AI-labelled concept illustration from Petwell_9_product_concepts.zip, received 2026-10-29. Archive claims creation on 2026-10-29; generator and usage terms are not verified. Not a real product photograph.",
+      "rights_reviewed": false,
+      "ai_generated": true,
+      "product_id": null,
+      "public_id": "",
+      "version": null,
+      "format": "png"
+    },
+    {
+      "product_name": "Eco Toy Rope",
+      "source_file": "eco-toy-rope.png",
+      "sha256": "c0ae9f9aa0fa4fa79424b1b9204a604a2adf9d1215f9e78660ec259690b63be0",
+      "provenance": "Owner-supplied AI-labelled concept illustration from Petwell_9_product_concepts.zip, received 2026-10-29. Archive claims creation on 2026-10-29; generator and usage terms are not verified. Not a real product photograph.",
+      "rights_reviewed": false,
+      "ai_generated": true,
+      "product_id": null,
+      "public_id": "",
+      "version": null,
+      "format": "png"
+    },
+    {
+      "product_name": "Herbal Ear Cleaner",
+      "source_file": "herbal-ear-cleaner.png",
+      "sha256": "d3d928bf3fce82ce1f240ae5bfe966066218b4db2e2684f5ae61a5308a32ea55",
+      "provenance": "Owner-supplied AI-labelled concept illustration from Petwell_9_product_concepts.zip, received 2026-10-29. Archive claims creation on 2026-10-29; generator and usage terms are not verified. Not a real product photograph.",
+      "rights_reviewed": false,
+      "ai_generated": true,
+      "product_id": null,
+      "public_id": "",
+      "version": null,
+      "format": "png"
+    },
+    {
+      "product_name": "Herbal Chill Drops",
+      "source_file": "herbal-chill-drops.png",
+      "sha256": "573fb722af647d7f73a77fb87e7cf892df435feb8870dbf0e7b28aad000a0039",
+      "provenance": "Owner-supplied AI-labelled concept illustration from Petwell_9_product_concepts.zip, received 2026-10-29. Archive claims creation on 2026-10-29; generator and usage terms are not verified. Not a real product photograph.",
+      "rights_reviewed": false,
+      "ai_generated": true,
+      "product_id": null,
+      "public_id": "",
+      "version": null,
+      "format": "png"
+    }
+  ]
+}

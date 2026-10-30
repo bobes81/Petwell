@@ -1,12 +1,26 @@
 import os
 from pathlib import Path
+
+import cloudinary
 import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "replace-this-with-a-random-key")
 DEBUG = os.environ.get("DEBUG", "False") == "True"
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = os.environ.get(
+    "ALLOWED_HOSTS", "localhost,127.0.0.1,petwell-u0cr.onrender.com"
+).split(",")
+SITE_URL = os.environ.get(
+    "SITE_URL", "https://petwell-u0cr.onrender.com"
+).rstrip("/")
+CSRF_TRUSTED_ORIGINS = [SITE_URL]
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
+STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
+STRIPE_LIVE_MODE = os.environ.get("STRIPE_LIVE_MODE", "False") == "True"
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -59,6 +73,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "cart.context_processors.cart_item_count",
+                "petwell.context_processors.seo_metadata",
             ],
         },
     },
@@ -66,13 +81,11 @@ TEMPLATES = [
 
 SITE_ID = 1
 
-# === DATABASES (LOCAL + HEROKU) ===
+# === DATABASES (LOCAL + RENDER) ===
 if os.environ.get("DATABASE_URL"):
     DATABASES = {
         "default": dj_database_url.parse(
-            os.environ.get("DATABASE_URL"),
-            conn_max_age=600,
-            ssl_require=True
+            os.environ.get("DATABASE_URL"), conn_max_age=600, ssl_require=True
         )
     }
 else:
@@ -87,33 +100,85 @@ else:
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
-CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": os.environ.get("CLOUDINARY_CLOUD_NAME"),
-    "API_KEY": os.environ.get("CLOUDINARY_API_KEY"),
-    "API_SECRET": os.environ.get("CLOUDINARY_API_SECRET"),
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    },
 }
 
-DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+# The SDK loads CLOUDINARY_URL, or separate variables when CLOUDINARY_CLOUD_NAME
+# is set. Preserve that configuration instead of overwriting URL credentials
+# with missing separate values. Force HTTPS even if an environment option differs.
+_cloudinary_config = cloudinary.config(secure=True)
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": _cloudinary_config.cloud_name,
+    "API_KEY": _cloudinary_config.api_key,
+    "API_SECRET": _cloudinary_config.api_secret,
+    "SECURE": True,
+}
 
-# --- FIX Mixed Content (force HTTPS for images) ---
-MEDIA_URL = f"https://res.cloudinary.com/{os.environ.get('CLOUDINARY_CLOUD_NAME', '')}/image/upload/"
+# CloudinaryField handles remote uploads; absent configuration uses placeholders.
+MEDIA_URL = (
+    f"https://res.cloudinary.com/{_cloudinary_config.cloud_name}/image/upload/"
+    if _cloudinary_config.cloud_name
+    else "/media/"
+)
 
 # --- Force HTTPS site-wide ---
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SECURE_SSL_REDIRECT = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
+SECURE_HSTS_PRELOAD = not DEBUG
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
 
 # === EMAIL CONFIGURATION (PETWELL SUPPORT) ===
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.sendgrid.net"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "apikey"
-EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY")
-DEFAULT_FROM_EMAIL = "Petwell Support <petwell.shop.uk@gmail.com>"
+def _email_boolean(name, default):
+    value = os.environ.get(name, str(default)).strip().lower()
+    if value in {"true", "1", "yes", "on"}:
+        return True
+    if value in {"false", "0", "no", "off"}:
+        return False
+    raise ImproperlyConfigured(f"{name} must be True or False.")
+
+
+EMAIL_BACKEND = os.environ.get(
+    "EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend"
+)
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.sendgrid.net").strip()
+try:
+    EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
+    EMAIL_TIMEOUT = int(os.environ.get("EMAIL_TIMEOUT", "10"))
+except ValueError:
+    raise ImproperlyConfigured(
+        "EMAIL_PORT and EMAIL_TIMEOUT must be integers."
+    ) from None
+if not 1 <= EMAIL_PORT <= 65535 or EMAIL_TIMEOUT <= 0:
+    raise ImproperlyConfigured(
+        "EMAIL_PORT must be 1–65535 and EMAIL_TIMEOUT must be positive."
+    )
+EMAIL_USE_TLS = _email_boolean("EMAIL_USE_TLS", True)
+EMAIL_USE_SSL = _email_boolean("EMAIL_USE_SSL", False)
+if EMAIL_USE_TLS and EMAIL_USE_SSL:
+    raise ImproperlyConfigured(
+        "EMAIL_USE_TLS and EMAIL_USE_SSL cannot both be True."
+    )
+_sendgrid_host = EMAIL_HOST.lower() == "smtp.sendgrid.net"
+EMAIL_HOST_USER = os.environ.get(
+    "EMAIL_HOST_USER", "apikey" if _sendgrid_host else ""
+)
+# A stale SendGrid secret must never authenticate to Gmail/another SMTP host.
+# An explicitly empty password also disables the backwards-compatible fallback.
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+if EMAIL_HOST_PASSWORD is None and _sendgrid_host:
+    EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY")
+DEFAULT_FROM_EMAIL = os.environ.get(
+    "DEFAULT_FROM_EMAIL", "PetWell <noreply@example.com>"
+)
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
@@ -121,9 +186,35 @@ LOGOUT_REDIRECT_URL = "/"
 ACCOUNT_SIGNUP_REDIRECT_URL = "/"
 ACCOUNT_LOGOUT_REDIRECT_URL = "/"
 ACCOUNT_EMAIL_VERIFICATION = "none"
-ACCOUNT_AUTHENTICATION_METHOD = "username"
-ACCOUNT_EMAIL_REQUIRED = False
-ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_LOGIN_METHODS = {"username"}
+ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*", "password2*"]
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "UserAttributeSimilarityValidator"
+        )
+    },
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {
+        "NAME": (
+            "django.contrib.auth.password_validation.CommonPasswordValidator"
+        )
+    },
+    {
+        "NAME": (
+            "django.contrib.auth.password_validation.NumericPasswordValidator"
+        )
+    },
+]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+LANGUAGE_CODE = "en-gb"
+TIME_ZONE = "Europe/London"
+USE_TZ = True
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]

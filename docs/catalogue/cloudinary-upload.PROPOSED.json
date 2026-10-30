@@ -1,0 +1,52 @@
+{
+  "status": "PROPOSED_ONLY_NOT_UPLOAD_RESULTS",
+  "cloud_name": "dr3kwknli",
+  "overwrite": false,
+  "products": [
+    {
+      "product_name": "Calming Lavender Spray",
+      "source_file": "calming-lavender-spray.png",
+      "proposed_public_id": "petwell/ai-products/calming-lavender-spray-20261030-0f0388295be6"
+    },
+    {
+      "product_name": "Dental Chew Sticks",
+      "source_file": "dental-chew-sticks.png",
+      "proposed_public_id": "petwell/ai-products/dental-chew-sticks-20261030-0f0388295be6"
+    },
+    {
+      "product_name": "Joint Support Treats",
+      "source_file": "joint-support-treats.png",
+      "proposed_public_id": "petwell/ai-products/joint-support-treats-20261030-0f0388295be6"
+    },
+    {
+      "product_name": "Hypoallergenic Shampoo",
+      "source_file": "hypoallergenic-shampoo.png",
+      "proposed_public_id": "petwell/ai-products/hypoallergenic-shampoo-20261030-0f0388295be6"
+    },
+    {
+      "product_name": "Organic Paw Balm",
+      "source_file": "organic-paw-balm.png",
+      "proposed_public_id": "petwell/ai-products/organic-paw-balm-20261030-0f0388295be6"
+    },
+    {
+      "product_name": "Digestive Support Powder",
+      "source_file": "digestive-support-powder.png",
+      "proposed_public_id": "petwell/ai-products/digestive-support-powder-20261030-0f0388295be6"
+    },
+    {
+      "product_name": "Eco Toy Rope",
+      "source_file": "eco-toy-rope.png",
+      "proposed_public_id": "petwell/ai-products/eco-toy-rope-20261030-0f0388295be6"
+    },
+    {
+      "product_name": "Herbal Ear Cleaner",
+      "source_file": "herbal-ear-cleaner.png",
+      "proposed_public_id": "petwell/ai-products/herbal-ear-cleaner-20261030-0f0388295be6"
+    },
+    {
+      "product_name": "Herbal Chill Drops",
+      "source_file": "herbal-chill-drops.png",
+      "proposed_public_id": "petwell/ai-products/herbal-chill-drops-20261030-0f0388295be6"
+    }
+  ]
+}

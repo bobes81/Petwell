@@ -5,3 +5,14 @@ staticfiles/
 db.sqlite3
 
 _backup_untracked/
+
+.env
+.env.*
+!.env.example
+media/
+
+# Keep reviewed image mappings/source records private.
+catalogue-images.private.json
+
+# Owner-reviewed original image references stay private.
+catalogue-image-guard.private.json

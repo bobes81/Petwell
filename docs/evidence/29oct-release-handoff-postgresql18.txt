@@ -1,0 +1,31 @@
+Creating test database for alias 'default'...
+..........................................................Stripe checkout failed for order 8ac40b5c-b18b-4491-9584-1ed59967e7c3
+..Stripe checkout failed for order 4d43ff2e-ee45-43be-bb03-8f4ea75afa5e
+.Stripe checkout failed for order 27c136fb-33bd-4d7a-8b88-3c6e449185e0
+.Stripe checkout failed for order 0e8b5d7a-bdd1-420a-a6a7-610238750e6c
+...........Stripe checkout failed for order 40214ba5-03aa-4554-ad3e-4247b6b75aaf
+........Stripe checkout failed for order fb0a995d-e34f-4a87-b949-2f556c69aece
+...Payment details mismatch for order 7e5e4cd9-25d8-4f6e-8e49-0f21bce2be37
+Payment details mismatch for order 7e5e4cd9-25d8-4f6e-8e49-0f21bce2be37
+Payment details mismatch for order 7e5e4cd9-25d8-4f6e-8e49-0f21bce2be37
+....Stripe checkout failed for order 43942b37-b327-42b0-bc40-05fe4394dceb
+......Stripe checkout failed for order b911e196-bee5-4aaf-860c-99ac54c6caeb
+..Stripe checkout failed for order bf6b532e-f3be-45e5-b3c0-1d795a2e093a
+...Stripe checkout failed for order 7c84d62d-ddd1-44a0-b811-3ca0b359ab0c
+...Stripe checkout failed for order e85f45b8-509e-4f48-b235-73d0eea0635e
+..Stripe checkout failed for order 18da108e-a9ab-4e7e-a6b1-a4dee9f55da8
+Stripe checkout failed for order 18da108e-a9ab-4e7e-a6b1-a4dee9f55da8
+....Payment details mismatch for order 4a55f20a-c5ac-4fe3-a916-3fbebc071c39
+Payment details mismatch for order 4a55f20a-c5ac-4fe3-a916-3fbebc071c39
+Payment details mismatch for order 4a55f20a-c5ac-4fe3-a916-3fbebc071c39
+Payment details mismatch for order 4a55f20a-c5ac-4fe3-a916-3fbebc071c39
+Payment details mismatch for order 4a55f20a-c5ac-4fe3-a916-3fbebc071c39
+Payment details mismatch for order 4a55f20a-c5ac-4fe3-a916-3fbebc071c39
+..................................................................................
+----------------------------------------------------------------------
+Ran 190 tests in 21.256s
+
+OK
+Destroying test database for alias 'default'...
+Found 190 test(s).
+System check identified no issues (0 silenced).

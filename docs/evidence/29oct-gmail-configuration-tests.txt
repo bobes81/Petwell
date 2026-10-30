@@ -1,0 +1,25 @@
+test_existing_render_url_only_configuration_survives_storage_import (petwell.test_configuration.ProductionConfigurationTests.test_existing_render_url_only_configuration_survives_storage_import) ... ok
+test_explicit_password_overrides_or_disables_sendgrid_fallback (petwell.test_configuration.ProductionConfigurationTests.test_explicit_password_overrides_or_disables_sendgrid_fallback) ... ok
+test_explicit_sendgrid_settings_use_tls_without_sending (petwell.test_configuration.ProductionConfigurationTests.test_explicit_sendgrid_settings_use_tls_without_sending) ... ok
+test_gmail_starttls_uses_explicit_credentials_without_sending (petwell.test_configuration.ProductionConfigurationTests.test_gmail_starttls_uses_explicit_credentials_without_sending) ... ok
+test_implicit_tls_is_explicitly_available_for_other_smtp_providers (petwell.test_configuration.ProductionConfigurationTests.test_implicit_tls_is_explicitly_available_for_other_smtp_providers) ... ok
+test_invalid_email_options_fail_without_echoing_secrets (petwell.test_configuration.ProductionConfigurationTests.test_invalid_email_options_fail_without_echoing_secrets) ... ok
+test_missing_optional_services_keep_startup_and_safe_defaults (petwell.test_configuration.ProductionConfigurationTests.test_missing_optional_services_keep_startup_and_safe_defaults) ... ok
+test_mixed_sources_follow_sdk_separate_variable_precedence (petwell.test_configuration.ProductionConfigurationTests.test_mixed_sources_follow_sdk_separate_variable_precedence) ... ok
+test_other_smtp_host_never_inherits_sendgrid_credentials (petwell.test_configuration.ProductionConfigurationTests.test_other_smtp_host_never_inherits_sendgrid_credentials) ... ok
+test_separate_cloudinary_variables_remain_supported (petwell.test_configuration.ProductionConfigurationTests.test_separate_cloudinary_variables_remain_supported) ... ok
+test_url_query_cannot_disable_https_images (petwell.test_configuration.ProductionConfigurationTests.test_url_query_cannot_disable_https_images) ... ok
+test_ipv6_loopback_is_supported_without_connecting (petwell.test_rehearsal_settings.RehearsalSettingsTests.test_ipv6_loopback_is_supported_without_connecting) ... ok
+test_local_restored_copy_does_not_force_ssl_or_inherit_providers (petwell.test_rehearsal_settings.RehearsalSettingsTests.test_local_restored_copy_does_not_force_ssl_or_inherit_providers) ... ok
+test_missing_local_url_never_falls_back_to_production_database (petwell.test_rehearsal_settings.RehearsalSettingsTests.test_missing_local_url_never_falls_back_to_production_database) ... ok
+test_query_or_libpq_routing_overrides_are_rejected (petwell.test_rehearsal_settings.RehearsalSettingsTests.test_query_or_libpq_routing_overrides_are_rejected) ... ok
+test_rehearsal_secret_is_required_instead_of_production_secret (petwell.test_rehearsal_settings.RehearsalSettingsTests.test_rehearsal_secret_is_required_instead_of_production_secret) ... ok
+test_remote_non_postgres_and_maintenance_targets_are_rejected (petwell.test_rehearsal_settings.RehearsalSettingsTests.test_remote_non_postgres_and_maintenance_targets_are_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 13.360s
+
+OK
+Found 17 test(s).
+Skipping setup of unused database(s): default.
+System check identified no issues (0 silenced).
