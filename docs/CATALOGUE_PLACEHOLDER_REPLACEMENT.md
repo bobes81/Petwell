@@ -14,6 +14,8 @@ Fastest safe handoff: **iPad** — confirm source rights/accuracy, inspect the e
 
 ## What the new evidence establishes
 
+**Later owner account check, 30 October:** the owner logged into `dr3kwknli (Test)`, saw 114 assets, found the construction graphic by searching `zsag3ghgmsfhmjnzn9a9`, and found no results for `calming-lavender-spray`. These are owner-reported observations, not a reviewer account inspection. The empty search does not rule out a correct asset stored under another ID. The owner's browser session has not granted the reviewer access; no authenticated Cloudinary tool/session/credentials are available here.
+
 For **Calming Lavender Spray**, the owner opened the original HTML delivery URL in Chrome:
 
 `https://res.cloudinary.com/dr3kwknli/image/upload/v1771237419/zsag3ghgmsfhmjnzn9a9.png`
@@ -33,6 +35,16 @@ Deployed **`f75dbe1` already contains** CloudinaryField URL rendering, the `petw
 The existing `associate_product_images` command deliberately preserves all non-empty images. It will not fix these already-filled fields. **Do not clear them or add a force flag.** The separately reviewed [operator helper](../scripts/reviewed_catalogue_images.py) below provides explicit approval, an exact original-reference guard, database-profile binding, transaction/row locks and conditional image-only updates. It uploads/fetches nothing and does not migrate or deploy.
 
 ## A. Owner-approved source and Cloudinary steps
+
+### Short browser route while reviewer access is unavailable
+
+Use the [nine proposed unique IDs](catalogue/cloudinary-upload.PROPOSED.json). **These are requested new names, not existing assets or upload results.** Keep them separate from the real mapping manifest; do not copy a proposed name into its `public_id` until the provider actually returns that exact value. Verify each requested ID is unused immediately before upload; stop on any collision. A random suffix reduces collision risk but cannot prove absence remotely.
+
+1. Confirm source rights/accuracy and the existing account's available no-charge capacity. Conditional approval is not a verified rights record. Stop at any upgrade/payment prompt; do not change account/upload presets.
+2. Start with `calming-lavender-spray.png` in Media Library's **Upload** local-file flow. Where the upload panel exposes **Advanced / Public ID**, enter its complete proposed ID, without `.png`, and require overwrite disabled. Leave the original file uncropped/unconverted. UI labels vary: if the controls do not expose the full ID/non-overwrite setting clearly, stop and report the visible options rather than guessing or changing existing assets. Merely selecting an asset folder does not guarantee the required public-ID prefix.
+3. Inspect that newly returned asset's details: actual `public_id` starts `petwell/ai-products/`, resource type `image`, delivery type `upload`, positive version and `png` format. Open the **original delivery URL**, verify the exact title and complete AI footer. Preserve every existing asset. A successful upload alone does not fix the website.
+4. When that succeeds, repeat for the other eight original PNGs. Do not include the PDF. Collect actual original delivery URLs/public IDs/versions for review; these public values may be shared without API credentials. Keep database guards and completed production manifests private.
+5. Complete section B only with actual verified metadata and a fresh original-reference snapshot. Run **review**, not **apply**, then obtain separate exact-mapping approval. No upload or production dry-run has yet been executed by the reviewer.
 
 - Use the nine unchanged PNGs in [the verified inventory](catalogue/README.md) and [prepared source draft](catalogue/catalogue-images.DRAFT.json). They are 1000×1000 **AI-generated product concepts, not photographs**. Keep both the in-image concept/AI disclosure and site caption; do not crop the footer or promise actual packaging/ingredients/efficacy from a generic illustration. Rights/accuracy approval is still pending; the draft correctly has `rights_reviewed: false`.
 - In the existing owner's Cloudinary account, verify the intended cloud against the observed **`dr3kwknli`** and deployed configuration. No key/secret or credential URL belongs in a manifest, screenshot or chat. Do not create an account/service or upgrade a plan; stop if the existing available no-charge allowance cannot accommodate the approved files.
