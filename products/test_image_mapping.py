@@ -404,14 +404,16 @@ class ProductImageAssociationTests(TestCase):
                 self.assertNotIn(str(self.directory), str(error.exception))
                 self.assert_unassigned()
 
-    def test_reserved_ai_namespace_has_an_honest_shop_caption(self):
+    def test_concept_images_keep_their_identity_without_a_duplicate_card_caption(self):
         response = self.client.get(reverse("products:product_list"))
         self.assertNotContains(response, "AI-generated product illustration")
         self.run_plan(apply=True)
         response = self.client.get(reverse("products:product_list"))
-        self.assertContains(response, "AI-generated product illustration", count=9)
+        self.assertNotContains(response, "AI-generated product illustration")
         for product in Product.objects.filter(pk__in=[p.pk for p in self.products]):
             self.assertTrue(product.image_is_ai_illustration)
+            self.assertContains(response, f'alt="{product.name}"')
+            self.assertContains(response, product.description)
         self.assertFalse(Product.objects.get(pk=self.legacy_pdf.pk).image_is_ai_illustration)
 
     def test_full_concept_display_is_scoped_to_ai_images(self):
@@ -439,4 +441,4 @@ class ProductImageAssociationTests(TestCase):
         self.assertTrue(all("product-concept-image" in image.get("class", "").split()
                             for image in concepts))
         self.assertNotIn("product-concept-image", ordinary[0].get("class", "").split())
-        self.assertContains(response, "AI-generated product illustration", count=8)
+        self.assertNotContains(response, "AI-generated product illustration")
