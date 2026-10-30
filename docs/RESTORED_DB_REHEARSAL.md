@@ -1,5 +1,7 @@
 # Isolated restored-database rehearsal on the owner's Mac
 
+**Status update — 30 October 2026:** the owner verified production deployment of `f75dbe1c6fb9c16f3895a5b01451e2de4d9b9160`, a successful build and all six project migrations. The existing Render service is running with **Maintenance Mode still enabled**. The real-backup PostgreSQL 18.6 rehearsal is also complete. [Current evidence and verification boundaries](evidence/30oct-production-deployment.md). The preparation instructions below are a dated reference, not a request to repeat deployment or rehearsal; Stripe, SMTP, Cloudinary and live browser acceptance remain unverified.
+
 The later PR #9 availability migration was introduced **after** this successful rehearsal. It does not invalidate the completed five-migration result. Before release, use a disposable copy of the already-migrated working database to inspect the plan, apply only `products.0002_product_is_available`, and verify preserved product/order/item/blog/subscriber counts, prices, image references and links. All existing products should default to available; no PDF should be automatically withdrawn. Record the genuine result privately. The command examples below remain a historical/reproducible full workflow, not a demand to restore and repeat completed work.
 
 For the **copy-ready procedure limited to `products.0002`**, use [the final handoff](FINAL_RELEASE_HANDOFF.md#macbook-rehearse-only-the-availability-migration). The historical full workflow below is retained for traceability, not a command sequence to repeat now.

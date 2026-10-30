@@ -1,0 +1,57 @@
+{
+  "result": "PASS",
+  "date": "2026-10-30",
+  "checked_at_utc": "2026-10-30T08:23:56.033443+00:00",
+  "application_commit": "1ad2b4c045c8a14cd3640bd6465339300732eb38",
+  "backup_sha256": "0b88315042d0a701f364f67b160f21a3610b9837faf5d62cb87d0dcd1f0616ad",
+  "postgresql_version": "18.6 (Debian 18.6-1.pgdg13+2)",
+  "applied_project_migrations": [
+    [
+      "accounts",
+      "0001_initial"
+    ],
+    [
+      "orders",
+      "0002_order_paid_at_order_public_id_order_status_and_more"
+    ],
+    [
+      "orders",
+      "0003_alter_orderitem_product"
+    ],
+    [
+      "orders",
+      "0004_order_cart_line_tokens_order_stripe_checkout_payload"
+    ],
+    [
+      "orders",
+      "0005_checkoutstate"
+    ],
+    [
+      "products",
+      "0002_product_is_available"
+    ]
+  ],
+  "historical_counts": {
+    "products_product": 10,
+    "orders_order": 5,
+    "orders_orderitem": 5,
+    "blog_blogpost": 2,
+    "blog_subscriber": 2
+  },
+  "original_tables_all_original_rows_and_fields_preserved": 22,
+  "sequence_checks_passed": 21,
+  "expected_metadata_additions": {
+    "auth_permission": 8,
+    "django_content_type": 2,
+    "django_migrations": 6
+  },
+  "original_migration_records_unchanged": true,
+  "missing_order_item_links": 0,
+  "legacy_orders_unique_uuid_pending_without_payment_evidence": 5,
+  "legacy_pdf_records_preserved": 1,
+  "all_product_availability_true": true,
+  "remaining_migrations": 0,
+  "django_system_check_passed": true,
+  "scope": "Actual attached backup. Six pending migrations applied once on an isolated disposable PostgreSQL 18 copy; full original rows compared with a second untouched restore of the same archive. No production access, payment/provider acceptance, deployment or merge.",
+  "cleanup": "Completed: both restored disposable databases/container and temporary internal Docker network removed; local relay stopped and ports closed; extracted backup and private working credentials/logs removed. Original uploaded archive retained unchanged."
+}

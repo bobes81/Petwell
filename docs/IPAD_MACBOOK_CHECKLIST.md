@@ -1,5 +1,7 @@
 # Owner actions: iPad or MacBook
 
+**Status update — 30 October 2026:** the owner verified production deployment of `f75dbe1c6fb9c16f3895a5b01451e2de4d9b9160`, a successful build and all six project migrations. The existing Render service is running with **Maintenance Mode still enabled**. The real-backup PostgreSQL 18.6 rehearsal is also complete. [Current evidence and verification boundaries](evidence/30oct-production-deployment.md). The preparation instructions below are a dated reference, not a request to repeat deployment or rehearsal; Stripe, SMTP, Cloudinary and live browser acceptance remain unverified.
+
 For the planned 30 October 2026 release. These are device capabilities, not permissions. Follow the [ordered cutover plan](RELEASE_2026-10-30.md); no merge/deploy/write/payment is currently authorised by this document.
 
 | Action | iPad | MacBook |

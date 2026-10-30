@@ -1,8 +1,16 @@
-# Test record — 29 October 2026, with earlier evidence retained
+# Test record — updated 30 October 2026, with earlier evidence retained
 
 This record covers integrated PR #9 availability and supplied-image preflight in `fix/pp5-resubmission`, including safe image mapping and Gmail configuration after `d0bd4b2`, the earlier follow-up after `a6cd86a`, the local restored-copy profile, aged checkout-retry fix, earlier deployment/configuration fixes and the pet-profile feature. It is not a production or external-service test report. Meaningful regressions were added without disabling a failing assertion to obtain a pass.
 
-## 30 October documentation audit
+## 30 October production deployment and real-backup rehearsal
+
+The owner verified deployment of **`f75dbe1c6fb9c16f3895a5b01451e2de4d9b9160`**, successful build and all six project migrations. Render is running the revision with **Maintenance Mode still enabled**. These are owner-verified production facts; the reviewer did not access the private dashboard or production database. They do not establish public/browser/provider acceptance.
+
+The reviewer separately completed the actual uploaded-backup rehearsal on disposable PostgreSQL 18.6: all six migrations applied, all original rows/fields in 22 tables preserved, 10 products / 5 orders / 5 items / 2 posts / 2 subscribers retained, zero missing item links, five unique legacy UUIDs with unpaid defaults, no pending migrations and passing local system check. Only expected new Django metadata was added. [Sanitised actual result](evidence/30oct-real-backup-migration-rehearsal.json), [complete source/scope record](evidence/30oct-production-deployment.md). The code/migrations rehearsed at `1ad2b4c` are identical to deployed `f75dbe1`; later changes were documentation only. No repeat rehearsal or local full-suite run was performed for this update.
+
+The deployed baseline's [CI](https://github.com/bobes81/Petwell/actions/runs/41010383682) passed: SQLite **189 passed / one PostgreSQL-only skip**, PostgreSQL **190 passed** (16/18 CI matrix; saved local 18.6 output below). Stripe, SMTP, Cloudinary and live browser testing remain **unverified**, not failed or retrospectively passed. Existing screenshots and Nu results retain their local scope. Production counts/secret settings/cutover details are not inferred from the backup rehearsal. [Remaining owner checks](OWNER_RELEASE_CHECKLIST.md).
+
+## Earlier 30 October documentation audit
 
 The [morning handoff](MORNING_HANDOFF.md) records a fresh source/documentation review and static link/evidence checks. No application code or migration changed, so no local Django tests were rerun. The latest 190-test results below are the actual 29 October application-baseline runs; they are not claimed as new executions today. The stale latest-test/validator entries in EVIDENCE.md now match those existing artifacts.
 
@@ -54,7 +62,7 @@ docker stop petwell-review-pg
 unset TEST_DATABASE_URL
 ```
 
-The password above is an explicit disposable fixture, not a deployment credential. Never substitute a production/valuable restored URL. The recorded image digest/version identifies the actual run; a later floating tag can differ. Local synthetic rehearsal does not establish real-data compatibility, release-time state or downtime on Render; the one targeted owner working-copy check remains separate from the already completed restore/five migrations.
+The password above is an explicit disposable fixture, not a deployment credential. Never substitute a production/valuable restored URL. The recorded image digest/version identifies the actual run; a later floating tag can differ. This older synthetic rehearsal did not establish real-data compatibility or Render downtime. The later actual uploaded-backup rehearsal and owner-verified production migration success, recorded above, complete the migration gates; do not repeat the previously pending targeted check.
 
 **Final running-app Chromium review:** [actual report](evidence/29oct-final-browser-results.json), 1440×1000 and 390×844, **12 grouped checks and 16 genuine screenshots**. It exercises actual local signup/login/logout and reset-request UX, auth destinations/invalid-reset recovery, navigation, unavailable-payment form behavior, blog CRUD/image validation/direct permissions, owner-only pet CRUD/validation/reminders and order privacy/current-price reorder. Forms have labels, captured main pages have one H1, images have alt attributes and no document overflow/broken images/JS exceptions/external page requests were detected. Email is dummy, provider calls are refused and paid orders are manually seeded fixtures; no delivery/payment/customer/deployed evidence is implied. The local server was stopped. These basic checks are not full WCAG, contrast, zoom or other-browser certification.
 
@@ -62,7 +70,7 @@ The password above is an explicit disposable fixture, not a deployment credentia
 
 **Final validation:** local Nu Html Checker 26.10.12 (973e40b): **22 HTML documents** (20 actual rendered fixture pages plus two labelled design artifacts), **two project CSS files**, **zero messages**. [Summary](evidence/29oct-final-validation-summary.json), [raw HTML result](evidence/29oct-final-nu-html.json), [raw CSS result](evidence/29oct-final-nu-css.json). Raw HTML/tokens remain outside Git. This is not a new external validator or full-accessibility pass. [Final system/migration/deployment/static/dependency checks](evidence/29oct-final-readiness-checks.txt) passed sequentially with synthetic/process-only configuration; the pip cache ownership warning was non-blocking.
 
-The candidate is ready for owner-controlled cutover review, with normal release/checkout/submission still NO-GO until actual catalogue decisions, private configuration, backup/pause/approval and genuine provider/deployed acceptance. Follow [the short ordered owner checklist](OWNER_RELEASE_CHECKLIST.md). Earlier records below retain their original counts, dates and scope; verify the final submitted head's CI rather than attributing older results to it.
+This earlier cutover-review status is superseded by the completed deployment/build/six migrations recorded above. Maintenance remains enabled; catalogue decisions and genuine provider/live-browser acceptance remain outstanding before opening checkout or claiming full submission readiness. Follow [the short ordered owner checklist](OWNER_RELEASE_CHECKLIST.md). Earlier records below retain their original counts, dates and scope; verify the final submitted head's CI rather than attributing older results to it.
 
 ## Earlier integrated PR #9 and supplied concept sources
 
@@ -76,7 +84,7 @@ A new [local Chromium check](evidence/29oct-availability-browser.json) passed ei
 
 [Final system/migration/deployment/static/dependency checks](evidence/29oct-integrated-readiness-checks.txt) passed sequentially after the test suite and after stopping the local browser server. No model changes were missing migrations; production-style checks used synthetic credentials and an ephemeral key, not actual services. The pip cache-ownership warning was non-blocking.
 
-The availability migration is new relative to the owner's completed five-migration real-data rehearsal. Synthetic initial-to-six and incremental-products.0002 fixtures preserve fields/links/default availability; old Product writers demonstrably fail after the new required field. Only this later migration needs a targeted new owner real-data check. No production migration or automatic PDF withdrawal occurred. The owner-provided concept files are repository review assets, not uploaded catalogue imagery or product photographs. Earlier results below retain their dates/counts and scope.
+The availability migration is new relative to the owner's completed five-migration real-data rehearsal. Synthetic initial-to-six and incremental-products.0002 fixtures preserve fields/links/default availability; old Product writers demonstrably fail after the new required field. At that earlier point this later migration needed a targeted real-data check. The 30 October six-migration rehearsal and owner-verified production application now complete that check; actual PDF withdrawal is still unverified. The owner-provided concept files are repository review assets, not uploaded catalogue imagery or product photographs. Earlier results below retain their dates/counts and scope.
 
 ## Earlier 29 October: image-association safety and Gmail configuration before ZIP receipt
 

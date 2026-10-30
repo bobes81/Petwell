@@ -1,6 +1,8 @@
 # Owner-controlled release and recovery runbook
 
-Prepared on 28 October and updated on 29 October 2026. **Current release decision: NO-GO until the outstanding gates in [RENDER_CHECKLIST.md](RENDER_CHECKLIST.md) are verified and the owner explicitly approves the exact release.** This document is a plan. The owner's separately reported successful restored-copy migration/browser rehearsal is recorded below; it is not a claim that this review deployed, restored production, processed a payment or verified external integrations. No production access or service change was performed to prepare it.
+**Status update — 30 October 2026:** the owner verified production deployment of `f75dbe1c6fb9c16f3895a5b01451e2de4d9b9160`, a successful build and all six project migrations. The existing Render service is running with **Maintenance Mode still enabled**. The real-backup PostgreSQL 18.6 rehearsal is also complete. [Current evidence and verification boundaries](evidence/30oct-production-deployment.md). The preparation instructions below are a dated reference, not a request to repeat deployment or rehearsal; Stripe, SMTP, Cloudinary and live browser acceptance remain unverified.
+
+Prepared on 28 October and updated on 29 October 2026. **Historical pre-deployment decision: NO-GO until the outstanding gates in [RENDER_CHECKLIST.md](RENDER_CHECKLIST.md) are verified and the owner explicitly approves the exact release.** This document is a plan. The owner's separately reported successful restored-copy migration/browser rehearsal is recorded below; it is not a claim that this review deployed, restored production, processed a payment or verified external integrations. No production access or service change was performed to prepare it.
 
 ## Starting point and required preparation
 
