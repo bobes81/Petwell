@@ -37,3 +37,7 @@ These documentation assets are not in `static/`, are not a deployment screenshot
 ## Existing construction artwork in Cloudinary
 
 On 30 October the owner verified that Calming Lavender Spray's original public Cloudinary URL displays construction/coming-soon artwork, not this product concept. This is a content/mapping finding for that observed item; exact HTTP status and the other products remain unverified. Use [the owner-approved new-asset/guarded reference replacement plan](../CATALOGUE_PLACEHOLDER_REPLACEMENT.md) for already-filled image fields. Originals stay unchanged, old assets stay intact, and no real product/upload IDs or versions have been invented in this draft.
+
+## 30 October conditional authorisation update
+
+The owner has conditionally approved use/new uploads subject to accuracy and rights verification, and supplied verified production IDs. A private ID-filled working manifest was prepared without changing this historical public draft or original PNGs. All nine titles/disclosures were rechecked and source-only validation passed; ID 5 (the PDF) is excluded. Rights remain unverified, and the reviewer has no authorised Cloudinary access. No asset search/upload, returned URL check, production snapshot or mapping dry-run was claimed. Follow the [current access boundary and next actions](../CATALOGUE_PLACEHOLDER_REPLACEMENT.md#latest-owner-authorisation-and-access-boundary).

@@ -2,6 +2,16 @@
 
 Prepared **30 October 2026**; deadline **31 October at 12:00 UK time**. No upload, production write, deployment, merge or paid resource was performed. This is an owner-operated procedure, not approval to execute it.
 
+## Latest owner authorisation and access boundary
+
+On **30 October**, the owner authorised the supplied nine AI-labelled originals **conditional on verifying accuracy and usage rights**, and authorised new non-overwriting uploads only if authorised access and existing no-charge capacity are available. This is not approval for production image-reference writes. The owner also supplied independently checked production product IDs; a private working manifest now binds those IDs by exact name to the nine original files and cloud `dr3kwknli`. **Mindful Pet Journal (PDF), ID 5, is excluded and must not be modified by this image task.** The public historical source draft stays unchanged; neither supplied IDs nor a source-only pass substitute for a fresh original-reference snapshot.
+
+The reviewer inspected all nine originals again: exact catalogue titles and AI/not-a-photograph footers match, PNG dimensions/hashes pass, and no original was edited. Actual supplier packaging, ingredients, efficacy and physical fulfilment are not certified by these generic drawings. The source archive/handoff claims AI concepts and Python/Pillow drawing but supplies no independently verifiable author licence or generation/source terms. **Conditional use approval is recorded; rights verification is still blocked, so `rights_reviewed` remains false.** The minimum missing source record is who created/provided the artwork, which tools/assets/fonts were used and the applicable permission/terms allowing this website use. Do not invent a licence or request private account credentials in chat.
+
+No Cloudinary connector, configured Cloudinary credentials or authenticated owner account is available in this workspace. Consequently, existing correct assets, current quota, upload permissions and returned URLs **have not been checked**; no upload was attempted. A public delivery URL cannot enumerate an account or establish rights. The owner must use the existing authenticated account, or provide an approved secure access route, to perform section A after resolving rights. New IDs/versions must come from real provider results. Source-only validation of the private ID-filled draft passed for all nine; **the production mapping dry-run is blocked** until actual metadata, rights review and the fresh private original-reference guard exist. No production connection was made to obtain that guard.
+
+Fastest safe handoff: **iPad** — confirm source rights/accuracy, inspect the existing cloud and available no-charge capacity, upload approved originals as new assets, then open each returned original URL. **MacBook or an already available authorised operator shell** — complete the private manifest, capture originals, run section B's read-only review, and submit the exact nine old→new associations for separate owner approval before any section C write. Keep original references and all operational review files private. No application deployment is required for this correction.
+
 ## What the new evidence establishes
 
 For **Calming Lavender Spray**, the owner opened the original HTML delivery URL in Chrome:
