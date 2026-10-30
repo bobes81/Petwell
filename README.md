@@ -15,7 +15,7 @@ PetWell is a responsive online shop and community for people who care about thei
 4. [Design and user experience](#design-and-user-experience)
 5. [Business model and marketing](#business-model-and-marketing)
 6. [How the application works](#how-the-application-works)
-7. [Data model and security](#data-model-and-security)
+7. [Data model and security](#data-model-and-relationships)
 8. [Technology](#technology)
 9. [Getting started locally](#getting-started-locally)
 10. [Deploying to Render](#deploying-to-render)
@@ -43,14 +43,16 @@ Pet owners often need different services for shopping, finding practical pet-car
 
 ### Shopping
 
-![PetWell shop illustration](static/images/shop.jpeg)
+![PetWell product photography contact sheet](docs/catalogue/packshots-review/contact-sheet.png)
+
+*Product image contact sheet prepared for the PetWell catalogue; this is an asset overview, not a screenshot of the deployed shop.*
 
 1. **Explore:** visit the homepage or the shop, browse product descriptions, prices and imagery.
-2. **Choose:** add an available product to the basket, then adjust quantities or remove items.
+2. **Choose:** add an available product to the basket or remove an item. Adding the same product again increases its quantity; there is no separate quantity-edit form.
 3. **Review:** see basket items and the current total, calculated from catalogue data on the server.
 4. **Checkout:** enter contact and delivery details and continue to Stripe's hosted payment page.
 5. **Confirmation:** after a successful payment, the order is marked paid only when the application receives a verified Stripe event. Returning from Stripe alone is not evidence of payment.
-6. **Return:** signed-in customers can inspect their order history and select **Buy again** to build a new basket using current product prices.
+6. **Return:** signed-in customers can inspect their own order history, including pending and paid orders. **Buy again** is available for paid orders and builds a new basket using current product prices.
 
 The catalogue includes physical pet-care items. Unavailable products are withheld from new purchases without destroying historical orders.
 
@@ -63,18 +65,18 @@ Members can publish and manage blog posts, maintain private profiles for their p
 | Feature | What it does | Who can use it |
 | --- | --- | --- |
 | Product catalogue | Displays descriptions, prices and current availability, with image fallbacks | Visitors |
-| Basket | Add, update and remove products using a server-validated session basket | Visitors |
+| Basket | Add products (including repeated additions) and remove products from a server-validated session basket | Visitors |
 | Stripe Checkout | Hosted card payment with server-computed GBP line items | Customers |
 | Order confirmation | Stores pending/paid states; verifies signed Stripe webhook before marking paid | Customers |
 | Customer accounts | Sign up, log in, log out, request password reset | Visitors/members |
-| My orders / Buy again | See personal paid orders and repopulate the basket at current prices | Signed-in customers |
+| My orders / Buy again | View own pending and paid orders; use **Buy again** on paid orders at current prices | Signed-in customers |
 | Community blog | Read articles; create, edit and delete own posts | Readers/authors |
 | My pets | Save pet name, species, care focus and notes; view a routine prompt; edit/delete | Signed-in owners |
 | Newsletter subscription | Validate and store unique email subscriptions | Visitors |
 | Administration | Manage catalogue and application data through Django Admin | Authorised staff |
 | Search visibility | Page-specific metadata, canonical URLs, robots and sitemap | Search engines |
 
-**Email delivery note:** newsletter addresses are stored; sending a marketing campaign is not implemented. Transactional welcome/password-reset email delivery depends on SMTP configuration and is not currently confirmed in the hosted environment.
+**Email delivery note:** newsletter addresses are stored; sending a marketing campaign is not implemented. On 30 October 2026, the deployed SMTP backend successfully sent a test message which was independently verified in the destination mailbox. This confirms outbound SMTP delivery, not the entire password-reset or signup email journey. The currently configured sender uses a temporary Gmail address.
 
 ### Pet profiles — a custom feature
 
@@ -334,7 +336,7 @@ Local tests use isolated test settings, not a production database, and must neve
 | Scenario / steps | Expected result | Recorded result and scope |
 | --- | --- | --- |
 | Browse shop and open product pages | Available products and current prices render without broken navigation | **PASS** in local browser review; owner reviewed live shop/cart |
-| Add an item, adjust quantity, remove it | Basket reflects the selected quantities and correct totals | **PASS** in local tests/browser flows; live shop/cart owner-reviewed |
+| Add an item (including adding it again), remove it | Basket reflects additions, repeated additions and removal at correct totals; no separate quantity-edit form | **PASS** in local tests/browser flows; live shop/cart owner-reviewed |
 | Complete hosted Stripe sandbox checkout | Stripe receives test card; verified event marks the order paid | **PASS** for one GBP 11.49 owner-performed sandbox purchase and saved paid order |
 | Submit a forged or mismatching payment webhook | Payment is rejected; order remains pending | **PASS** in automated signed-webhook regressions; not a live provider attack test |
 | Sign up, log in and log out | User can authenticate and returns to the expected pages | **PASS** in local browser tests; production transactional email remains unverified |
@@ -343,14 +345,14 @@ Local tests use isolated test settings, not a production database, and must neve
 | Add, update, delete a pet profile | Owner sees own data; other users cannot retrieve it | **PASS** in local browser/automated tests |
 | View order history and Buy again | Only own orders visible; repeated basket uses current prices | **PASS** in local tests and synthetic browser fixtures |
 | Visit `/robots.txt` and `/sitemap.xml` | URLs reference the configured site, and public pages are listed | **PASS** in route tests; external deployed crawl not independently verified |
-| Request a password reset on the hosted service | Reset email arrives and link allows a secure password change | **NOT PASSING / NOT VERIFIED**: current SMTP authentication fails |
+| Send an SMTP test message from deployed Django | The message is accepted and received in a controlled mailbox | **PASS:** `send_mail` returned 1; the test message appeared in the recipient Gmail inbox on 30 October 2026. This does **not** verify password-reset token/link flow |
 | View wireframes and marketing mockup | Images render in repository documentation | Assets stored in `docs/design/` and `docs/marketing/`; not live campaign evidence |
 
 **Validation and evidence:** actual HTML/CSS validation runs, local desktop/mobile browser captures and scope-limited accessibility results are documented in [the testing log](docs/TESTING.md) and [evidence checklist](docs/EVIDENCE.md). Refer to the [saved local validation summary](docs/evidence/29oct-final-validation-summary.json) for the machine-readable result; this is not a deployed-site Lighthouse or cross-browser certificate. The [GitHub Actions run](https://github.com/bobes81/Petwell/actions/runs/41089034654) provides reproducible CI evidence.
 
 ## Limitations and future development
 
-- **Transactional emails:** hosted SMTP authentication currently fails; welcome and password-reset delivery must be configured and tested with the correct provider account. The application can still be demonstrated locally with console/in-memory email.
+- **Transactional emails:** SMTP sending and real inbox receipt were verified on 30 October 2026 with a temporary personal Gmail sender. The full welcome-email and password-reset link/change-password flows remain unverified on the hosted service; the sender should later be replaced with an appropriate dedicated address.
 - **Newsletter:** signup stores validated addresses but does not yet send campaign emails.
 - **Fulfilment:** checkout records payment; it does not provide warehouse dispatch, shipment tracking, digital download fulfilment or automatic refunds. Product availability must reflect what can genuinely be supplied.
 - **Inventory:** no stock-quantity reservation system; availability is controlled by a product flag.
