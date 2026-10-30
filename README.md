@@ -2,6 +2,8 @@
 
 PetWell is a Django e-commerce portfolio project for Code Institute Portfolio Project 5. Visitors can browse products and community posts, maintain a cart and pay through Stripe Checkout. Signed-in users can publish and manage their own posts, view their order history and buy the same products again at current prices.
 
+For the final owner actions on **30 October**, start with the [concise morning handoff](docs/MORNING_HANDOFF.md), including iPad/MacBook priorities and the actual evidence boundary.
+
 Deployment target: **https://petwell-u0cr.onrender.com**. This branch has not been deployed or merged. The target URL is not a claim that the latest changes are live.
 
 Deployment readiness: **NO-GO pending the remaining release gates**: a fresh release-time backup and approved write-pause/code cutover, actual configuration and genuine sandbox acceptance. The restored-copy migration/integrity/local-browser rehearsal is now complete according to the owner; it does not deploy this branch. See the [release checklist](docs/RENDER_CHECKLIST.md) and [forward/abort/recovery runbook](docs/RELEASE_RUNBOOK.md).

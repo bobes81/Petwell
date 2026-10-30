@@ -2,6 +2,10 @@
 
 This record covers integrated PR #9 availability and supplied-image preflight in `fix/pp5-resubmission`, including safe image mapping and Gmail configuration after `d0bd4b2`, the earlier follow-up after `a6cd86a`, the local restored-copy profile, aged checkout-retry fix, earlier deployment/configuration fixes and the pet-profile feature. It is not a production or external-service test report. Meaningful regressions were added without disabling a failing assertion to obtain a pass.
 
+## 30 October documentation audit
+
+The [morning handoff](MORNING_HANDOFF.md) records a fresh source/documentation review and static link/evidence checks. No application code or migration changed, so no local Django tests were rerun. The latest 190-test results below are the actual 29 October application-baseline runs; they are not claimed as new executions today. The stale latest-test/validator entries in EVIDENCE.md now match those existing artifacts.
+
 ## Automated checks actually run
 
 ```bash

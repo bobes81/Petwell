@@ -1,0 +1,8 @@
+30 October 2026: repository-only documentation/evidence audit
+Application baseline: d451bb95382310c3abc3e946872fe1aa44aa94fa
+PASS: 331 local Markdown links, including local fragments, resolve.
+PASS: nine draft names equal seeded physical names; all source SHA-256/PNG dimensions agree; operational IDs remain unset and rights unapproved.
+PASS: preserved logs confirm 190-test baseline; stored validator JSON confirms 22 HTML/two CSS/zero messages; browser report has 12 steps and 16 screenshot files exist. No tests/browser re-executed.
+PASS: reported historical blog/product/order migration files unchanged versus origin/main.
+PASS: documentation-only changes; whitespace, English-content and common credential/private-correspondence checks passed. Pattern scans are not a general security certification.
+No Django invocation, migration, production/provider access, payment, upload or deployment performed.
