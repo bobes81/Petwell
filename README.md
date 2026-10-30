@@ -245,4 +245,10 @@ These are new **retrospective design reviews created 28 October 2026**, not inve
 
 ## Credits and authorship
 
-Original repository: [bobes81/Petwell](https://github.com/bobes81/Petwell). Third-party packages and Bootstrap provide the framework/components identified above. Product descriptions, images and article content require owner review for accuracy, permission and attribution. This resubmission revision received AI-assisted code, testing and documentation changes; review and explain the code yourself and disclose assistance according to current Code Institute rules. No license or asset rights are assumed where none are recorded.
+### AI Tools
+
+AI tools, including ChatGPT and OpenAI Codex, were used to support the development, debugging, testing, documentation, and improvement of this project.
+
+
+
+Original repository: [bobes81/Petwell](https://github.com/bobes81/Petwell). Third-party packages and Bootstrap provide the framework/components identified above. Product descriptions, images and article content require owner review for accuracy, permission and attribution. No license or asset rights are assumed where none are recorded.
