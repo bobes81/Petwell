@@ -1,0 +1,491 @@
+{
+  "status": "REVIEW_COPIES_ONLY_NOT_UPLOADED_OR_APPLIED",
+  "method": "Owner-approved Pillow text-region removal; originals preserved",
+  "products": [
+    {
+      "product_name": "Calming Lavender Spray",
+      "source_file": "calming-lavender-spray.png",
+      "source_sha256": "751d698735054428e9a4cbbcf9b627c998be02a68b308b0442c7ed44221a090b",
+      "edited_file": "calming-lavender-spray-clean.png",
+      "edited_sha256": "23c317204cd5cb0b785a56d6596fb2f089d850bfe99cabb7518190318c690d22",
+      "dimensions": [
+        1000,
+        1000
+      ],
+      "changed_pixels": 5781,
+      "outside_approved_regions_changed_pixels": 0,
+      "regions": [
+        {
+          "label": "header_bullet_and_PRODUCT_CONCEPT",
+          "box_right_bottom_exclusive": [
+            412,
+            115,
+            682,
+            146
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            252
+          ]
+        },
+        {
+          "label": "AI_generated_footer",
+          "box_right_bottom_exclusive": [
+            260,
+            890,
+            740,
+            911
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            252
+          ]
+        },
+        {
+          "label": "inner_AI_CONCEPT",
+          "box_right_bottom_exclusive": [
+            443,
+            608,
+            557,
+            636
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            251
+          ]
+        }
+      ]
+    },
+    {
+      "product_name": "Dental Chew Sticks",
+      "source_file": "dental-chew-sticks.png",
+      "source_sha256": "ceace0fc221f4f20be4cf99315de845561f10815ca93c14f3d2ea28ca7fe59c4",
+      "edited_file": "dental-chew-sticks-clean.png",
+      "edited_sha256": "4faba703a8c5d7775c7e7b2083293e56bd741acd86c223736c69d2d16964ffa1",
+      "dimensions": [
+        1000,
+        1000
+      ],
+      "changed_pixels": 5190,
+      "outside_approved_regions_changed_pixels": 0,
+      "regions": [
+        {
+          "label": "header_bullet_and_PRODUCT_CONCEPT",
+          "box_right_bottom_exclusive": [
+            412,
+            115,
+            682,
+            146
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            252
+          ]
+        },
+        {
+          "label": "AI_generated_footer",
+          "box_right_bottom_exclusive": [
+            260,
+            890,
+            740,
+            911
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            252
+          ]
+        }
+      ]
+    },
+    {
+      "product_name": "Joint Support Treats",
+      "source_file": "joint-support-treats.png",
+      "source_sha256": "f21fcaddae7265a9871f399c149af0ec2395dd33393095736fb72e0455608d08",
+      "edited_file": "joint-support-treats-clean.png",
+      "edited_sha256": "8c6739a7171e7f8836e04bf6923ed4c07e13201f5f10caf3816cb9183949f404",
+      "dimensions": [
+        1000,
+        1000
+      ],
+      "changed_pixels": 5781,
+      "outside_approved_regions_changed_pixels": 0,
+      "regions": [
+        {
+          "label": "header_bullet_and_PRODUCT_CONCEPT",
+          "box_right_bottom_exclusive": [
+            412,
+            115,
+            682,
+            146
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            252
+          ]
+        },
+        {
+          "label": "AI_generated_footer",
+          "box_right_bottom_exclusive": [
+            260,
+            890,
+            740,
+            911
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            252
+          ]
+        },
+        {
+          "label": "inner_AI_CONCEPT",
+          "box_right_bottom_exclusive": [
+            443,
+            608,
+            557,
+            636
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            251
+          ]
+        }
+      ]
+    },
+    {
+      "product_name": "Hypoallergenic Shampoo",
+      "source_file": "hypoallergenic-shampoo.png",
+      "source_sha256": "1ac288c3a0d0d97549081781a2eeabd2cd8016a3b000c83c7313a7a678642a61",
+      "edited_file": "hypoallergenic-shampoo-clean.png",
+      "edited_sha256": "90281ae2b05628886f351b64e1f0076e69eba13dc56177c9dcee78455e468b62",
+      "dimensions": [
+        1000,
+        1000
+      ],
+      "changed_pixels": 5781,
+      "outside_approved_regions_changed_pixels": 0,
+      "regions": [
+        {
+          "label": "header_bullet_and_PRODUCT_CONCEPT",
+          "box_right_bottom_exclusive": [
+            412,
+            115,
+            682,
+            146
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            252
+          ]
+        },
+        {
+          "label": "AI_generated_footer",
+          "box_right_bottom_exclusive": [
+            260,
+            890,
+            740,
+            911
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            252
+          ]
+        },
+        {
+          "label": "inner_AI_CONCEPT",
+          "box_right_bottom_exclusive": [
+            443,
+            608,
+            557,
+            636
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            251
+          ]
+        }
+      ]
+    },
+    {
+      "product_name": "Organic Paw Balm",
+      "source_file": "organic-paw-balm.png",
+      "source_sha256": "244ee652fedb21a24e5e32840afe0a384bde724af6a59dbe79654acbeff12b01",
+      "edited_file": "organic-paw-balm-clean.png",
+      "edited_sha256": "f2eeae4c4757d5f85bb06947c2356f3c0e25c8c265483f5f082a43370395f5c9",
+      "dimensions": [
+        1000,
+        1000
+      ],
+      "changed_pixels": 5781,
+      "outside_approved_regions_changed_pixels": 0,
+      "regions": [
+        {
+          "label": "header_bullet_and_PRODUCT_CONCEPT",
+          "box_right_bottom_exclusive": [
+            412,
+            115,
+            682,
+            146
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            252
+          ]
+        },
+        {
+          "label": "AI_generated_footer",
+          "box_right_bottom_exclusive": [
+            260,
+            890,
+            740,
+            911
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            252
+          ]
+        },
+        {
+          "label": "inner_AI_CONCEPT",
+          "box_right_bottom_exclusive": [
+            443,
+            608,
+            557,
+            636
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            251
+          ]
+        }
+      ]
+    },
+    {
+      "product_name": "Digestive Support Powder",
+      "source_file": "digestive-support-powder.png",
+      "source_sha256": "7a237790604e740da45b398790fc9deb1b4e4d5b5b943eb8d50d150900aa7a01",
+      "edited_file": "digestive-support-powder-clean.png",
+      "edited_sha256": "f2782e8d07fc0d5dc099556f6c4fb2a78cd1942f99fdb8f089b9d6c623fa2f60",
+      "dimensions": [
+        1000,
+        1000
+      ],
+      "changed_pixels": 5781,
+      "outside_approved_regions_changed_pixels": 0,
+      "regions": [
+        {
+          "label": "header_bullet_and_PRODUCT_CONCEPT",
+          "box_right_bottom_exclusive": [
+            412,
+            115,
+            682,
+            146
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            252
+          ]
+        },
+        {
+          "label": "AI_generated_footer",
+          "box_right_bottom_exclusive": [
+            260,
+            890,
+            740,
+            911
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            252
+          ]
+        },
+        {
+          "label": "inner_AI_CONCEPT",
+          "box_right_bottom_exclusive": [
+            443,
+            608,
+            557,
+            636
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            251
+          ]
+        }
+      ]
+    },
+    {
+      "product_name": "Eco Toy Rope",
+      "source_file": "eco-toy-rope.png",
+      "source_sha256": "c0ae9f9aa0fa4fa79424b1b9204a604a2adf9d1215f9e78660ec259690b63be0",
+      "edited_file": "eco-toy-rope-clean.png",
+      "edited_sha256": "fb6d18b040e5cf766d6ffbd4bd8b7edad4fd24c4f876418ebddac071edad57f9",
+      "dimensions": [
+        1000,
+        1000
+      ],
+      "changed_pixels": 5190,
+      "outside_approved_regions_changed_pixels": 0,
+      "regions": [
+        {
+          "label": "header_bullet_and_PRODUCT_CONCEPT",
+          "box_right_bottom_exclusive": [
+            412,
+            115,
+            682,
+            146
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            252
+          ]
+        },
+        {
+          "label": "AI_generated_footer",
+          "box_right_bottom_exclusive": [
+            260,
+            890,
+            740,
+            911
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            252
+          ]
+        }
+      ]
+    },
+    {
+      "product_name": "Herbal Ear Cleaner",
+      "source_file": "herbal-ear-cleaner.png",
+      "source_sha256": "d3d928bf3fce82ce1f240ae5bfe966066218b4db2e2684f5ae61a5308a32ea55",
+      "edited_file": "herbal-ear-cleaner-clean.png",
+      "edited_sha256": "edbde13e51f8f28cb742226c9edbe755c942e9b9b7f4da0b62397c2d1b4d5bdd",
+      "dimensions": [
+        1000,
+        1000
+      ],
+      "changed_pixels": 5781,
+      "outside_approved_regions_changed_pixels": 0,
+      "regions": [
+        {
+          "label": "header_bullet_and_PRODUCT_CONCEPT",
+          "box_right_bottom_exclusive": [
+            412,
+            115,
+            682,
+            146
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            252
+          ]
+        },
+        {
+          "label": "AI_generated_footer",
+          "box_right_bottom_exclusive": [
+            260,
+            890,
+            740,
+            911
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            252
+          ]
+        },
+        {
+          "label": "inner_AI_CONCEPT",
+          "box_right_bottom_exclusive": [
+            443,
+            608,
+            557,
+            636
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            251
+          ]
+        }
+      ]
+    },
+    {
+      "product_name": "Herbal Chill Drops",
+      "source_file": "herbal-chill-drops.png",
+      "source_sha256": "573fb722af647d7f73a77fb87e7cf892df435feb8870dbf0e7b28aad000a0039",
+      "edited_file": "herbal-chill-drops-clean.png",
+      "edited_sha256": "70b3c10ddf4fc0a7e7156eef88834d8e391037e6815f0cf66b10cb75728373b8",
+      "dimensions": [
+        1000,
+        1000
+      ],
+      "changed_pixels": 5781,
+      "outside_approved_regions_changed_pixels": 0,
+      "regions": [
+        {
+          "label": "header_bullet_and_PRODUCT_CONCEPT",
+          "box_right_bottom_exclusive": [
+            412,
+            115,
+            682,
+            146
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            252
+          ]
+        },
+        {
+          "label": "AI_generated_footer",
+          "box_right_bottom_exclusive": [
+            260,
+            890,
+            740,
+            911
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            252
+          ]
+        },
+        {
+          "label": "inner_AI_CONCEPT",
+          "box_right_bottom_exclusive": [
+            443,
+            608,
+            557,
+            636
+          ],
+          "background_rgb_sampled_from_uniform_margin": [
+            255,
+            255,
+            251
+          ]
+        }
+      ]
+    }
+  ]
+}
