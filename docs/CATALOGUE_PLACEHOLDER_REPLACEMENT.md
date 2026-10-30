@@ -2,6 +2,8 @@
 
 Prepared **30 October 2026**; deadline **31 October at 12:00 UK time**. No upload, production write, deployment, merge or paid resource was performed. This is an owner-operated procedure, not approval to execute it.
 
+**Later presentation request:** the owner requested a plan for new derivatives without the embedded concept header/footer. Follow [the derivative edit plan](CATALOGUE_IMAGE_EDIT_PLAN.md) before choosing the final asset set. Earlier instructions here to retain embedded wording describe the original set; originals and existing assets must still remain untouched. No derivative edit/upload or production mapping is executed or authorised by this planning note.
+
 ## Latest owner authorisation and access boundary
 
 On **30 October**, the owner authorised the supplied nine AI-labelled originals **conditional on verifying accuracy and usage rights**, and authorised new non-overwriting uploads only if authorised access and existing no-charge capacity are available. This is not approval for production image-reference writes. The owner also supplied independently checked production product IDs; a private working manifest now binds those IDs by exact name to the nine original files and cloud `dr3kwknli`. **Mindful Pet Journal (PDF), ID 5, is excluded and must not be modified by this image task.** The public historical source draft stays unchanged; neither supplied IDs nor a source-only pass substitute for a fresh original-reference snapshot.
