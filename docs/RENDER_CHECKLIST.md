@@ -2,6 +2,8 @@
 
 The owner reported these existing Render environment-variable **names** on 28 October 2026: `CLOUDINARY_URL`, `DATABASE_URL`, `DEBUG` and `SECRET_KEY`. Their secret values, current deployed revision and external-service operation were not inspected. This review changes repository code and documentation only; it does not modify Render, deploy, merge, create resources or enable live payments.
 
+New owner-reported service facts: `main`, auto-deploy enabled, `./build.sh`, `gunicorn petwell.wsgi`, production `6f0ac78`. They are recorded with their access/approval limits and supported exact-SHA mechanism in [the final release handoff](FINAL_RELEASE_HANDOFF.md); no dashboard or production connection was inspected.
+
 ## Restored-copy rehearsal completed on 29 October
 
 The owner reports successfully restoring the **28 October Render PostgreSQL backup** into an isolated **PostgreSQL 18 working copy on their MacBook**, applying **all five pending project migrations**, and finding **no remaining migrations**. The preserved original record counts are **10 products, 5 orders, 5 order items, 2 blog posts and 2 subscribers**. Reported integrity checks returned **zero missing UUIDs, duplicate UUIDs, missing order links or incorrectly paid legacy orders**.

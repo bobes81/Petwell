@@ -2,6 +2,8 @@
 
 **Deadline: 31 October, 12:00 noon UK/Irish time (GMT). Current decision: NO-GO for opening checkout/submission until the unresolved operational evidence below is obtained.** No merge, deployment, provider action or production write is authorised by this document. A Pass is not guaranteed.
 
+For the newly confirmed `main`/auto-deploy/build settings, exact-SHA capability, unresolved writer-pause blocker and copy-ready single-migration Mac procedure, use [FINAL_RELEASE_HANDOFF.md](FINAL_RELEASE_HANDOFF.md).
+
 ## Owner priorities today
 
 | Order | Smallest required action | Device / completion evidence |
