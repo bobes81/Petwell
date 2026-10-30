@@ -220,11 +220,11 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ~~~
 
-For Windows, activate the environment with \`venv\Scripts\activate\` (Command Prompt) or \`.\venv\Scripts\Activate.ps1\` (PowerShell).
+For Windows, activate the environment with `venv\Scripts\activate` (Command Prompt) or `.\venv\Scripts\Activate.ps1` (PowerShell).
 
 ### Set local environment variables
 
-The application reads process environment variables; it does not automatically load a \`.env\` file. The following local-only configuration uses SQLite, console email and a fresh development secret. Do **not** paste real credentials into the repository.
+The application reads process environment variables; it does not automatically load a `.env` file. The following local-only configuration uses SQLite, console email and a fresh development secret. Do **not** paste real credentials into the repository.
 
 ~~~bash
 export DEBUG=True
@@ -235,7 +235,7 @@ export SECRET_KEY="$(python -c 'from django.core.management.utils import get_ran
 unset DATABASE_URL
 ~~~
 
-On Windows PowerShell, use \`$env:NAME = "value"\`; remove an existing remote database variable using \`Remove-Item Env:DATABASE_URL -ErrorAction SilentlyContinue\`.
+On Windows PowerShell, use `$env:NAME = "value"`; remove an existing remote database variable using `Remove-Item Env:DATABASE_URL -ErrorAction SilentlyContinue`.
 
 ### Prepare the database and run
 
@@ -257,15 +257,15 @@ The local seed adds sample physical-product listings for development. Seeded lis
 
 This deployment is a **Python web service with a PostgreSQL database**. The same steps can be used for a new instance after providing your own service credentials.
 
-1. **Prepare the repository.** Push the application code and pinned \`requirements.txt\` to GitHub. Confirm \`build.sh\`, \`manage.py\` and \`petwell/wsgi.py\` are present.
-2. **Create PostgreSQL.** In Render, create a PostgreSQL instance and copy its private **Internal Database URL** to the web service's \`DATABASE_URL\` environment variable. Preserve database backups before changing a populated schema.
-3. **Create the web service.** Connect the GitHub repository, select Python, and choose an appropriate Python 3.11 runtime. Use build command \`./build.sh\` and start command \`gunicorn petwell.wsgi\`. The build script installs dependencies, gathers static files and applies Django migrations; do not run the same production migrations manually without reviewing the release procedure.
-4. **Configure the host.** Set \`DEBUG=False\`, a strong private \`SECRET_KEY\`, \`SITE_URL=https://YOUR-SERVICE.onrender.com\` and \`ALLOWED_HOSTS=YOUR-SERVICE.onrender.com\`. Adjust these values if using a custom domain.
-5. **Configure media.** Add your Cloudinary \`CLOUDINARY_URL\` credential and verify that images upload and render over HTTPS. Existing production image references are not portable to an unrelated Cloudinary account automatically.
-6. **Configure Stripe test payments.** Set \`STRIPE_SECRET_KEY\` to a Stripe **test** key, \`STRIPE_LIVE_MODE=False\`, and \`STRIPE_WEBHOOK_SECRET\` to the destination's signing secret. Configure the Stripe webhook URL \`https://YOUR-SERVICE.onrender.com/checkout/webhook/\` for \`checkout.session.completed\` and \`checkout.session.async_payment_succeeded\`. Never mix test and live keys or use a real card for a test.
-7. **Configure email.** Set \`EMAIL_BACKEND\` and the appropriate \`EMAIL_HOST\`, \`EMAIL_PORT\`, \`EMAIL_HOST_USER\`, \`EMAIL_HOST_PASSWORD\`, \`EMAIL_USE_TLS\`/\`EMAIL_USE_SSL\` and \`DEFAULT_FROM_EMAIL\` for the chosen provider. Test an actual password-reset email before saying transactional delivery works. If SMTP is unavailable, the console backend only logs messages and cannot deliver them.
-8. **Deploy and inspect logs.** Ensure the build succeeds, migrations complete, there are no pending migrations, and the expected hostname serves the homepage, shop, \`robots.txt\` and \`sitemap.xml\`.
-9. **Create authorised admin access** if none exists, using \`python manage.py createsuperuser\` in a secure service shell. Never commit or publish account passwords.
+1. **Prepare the repository.** Push the application code and pinned `requirements.txt` to GitHub. Confirm `build.sh`, `manage.py` and `petwell/wsgi.py` are present.
+2. **Create PostgreSQL.** In Render, create a PostgreSQL instance and copy its private **Internal Database URL** to the web service's `DATABASE_URL` environment variable. Preserve database backups before changing a populated schema.
+3. **Create the web service.** Connect the GitHub repository, select Python, and choose an appropriate Python 3.11 runtime. Use build command `./build.sh` and start command `gunicorn petwell.wsgi`. The build script installs dependencies, gathers static files and applies Django migrations; do not run the same production migrations manually without reviewing the release procedure.
+4. **Configure the host.** Set `DEBUG=False`, a strong private `SECRET_KEY`, `SITE_URL=https://YOUR-SERVICE.onrender.com` and `ALLOWED_HOSTS=YOUR-SERVICE.onrender.com`. Adjust these values if using a custom domain.
+5. **Configure media.** Add your Cloudinary `CLOUDINARY_URL` credential and verify that images upload and render over HTTPS. Existing production image references are not portable to an unrelated Cloudinary account automatically.
+6. **Configure Stripe test payments.** Set `STRIPE_SECRET_KEY` to a Stripe **test** key, `STRIPE_LIVE_MODE=False`, and `STRIPE_WEBHOOK_SECRET` to the destination's signing secret. Configure the Stripe webhook URL `https://YOUR-SERVICE.onrender.com/checkout/webhook/` for `checkout.session.completed` and `checkout.session.async_payment_succeeded`. Never mix test and live keys or use a real card for a test.
+7. **Configure email.** Set `EMAIL_BACKEND` and the appropriate `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `EMAIL_USE_TLS`/`EMAIL_USE_SSL` and `DEFAULT_FROM_EMAIL` for the chosen provider. Test an actual password-reset email before saying transactional delivery works. If SMTP is unavailable, the console backend only logs messages and cannot deliver them.
+8. **Deploy and inspect logs.** Ensure the build succeeds, migrations complete, there are no pending migrations, and the expected hostname serves the homepage, shop, `robots.txt` and `sitemap.xml`.
+9. **Create authorised admin access** if none exists, using `python manage.py createsuperuser` in a secure service shell. Never commit or publish account passwords.
 10. **Complete acceptance checks:** images, navigation, basket, Stripe sandbox checkout and webhook delivery, order history, user permissions, blog and pet CRUD, mobile layouts and email. Record actual results rather than treating a completed deploy as a full functional test.
 
 The application supports the deployed Render URL shown at the top of this README. For a populated instance or recovery, refer to the [release runbook](docs/RELEASE_RUNBOOK.md) and [Render configuration guide](docs/RENDER_CHECKLIST.md); do not overwrite a live database with local sample fixtures.
@@ -274,26 +274,26 @@ The application supports the deployed Render URL shown at the top of this README
 
 | Variable | Required for | Notes |
 | --- | --- | --- |
-| \`SECRET_KEY\` | Production | Keep secret, persistent and unique |
-| \`DEBUG\` | Production | \`False\` |
-| \`DATABASE_URL\` | PostgreSQL | Render connection URL; never commit |
-| \`SITE_URL\` | Correct URLs and Stripe | Full HTTPS origin, no trailing slash |
-| \`ALLOWED_HOSTS\` | Host validation | Comma-separated domain names |
-| \`CLOUDINARY_URL\` | Image media | Private Cloudinary connection URL |
-| \`STRIPE_SECRET_KEY\` | Checkout | Stripe test key for sandbox |
-| \`STRIPE_WEBHOOK_SECRET\` | Order confirmation | Secret for the exact webhook destination |
-| \`STRIPE_LIVE_MODE\` | Payment environment | \`False\` for sandbox |
-| \`EMAIL_BACKEND\` | Email | SMTP backend for actual delivery |
-| \`EMAIL_HOST\` / \`EMAIL_PORT\` | Email | Provider hostname and port |
-| \`EMAIL_HOST_USER\` / \`EMAIL_HOST_PASSWORD\` | Email | Authentication; keep private |
-| \`EMAIL_USE_TLS\` / \`EMAIL_USE_SSL\` | Email | Choose the provider's supported encryption |
-| \`DEFAULT_FROM_EMAIL\` | Email | Verified sender address |
+| `SECRET_KEY` | Production | Keep secret, persistent and unique |
+| `DEBUG` | Production | `False` |
+| `DATABASE_URL` | PostgreSQL | Render connection URL; never commit |
+| `SITE_URL` | Correct URLs and Stripe | Full HTTPS origin, no trailing slash |
+| `ALLOWED_HOSTS` | Host validation | Comma-separated domain names |
+| `CLOUDINARY_URL` | Image media | Private Cloudinary connection URL |
+| `STRIPE_SECRET_KEY` | Checkout | Stripe test key for sandbox |
+| `STRIPE_WEBHOOK_SECRET` | Order confirmation | Secret for the exact webhook destination |
+| `STRIPE_LIVE_MODE` | Payment environment | `False` for sandbox |
+| `EMAIL_BACKEND` | Email | SMTP backend for actual delivery |
+| `EMAIL_HOST` / `EMAIL_PORT` | Email | Provider hostname and port |
+| `EMAIL_HOST_USER` / `EMAIL_HOST_PASSWORD` | Email | Authentication; keep private |
+| `EMAIL_USE_TLS` / `EMAIL_USE_SSL` | Email | Choose the provider's supported encryption |
+| `DEFAULT_FROM_EMAIL` | Email | Verified sender address |
 
 ## Testing and quality assurance
 
 The project uses automated regression tests, GitHub CI, manual browser reviews and targeted external-service checks. Different types of evidence are kept separate.
 
-**Verified automated baseline:** the main code revision passed **215 SQLite tests (one PostgreSQL-only skip)** and **216/216 PostgreSQL 18.6 tests** in the final local audit. GitHub Actions for commit \`dde85fe\` passed its SQLite and PostgreSQL 16/18 jobs: [view workflow run](https://github.com/bobes81/Petwell/actions/runs/41089034654). Application-level Stripe tests include signed payloads, idempotent sessions, error handling and order transitions; they mock external provider operations where appropriate.
+**Verified automated baseline:** the main code revision passed **215 SQLite tests (one PostgreSQL-only skip)** and **216/216 PostgreSQL 18.6 tests** in the final local audit. GitHub Actions for commit `dde85fe` passed its SQLite and PostgreSQL 16/18 jobs: [view workflow run](https://github.com/bobes81/Petwell/actions/runs/41089034654). Application-level Stripe tests include signed payloads, idempotent sessions, error handling and order transitions; they mock external provider operations where appropriate.
 
 **Actual hosted payment evidence:** one owner-performed **GBP 11.49 Stripe sandbox checkout** completed and the corresponding production database order was marked paid. This does not constitute a live-card charge or exhaustive provider-side failure/replay testing.
 
@@ -321,9 +321,9 @@ Local tests use isolated test settings, not a production database, and must neve
 | Try another user's blog edit URL | Access is rejected, including direct GET/POST requests | **PASS** in automated permissions and local browser checks |
 | Add, update, delete a pet profile | Owner sees own data; other users cannot retrieve it | **PASS** in local browser/automated tests |
 | View order history and Buy again | Only own orders visible; repeated basket uses current prices | **PASS** in local tests and synthetic browser fixtures |
-| Visit \`/robots.txt\` and \`/sitemap.xml\` | URLs reference the configured site, and public pages are listed | **PASS** in route tests; external deployed crawl not independently verified |
+| Visit `/robots.txt` and `/sitemap.xml` | URLs reference the configured site, and public pages are listed | **PASS** in route tests; external deployed crawl not independently verified |
 | Request a password reset on the hosted service | Reset email arrives and link allows a secure password change | **NOT PASSING / NOT VERIFIED**: current SMTP authentication fails |
-| View wireframes and marketing mockup | Images render in repository documentation | Assets stored in \`docs/design/\` and \`docs/marketing/\`; not live campaign evidence |
+| View wireframes and marketing mockup | Images render in repository documentation | Assets stored in `docs/design/` and `docs/marketing/`; not live campaign evidence |
 
 **Validation:** HTML/CSS validator results, desktop/mobile screenshots and accessibility notes are recorded with date and precise test scope in [the full testing log](docs/TESTING.md) and [evidence checklist](docs/EVIDENCE.md). Local validation does not imply a separate deployed Lighthouse or cross-browser pass.
 
