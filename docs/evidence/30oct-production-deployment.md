@@ -1,6 +1,6 @@
 # Production deployment and evidence boundary — 30 October 2026
 
-## Production facts verified by the owner
+## Initial production deployment facts verified by the owner
 
 - Existing Render service: `srv-d67jptusb7us73e9qbj0`.
 - Deployed commit: **`f75dbe1c6fb9c16f3895a5b01451e2de4d9b9160`**.
@@ -9,6 +9,14 @@
 - These deployment facts were explicitly verified and supplied by the owner. The repository reviewer did not deploy, inspect the private dashboard or query production. No dashboard screenshot, exact deployment time, production data counts, backup boundary or cutover mechanism is invented here. This update does not assert that PR #8 was merged; deployment and merge are separate.
 
 Later documentation commits on `fix/pp5-resubmission` are not automatically deployed. The production SHA above remains the release identity until a separately verified update. The earlier `6f0ac78` production baseline and pre-deployment NO-GO plans are historical references, not the current deployment state.
+
+## Later owner-verified acceptance and current image issue
+
+The owner subsequently verified on **30 October** that the public shop and cart function and **one real Stripe SANDBOX hosted checkout for GBP 11.49 succeeded**: the related production order is stored as paid, and its Checkout Session is complete and paid. This is a genuine owner-verified sandbox result, not a live-card charge or a mocked fixture. No order/Session identifier or customer details are published. The reviewer did not initiate another checkout or access the payment account. Exact destination-response evidence, duplicate-event handling, failure/retry and one-time cart reconciliation remain separate checks unless genuinely recorded.
+
+The owner also confirms **Render auto-deploy is disabled**. The earlier maintenance-enabled statement records the initial deployment snapshot; it is not a new inspection of the current setting. Later public shop/cart success is owner verified. No maintenance/environment/deployment setting was changed by this review.
+
+**Confirmed owner-reported defect:** all ten products have Cloudinary image references, but the live shop displays static fallback images. The actual original public `src` and Cloudinary HTTP response have not been verified, so missing/inaccessible assets are **not** established. [Image diagnosis and narrow code fix](../PRODUCT_IMAGE_DIAGNOSIS.md) distinguishes server-selected fallback, correctly generated URL and browser fallback after a delivery failure. The persisted reference shape already builds correctly from a configured database resource; a separately confirmed raw-string input bug is fixed on the PR branch, not claimed as the production root cause or as deployed.
 
 ## Automated application evidence
 
@@ -26,11 +34,11 @@ Disposable databases/container/network and private temporary files were removed;
 
 | Area | Genuine evidence still needed |
 | --- | --- |
-| Stripe sandbox | Site-created test Checkout and exact signed destination delivery, webhook-only paid status, one-time cart clearing, duplicate event and decline/cancel/retry behavior. No real/live payment is authorised by this record. |
+| Stripe sandbox | One GBP 11.49 hosted sandbox Checkout/complete paid Session/paid production order is owner verified above. Exact destination HTTP 200/correlation, replay, one-time cart clearing and decline/cancel/retry observations are not inferred from it. No additional payment is authorised here. |
 | SMTP/password reset | Actual receipt in a controlled mailbox and successful secure reset link; environment compatibility, local in-memory email and console logs are not delivery. |
-| Cloudinary/catalogue | Actual authorised upload/replace/clear and HTTPS rendering, nine correct product associations and honest AI disclosure/accuracy/rights. The repository draft is not proof of production mapping. |
+| Cloudinary/catalogue | Owner confirms ten existing references and a live fallback-image defect. Original URL/CDN response, accurate image content/rights, actual upload/replace/clear and correct rendering still require verification. The blank nine-concept draft is not a map of current production assets. |
 | Legacy PDF/fulfilment | Actual intended row and obligations reviewed; verified fulfilment or approved withdrawal preserving history. No production withdrawal is claimed. |
-| Live browser/security/SEO | Selected-revision desktop/mobile navigation, forms, auth, private pet/blog CRUD and order privacy, cart, image fallbacks, HTTPS/security configuration, robots/sitemap and persistence. Existing screenshots are local; maintenance remaining enabled is not public acceptance. |
+| Live browser/security/SEO | Selected-revision desktop/mobile navigation, forms, auth, private pet/blog CRUD and order privacy, cart, image fallbacks, HTTPS/security configuration, robots/sitemap and persistence. Owner-verified public shop/cart success is recorded above; other screenshots/checks remain local and broader deployed acceptance is unverified. |
 | Assessment/submission | Final check against the owner's issued full guide, correct repository/site links and genuine redacted evidence. No Pass is guaranteed. |
 
-**Current decision:** production deployment/build/migration stages completed; **NO-GO for claiming completed external acceptance or opening the storefront/submitting as fully verified** until the relevant outstanding checks and owner decisions are recorded. This documentation change does not disable Maintenance Mode, enable payments, modify production or authorise any new deployment/provider action. See [remaining owner checklist](../OWNER_RELEASE_CHECKLIST.md), [configuration/acceptance matrix](../RENDER_CHECKLIST.md) and [testing record](../TESTING.md).
+**Current decision:** deployment/build/migrations and one owner-verified sandbox success are complete. The live product-image defect and unverified remaining acceptance prevent a claim of complete submission readiness. No missing-asset diagnosis or new public maintenance state is invented. This documentation change does not disable Maintenance Mode, enable payments, modify production or authorise any new deployment/provider action. See [remaining owner checklist](../OWNER_RELEASE_CHECKLIST.md), [configuration/acceptance matrix](../RENDER_CHECKLIST.md) and [testing record](../TESTING.md).

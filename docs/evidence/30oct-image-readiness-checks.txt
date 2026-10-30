@@ -1,0 +1,4 @@
+System check identified no issues (0 silenced).
+No changes detected
+System check identified no issues (0 silenced).
+Production-style check used a new process-only secret and no database/provider credentials; no external acceptance performed.
