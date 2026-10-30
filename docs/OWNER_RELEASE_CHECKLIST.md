@@ -12,3 +12,5 @@ Deployment success is not external acceptance. **The live product-image defect a
 [iPad/MacBook capabilities](IPAD_MACBOOK_CHECKLIST.md), [test record](TESTING.md), [Pass matrix](PASS_COMPLIANCE_MATRIX.md), [evidence checklist](EVIDENCE.md).
 
 **Image priority:** owner confirms ten existing Cloudinary paths but live fallback images. Follow [the read-only original-src/configuration/CDN diagnosis](PRODUCT_IMAGE_DIAGNOSIS.md). The PR raw-string helper fix and diagnostic command require a separately approved manual deploy and are not a proven fix for the production root cause; no asset is presumed missing or replaced.
+
+**New confirmed image evidence:** the owner-opened original Calming Cloudinary URL displays construction artwork; exact HTTP status was not captured. Use [the owner-approved upload/guarded mapping plan](CATALOGUE_PLACEHOLDER_REPLACEMENT.md), not another app deployment or clearing non-empty image fields. Correct source concepts are prepared; actual uploads/IDs/versions and per-row replacement approval remain owner actions. Other products must be reviewed individually.

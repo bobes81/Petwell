@@ -6,6 +6,10 @@ The [blank template](catalogue-images.example.json) remains available for anothe
 
 The private feedback summary identifies placeholder product images; it does not specify that the media must be photographs. Accurate, authorised AI illustrations are a candidate, subject to the actual guide/assessor's acceptance. Do not present them as supplier photographs, proof of actual packaging or a guaranteed Pass. Local visual title/concept/disclosure review is complete; actual product accuracy, source terms and rights approval remain pending.
 
+## Existing non-empty references: new confirmed placeholder evidence
+
+For Calming Lavender Spray, the owner opened its original Cloudinary URL and saw construction/coming-soon artwork; exact HTTP status was not captured. The [owner-approved image-only replacement plan](CATALOGUE_PLACEHOLDER_REPLACEMENT.md) preserves old assets and all product/order fields while allowing a separately approved guarded reference change. Do not use this empty-only command as a force replacement or clear fields to bypass it. No production upload/mapping has been executed by this review.
+
 ## What the command safely prepares
 
 `associate_product_images` validates a private, explicit nine-item manifest and defaults to **read-only dry-run**. It never creates products, uploads/downloads assets, calls Cloudinary APIs or seeds data. Only a later explicit `--apply` can fill empty `Product.image` fields; no production invocation was performed here.

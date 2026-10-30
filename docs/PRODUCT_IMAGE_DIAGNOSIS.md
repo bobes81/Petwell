@@ -1,6 +1,10 @@
 # Product image diagnosis — 30 October 2026
 
-The owner verified that all ten production products have Cloudinary references, but the live shop displays fallback images. The reported shape `image/upload/v1771237247/<public-id>.png` is a valid CloudinaryField persisted reference. **Do not assume the assets are missing or rewrite the records.** The production public image URL and actual CDN response remain unverified; this environment's public shop request was proxy-blocked before reaching Render.
+The owner verified that all ten production products have Cloudinary references, but the live shop displays fallback images. The reported shape `image/upload/v1771237247/<public-id>.png` is a valid CloudinaryField persisted reference. **Do not assume the assets are missing or rewrite the records.** The original Calming URL and displayed construction artwork are now owner verified; the exact origin HTTP status and other products' image content remain unverified; this environment's public shop request was proxy-blocked before reaching Render.
+
+## New owner evidence: the observed asset contains placeholder artwork
+
+The owner opened the original Calming Lavender Spray Cloudinary URL in Chrome and saw PetWell construction/coming-soon artwork, not the correct illustration. Its exact HTTP status was not independently captured. This establishes the observed wrong image content/mapping, not a missing asset or a URL-normalisation failure for that record. Other products still require individual review. Follow [the smallest owner-approved replacement plan](CATALOGUE_PLACEHOLDER_REPLACEMENT.md): new/reused verified correct assets plus guarded image-only reference changes. The deployed app already supports these references/disclosures, so that data-only correction does not require another application deploy.
 
 ## Confirmed repository finding and narrow fix
 
@@ -54,4 +58,4 @@ Default output contains no raw references or credential values. The opt-in exclu
 
 The owner must verify the existing account's actual asset metadata and product accuracy/rights first. If data/configuration is wrong, prepare and separately approve the exact correction with its original value preserved. If an asset is genuinely absent, separately approve an authorised original upload and explicit mapping; do not fabricate replacement imagery. [The existing image workflow](CATALOGUE_IMAGES.md) preserves **non-empty** references and cannot replace all ten already-filled fields. Do not clear fields to bypass that guard. No production record, Cloudinary asset or environment value was changed here.
 
-A new manual Render deployment is required to use the helper hardening/diagnostic command. **Redeployment alone is not a proven cure for the current live fallback:** the given normal database reference already renders correctly offline, and the actual public URL/configuration/asset response still needs the above check. Auto-deploy is disabled according to the owner; do not merge or deploy as part of this investigation.
+A new manual Render deployment is required to use the helper hardening/diagnostic command. **Redeployment alone is not a proven cure for the current live fallback:** the given normal database reference already renders correctly offline, and the observed Calming URL now points to construction artwork, so its content/mapping correction follows the newer replacement plan. Exact HTTP status and the other products still need review. Auto-deploy is disabled according to the owner; do not merge or deploy as part of this investigation.

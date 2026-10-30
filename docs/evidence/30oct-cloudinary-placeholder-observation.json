@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-30",
+  "product_name": "Calming Lavender Spray",
+  "original_html_url": "https://res.cloudinary.com/dr3kwknli/image/upload/v1771237419/zsag3ghgmsfhmjnzn9a9.png",
+  "observed_by": "Owner, Chrome browser",
+  "owner_observed_content": "PetWell-branded Our website is under construction - Images will be available soon graphic, not the expected product illustration.",
+  "origin_http_status": null,
+  "reviewer_attempt": "Proxy tunnel HTTP 403 before the origin; not a Cloudinary asset HTTP status.",
+  "scope": "Confirms the observed URL displays wrong artwork for this product. No automatic inference about other eight physical products; no missing-asset, new upload, production mapping or independent live-browser claim."
+}

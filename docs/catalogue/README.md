@@ -33,3 +33,7 @@ The owner and archive describe AI-generated concepts created for Petwell on 29 O
 Use the source-only check in [CATALOGUE_IMAGES.md](../CATALOGUE_IMAGES.md) against `docs/catalogue/concepts`. It does not approve rights, verify Cloudinary or make a ready-to-apply mapping. Normal dry-run/application must continue to reject the incomplete draft. After owner review and separate upload approval, record actual returned Cloudinary metadata and verified product IDs privately, then follow the reviewed dry-run/empty-only workflow.
 
 These documentation assets are not in `static/`, are not a deployment screenshot, and do not replace existing product images automatically. No PDF image, delivery file, licence or product claim has been invented.
+
+## Existing construction artwork in Cloudinary
+
+On 30 October the owner verified that Calming Lavender Spray's original public Cloudinary URL displays construction/coming-soon artwork, not this product concept. This is a content/mapping finding for that observed item; exact HTTP status and the other products remain unverified. Use [the owner-approved new-asset/guarded reference replacement plan](../CATALOGUE_PLACEHOLDER_REPLACEMENT.md) for already-filled image fields. Originals stay unchanged, old assets stay intact, and no real product/upload IDs or versions have been invented in this draft.

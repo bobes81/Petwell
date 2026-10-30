@@ -13,3 +13,6 @@ media/
 
 # Keep reviewed image mappings/source records private.
 catalogue-images.private.json
+
+# Owner-reviewed original image references stay private.
+catalogue-image-guard.private.json

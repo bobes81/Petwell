@@ -1,0 +1,31 @@
+Creating test database for alias 'default'...
+............................................................Stripe checkout failed for order 982c0d99-fab5-4770-a38b-484e8c5369e4
+..Stripe checkout failed for order e3640017-b358-4575-9a8d-f77725b6f5e6
+.Stripe checkout failed for order 10c78b27-494b-49fe-bcd1-c80a91c7d9dd
+.Stripe checkout failed for order 66666648-9860-4c5f-9b25-f979790f0a08
+...........Stripe checkout failed for order 997cdacc-fd64-45d3-ba1e-4ec5b7749b8c
+........Stripe checkout failed for order d5c3ba06-7a6c-4b8a-aa77-d9644e08be2a
+...Payment details mismatch for order fafec89e-d506-4757-81d1-15c2b874924a
+Payment details mismatch for order fafec89e-d506-4757-81d1-15c2b874924a
+Payment details mismatch for order fafec89e-d506-4757-81d1-15c2b874924a
+....Stripe checkout failed for order 68ca6139-1830-4429-ac4a-36f1382467ac
+......Stripe checkout failed for order bafe356f-471a-4a8e-acfa-78055c4c9c7e
+..Stripe checkout failed for order 2906c06f-427a-4f46-8857-d312cf7ab6d3
+...Stripe checkout failed for order 25fade8c-7ad8-417f-92df-388ebae7bf73
+...Stripe checkout failed for order bc869e69-4c07-4442-bf82-5521fac9446a
+..Stripe checkout failed for order fc56cea3-9872-4fe4-b3a5-9b9f3044c7c8
+Stripe checkout failed for order fc56cea3-9872-4fe4-b3a5-9b9f3044c7c8
+....Payment details mismatch for order 914f0785-63b5-4df2-a6f8-7d6294818ddf
+Payment details mismatch for order 914f0785-63b5-4df2-a6f8-7d6294818ddf
+Payment details mismatch for order 914f0785-63b5-4df2-a6f8-7d6294818ddf
+Payment details mismatch for order 914f0785-63b5-4df2-a6f8-7d6294818ddf
+Payment details mismatch for order 914f0785-63b5-4df2-a6f8-7d6294818ddf
+Payment details mismatch for order 914f0785-63b5-4df2-a6f8-7d6294818ddf
+.....................................................................................s....................
+----------------------------------------------------------------------
+Ran 216 tests in 20.089s
+
+OK (skipped=1)
+Destroying test database for alias 'default'...
+Found 216 test(s).
+System check identified no issues (0 silenced).
