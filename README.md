@@ -4,13 +4,13 @@ PetWell is a Django e-commerce portfolio project for Code Institute Portfolio Pr
 
 For the remaining acceptance/submission actions, use the [current owner checklist](docs/OWNER_RELEASE_CHECKLIST.md) and [deployment evidence record](docs/evidence/30oct-production-deployment.md).
 
-Deployment: **https://petwell-u0cr.onrender.com**. On **30 October 2026**, the owner verified deployment of **`f75dbe1c6fb9c16f3895a5b01451e2de4d9b9160`**, a successful build and all six project migrations. The owner subsequently verified the public shop/cart and one successful **GBP 11.49 Stripe sandbox Checkout**, with its Session complete/paid and related production order paid. Auto-deploy is disabled. The earlier maintenance-enabled report was the deployment snapshot; no current setting was independently inspected. These checks do not establish all provider/browser acceptance, and later PR changes are not claimed as deployed. PR #8 has not been merged by this documentation work.
+Deployment: **https://petwell-u0cr.onrender.com**. On **30 October 2026**, PR #8 was merged into `main` at commit **`dde85fe0c9b9be2c7e562a077e310ce8bf6024aa`**. The connected Render service confirmed deployment **LIVE** at that commit, with Maintenance Mode disabled and auto-deploy disabled. The owner previously verified a GBP 11.49 Stripe **sandbox** hosted checkout (complete/paid Session and paid PostgreSQL order); this is not proof of live-card payments, webhook retries, declines or all browser paths. The production product image mappings were subsequently updated and 10/10 database image references checked; rendering was owner-reviewed in the storefront. Earlier image fallback and maintenance observations in evidence documents are historical, not the current confirmed state.
 
-**Completed:** deployed-commit CI (SQLite **189 passed + one PostgreSQL-only skip**, PostgreSQL **190 passed**); an independently executed real-backup PostgreSQL 18.6 rehearsal of all six migrations, preserving original records and leaving no pending migrations; owner-verified production build/migration success. [Sources and exact verification boundaries](docs/evidence/30oct-production-deployment.md). The earlier 29 October owner Mac rehearsal remains genuine historical evidence; neither it nor the later successful rehearsal needs repeating by default.
+**Automated evidence:** the earlier completed CI checks, SQLite/PostgreSQL suites, actual-backup PostgreSQL migration rehearsal, and local desktop/mobile/HTML validation remain recorded in [docs/TESTING.md](docs/TESTING.md) and [the deployment evidence](docs/evidence/30oct-production-deployment.md); do not represent them as newly executed on the merged commit. The real-backup migration rehearsal preserved historical records and showed no outstanding migrations.
 
-**Remaining:** owner-confirmed live product images show fallback despite ten stored references; the original Calming Lavender Spray URL now owner-verifiably displays construction artwork. Exact HTTP status and other products' asset content remain unverified. Detailed webhook/replay/cart/failure acceptance, SMTP, Cloudinary upload/rendering and broader live browser/security/SEO checks, offer/rights decisions and final evidence remain outstanding. **Do not claim complete end-to-end readiness from the completed deployment and single sandbox success.** This update grants no new production/provider/maintenance/payment action. [Configuration checks](docs/RENDER_CHECKLIST.md); [recovery runbook](docs/RELEASE_RUNBOOK.md).
+**Known current limitation:** transactional Gmail SMTP was configured on Render but test sending failed at authentication because the available App Password belonged to a different Google account. Password-reset and welcome-message delivery are **not verified** and must be repaired with an App Password for `petwell.shop.uk@gmail.com` before claiming these workflows work. No new purchase or mail delivery is implied. Detailed provider-side webhook/replay/decline acceptance and complete live browser acceptance remain separately unverified. [Owner checklist](docs/OWNER_RELEASE_CHECKLIST.md).
 
-Resubmission deadline: **31 October 2026, 12:00 noon Irish and UK time (GMT)**. The focus is a working, testable submission. A private feedback summary supplied by the owner guides this review. The private correspondence is not published; the official assessment guide was not available in the checkout. The evidence map is not an assessor decision.
+Resubmission deadline: **31 October 2026, 12:00 noon Irish and UK time (GMT)**. Submit the current deployed URL and **https://github.com/bobes81/Petwell** (branch `main`), not the stale Code-Institute-Submissions/Petwell-1 repository unless separately required and updated by the school. This documentation records developer/owner testing rather than assessor approval.
 
 ## Features and user stories
 
@@ -46,7 +46,7 @@ Python 3.11; Django 5.2.17; Stripe Python SDK 12.5.1; PostgreSQL on Render (SQLi
 Use the existing checkout in an isolated cloud task; no extra Git worktree is necessary.
 
 ```bash
-git clone --branch fix/pp5-resubmission https://github.com/bobes81/Petwell.git
+git clone --branch main https://github.com/bobes81/Petwell.git
 cd Petwell
 python3.11 -m venv venv
 source venv/bin/activate
