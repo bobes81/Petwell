@@ -1,0 +1,163 @@
+{
+  "status": "NEW_REALISTIC_PACKSHOT_MOCKUPS_FOR_REVIEW_ONLY",
+  "created": "2026-10-30",
+  "generation_tool": "image_gen.imagegen",
+  "no_cloudinary_upload_or_production_assignment": true,
+  "not_actual_supplier_product_photographs": true,
+  "owner_acceptance_pending": true,
+  "products": [
+    {
+      "product_name": "Calming Lavender Spray",
+      "file": "calming-lavender-spray-packshot.png",
+      "sha256": "2a9a58a9d0cea782a3916e97ec7a5aa041c5028d448484c05eb605eb27fde176",
+      "bytes": 931135,
+      "dimensions": [
+        1000,
+        1000
+      ],
+      "source_generated_dimensions": [
+        1254,
+        1254
+      ],
+      "source_generated_sha256": "9f8832d2b5b4eeb13d7621d38b3f16302df50db87440881a97a8ddfc7381ed72",
+      "normalisation": "Proportional full-frame Lanczos resize; no cropping",
+      "owner_review": "PENDING"
+    },
+    {
+      "product_name": "Dental Chew Sticks",
+      "file": "dental-chew-sticks-packshot.png",
+      "sha256": "1ee743cf9c302a2e02450870878b052a4b7516ddf24c7d14553953645e806d81",
+      "bytes": 1310150,
+      "dimensions": [
+        1000,
+        1000
+      ],
+      "source_generated_dimensions": [
+        1254,
+        1254
+      ],
+      "source_generated_sha256": "e5ea5000c05bdfff193dc56a9970fa981ccbb2c5291f450e5478bece8f3ebe5f",
+      "normalisation": "Proportional full-frame Lanczos resize; no cropping",
+      "owner_review": "PENDING"
+    },
+    {
+      "product_name": "Joint Support Treats",
+      "file": "joint-support-treats-packshot.png",
+      "sha256": "4b56910d6bb517b3e3acbfb26f2db5d4860e4ddd840331bc4977153685d834ca",
+      "bytes": 998278,
+      "dimensions": [
+        1000,
+        1000
+      ],
+      "source_generated_dimensions": [
+        1254,
+        1254
+      ],
+      "source_generated_sha256": "7001cefdd6731f0cabd698ce80fed51539ee5d1d115a769f20c323e2f4f7bf05",
+      "normalisation": "Proportional full-frame Lanczos resize; no cropping",
+      "owner_review": "PENDING"
+    },
+    {
+      "product_name": "Hypoallergenic Shampoo",
+      "file": "hypoallergenic-shampoo-packshot.png",
+      "sha256": "78b58c25ecc8c244a7e1039cf6dcf6c1ed0941768b6a0c7e8b38bf98a77ac8eb",
+      "bytes": 919435,
+      "dimensions": [
+        1000,
+        1000
+      ],
+      "source_generated_dimensions": [
+        1254,
+        1254
+      ],
+      "source_generated_sha256": "30b09dda476f0c215af9631c10ecda4356a8b0fb9f85d45cff10c71cb085eb0f",
+      "normalisation": "Proportional full-frame Lanczos resize; no cropping",
+      "owner_review": "PENDING"
+    },
+    {
+      "product_name": "Organic Paw Balm",
+      "file": "organic-paw-balm-packshot.png",
+      "sha256": "43458e23e8fe1af9af3e06b78a1c3e48e9ed160551eb196215443dd0425d7393",
+      "bytes": 1008435,
+      "dimensions": [
+        1000,
+        1000
+      ],
+      "source_generated_dimensions": [
+        1254,
+        1254
+      ],
+      "source_generated_sha256": "73c5b3a1696601dd8077da9f9c82f40c93919b1da49171f3033d34da4a17ee98",
+      "normalisation": "Proportional full-frame Lanczos resize; no cropping",
+      "owner_review": "PENDING"
+    },
+    {
+      "product_name": "Digestive Support Powder",
+      "file": "digestive-support-powder-packshot.png",
+      "sha256": "1e582aa945121d285da04b51a3f4b3a7385ebea64d5fd1d0ab43128baa57fd05",
+      "bytes": 1335144,
+      "dimensions": [
+        1000,
+        1000
+      ],
+      "source_generated_dimensions": [
+        1254,
+        1254
+      ],
+      "source_generated_sha256": "b8c1a7202e59bbabe6766ca82db22b2cf8291a5e37bec3ef5dba76e2e0d17261",
+      "normalisation": "Proportional full-frame Lanczos resize; no cropping",
+      "owner_review": "PENDING"
+    },
+    {
+      "product_name": "Eco Toy Rope",
+      "file": "eco-toy-rope-packshot.png",
+      "sha256": "782143f7ca3e06eeba8f465f671743e9c051c97a90afccbccf2be647f7801608",
+      "bytes": 1300619,
+      "dimensions": [
+        1000,
+        1000
+      ],
+      "source_generated_dimensions": [
+        1254,
+        1254
+      ],
+      "source_generated_sha256": "7a02f05c262bf9a587f650e10fae9e70960ac60827b6f68102176efdfafaf3d7",
+      "normalisation": "Proportional full-frame Lanczos resize; no cropping",
+      "owner_review": "PENDING"
+    },
+    {
+      "product_name": "Herbal Ear Cleaner",
+      "file": "herbal-ear-cleaner-packshot.png",
+      "sha256": "873d02fd4246cc1265f2bb9a487de745a470471d5039fece9d88b69efc2a8a94",
+      "bytes": 933028,
+      "dimensions": [
+        1000,
+        1000
+      ],
+      "source_generated_dimensions": [
+        1254,
+        1254
+      ],
+      "source_generated_sha256": "b3d8395bbe8e02335cf7e7961948b218685fd40911faf376f16b41794b12596f",
+      "normalisation": "Proportional full-frame Lanczos resize; no cropping",
+      "owner_review": "PENDING"
+    },
+    {
+      "product_name": "Herbal Chill Drops",
+      "file": "herbal-chill-drops-packshot.png",
+      "sha256": "eed54e271e8a56ba8c80768c2f48a13c2a2299c63831a9939d0064f75e927379",
+      "bytes": 976902,
+      "dimensions": [
+        1000,
+        1000
+      ],
+      "source_generated_dimensions": [
+        1254,
+        1254
+      ],
+      "source_generated_sha256": "585a9cd8097c6843d0fa863d696b89b7d5b39ef6e250765adf0873b15ad63fbc",
+      "normalisation": "Proportional full-frame Lanczos resize; no cropping",
+      "owner_review": "PENDING"
+    }
+  ]
+}
