@@ -86,6 +86,14 @@ The visual direction combines a friendly pet-wellness theme with familiar commer
 
 **Design priorities:** usable on mobile and desktop; consistent menus and buttons; visible feedback for invalid form data; helpful empty states; confirmation before destructive blog/profile actions; and graceful image fallbacks.
 
+### Visual identity and design decisions
+
+PetWell uses a **soft blue, white and neutral-grey** visual language intended to feel clean, friendly and dependable rather than clinical. The actual site styles use a pale background (`#f9fbfd`), dark body text (`#333333`), blue calls to action (`#0d6efd`) and light-blue/cyan accents (`#00b4d8`). White card surfaces and subtle shadows separate product and information blocks from the page background.
+
+The project styles specify **Inter** with system sans-serif fallbacks for body text. Bootstrap provides the consistent grid, navigation, form controls and responsive breakpoints. Rounded calls to action, generous spacing and visible focus outlines support clear interaction on both desktop and mobile.
+
+The checkout path deliberately keeps card entry on **Stripe's hosted page** instead of presenting a custom card form. Destructive blog/profile actions include confirmation, while unavailable products are excluded from purchasing. These choices connect the visual design to trust, accessibility and safe behaviour.
+
 ### Page layouts and wireframes
 
 These diagrams document the implemented user journeys as a **retrospective design review**. They are genuine design artefacts, not claims of original pre-development sketches or screenshots of the deployed website.
@@ -172,6 +180,19 @@ The following simplified relationship diagram is illustrative; the [complete, im
 | Product → OrderItem | Keeps historical orders linked to purchased products |
 | Order ↔ CheckoutState | Coordinates an active checkout attempt for a browser session |
 | Subscriber | Stores a unique email address independently of accounts |
+
+#### Entity-relationship overview
+
+The diagram below shows the main customer-facing relationships. The complete schema additionally documents the internal checkout coordinator and field-level details.
+
+```mermaid
+erDiagram
+    USER ||--o{ BLOG_POST : writes
+    USER ||--o{ PET_PROFILE : owns
+    USER o|--o{ ORDER : places
+    ORDER ||--o{ ORDER_ITEM : contains
+    PRODUCT ||--o{ ORDER_ITEM : purchased_as
+```
 
 See [full entity-relationship diagram](docs/MODELS.md) for field-level detail, historical migration handling and deletion rules.
 
@@ -325,7 +346,7 @@ Local tests use isolated test settings, not a production database, and must neve
 | Request a password reset on the hosted service | Reset email arrives and link allows a secure password change | **NOT PASSING / NOT VERIFIED**: current SMTP authentication fails |
 | View wireframes and marketing mockup | Images render in repository documentation | Assets stored in `docs/design/` and `docs/marketing/`; not live campaign evidence |
 
-**Validation:** HTML/CSS validator results, desktop/mobile screenshots and accessibility notes are recorded with date and precise test scope in [the full testing log](docs/TESTING.md) and [evidence checklist](docs/EVIDENCE.md). Local validation does not imply a separate deployed Lighthouse or cross-browser pass.
+**Validation and evidence:** actual HTML/CSS validation runs, local desktop/mobile browser captures and scope-limited accessibility results are documented in [the testing log](docs/TESTING.md) and [evidence checklist](docs/EVIDENCE.md). Refer to the [saved local validation summary](docs/evidence/29oct-final-validation-summary.json) for the machine-readable result; this is not a deployed-site Lighthouse or cross-browser certificate. The [GitHub Actions run](https://github.com/bobes81/Petwell/actions/runs/41089034654) provides reproducible CI evidence.
 
 ## Limitations and future development
 
