@@ -1,7 +1,7 @@
 # PetWell 🐾
 ### Pet wellness store & community
 
-[**Visit the shop**](https://petwell-u0cr.onrender.com/) · [Shop products](https://petwell-u0cr.onrender.com/products/) · [Read the blog](https://petwell-u0cr.onrender.com/blog/) · [Technical testing](docs/TESTING.md)
+[**Visit the shop**](https://petwell-u0cr.onrender.com/) · [Shop products](https://petwell-u0cr.onrender.com/products/) · [Read the blog](https://petwell-u0cr.onrender.com/blog/) · [Technical testing](docs/TESTING.md) · [**Public Agile board**](https://github.com/users/bobes81/projects/3)
 
 PetWell is a responsive online shop and community for people who care about their pets' everyday wellbeing. It brings a curated pet-care catalogue, secure card checkout, educational blog posts, personal pet profiles and customer order history into one Django-powered experience.
 
@@ -81,6 +81,8 @@ Members can publish and manage blog posts, maintain private profiles for their p
 ### Pet profiles — a custom feature
 
 **My pets** is a dedicated, owner-only feature rather than a standard shopping model. A registered customer can add a pet, choose a care focus, read a matching routine prompt, update the details or remove the profile. Server-side ownership checks protect direct URLs and form submissions: a different user cannot access the pet's information simply by guessing an address.
+
+**Agile evidence:** The [public PetWell Kanban project board](https://github.com/users/bobes81/projects/3) tracks 14 linked GitHub User Stories (12 completed, 2 open). Issues and [the story-to-criteria mapping](docs/USER_STORIES.md) were assembled retrospectively on 31 October 2026; they do not claim to document the original sprint history.
 
 ## Design and user experience
 
