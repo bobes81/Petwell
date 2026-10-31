@@ -1,22 +1,27 @@
-# Feature stories and verification status
+# PetWell feature stories — implementation and acceptance tracking
 
-Created **28 October 2026** as a retrospective breakdown of the current work; updated **29 October 2026** for the supplied concept files and integrated availability guards. These are project story IDs, not invented GitHub issue numbers, historical sprint records or claims of deployed completion. MUST/SHOULD describe this resubmission's priorities. Actual GitHub labels/states must be reviewed separately. Direct GitHub API access was previously proxy-blocked; native Git can update the branch. No issues or labels were changed by this review.
+This is a **retrospective Agile issue map assembled on 31 October 2026**, connecting the implemented application to its user goals, tests and assessment criteria. These GitHub Issues were created after implementation to provide an accessible, truthful review trail. They are **not original sprint tickets**, historical Kanban progress or proof that work was carried out in issue-number order.
 
-| Story | Priority | User goal and acceptance criteria | Code / checks | Current status |
+[**GitHub Issues — all PetWell user stories**](https://github.com/bobes81/Petwell/issues?q=US-) · [**Source code**](https://github.com/bobes81/Petwell) · [**Testing evidence**](TESTING.md)
+
+| Story | User goal / delivered feature | Priority | GitHub issue | Status and boundary |
 | --- | --- | --- | --- | --- |
-| US-01 Secure checkout | MUST | As a buyer, pay a server-calculated GBP total through hosted Stripe; stay pending until a valid signed event confirms payment. Failed/cancelled attempts keep my cart. | checkout/views.py; checkout/tests.py | Implemented; offline regressions verified. Real sandbox delivery pending. |
-| US-02 Safe retries | MUST | As a buyer, double submission or changing a cart must not start overlapping payable attempts. Completed sessions wait for their webhook. | checkout/coordination.py; checkout/test_coordination.py | Implemented; deterministic stale-worker/lease tests. No production load test claimed. |
-| US-03 Own blog CRUD | MUST | As an author, create/read/update/delete my article; retain/clear an image; other members cannot access my edit/delete forms or POST changes. | blog/views.py; blog/tests.py | Implemented; permission/CRUD regressions and local browser checks recorded in TESTING.md. |
-| US-04 Pet care profiles | MUST | As a member, maintain private pet profiles with species, care focus and notes; see a relevant routine prompt; only I can edit/delete my pets. | accounts/models.py; accounts/test_profiles.py | Implemented in this revision; see final test record. Deployed verification pending. |
-| US-05 Order history | MUST | As a buyer, see only my orders and buy a paid order again at current prices without changing the original total. | orders/views.py; orders/tests.py | Implemented; synthetic fixture tests, not proof of real payment. |
-| US-06 Account recovery | MUST | As a member, keep my internal destination when signing up/logging in; invalid/expired reset links offer recovery and used tokens cannot reset again. | accounts/tests.py | Implemented; local email/token tests. Real delivery pending. |
-| US-07 Valid newsletter | MUST | As a visitor, subscribe with a valid bounded email once; invalid/overlong input must not cause a server error. | blog/forms.py; blog/tests.py | Implemented; no campaign delivery claim. |
-| US-08 Public SEO | MUST | As a search crawler, receive correct Render public sitemap/canonical URLs, page metadata and valid public links; private pages are not indexed. | petwell/context_processors.py; petwell/tests.py | Implemented and tested locally; actual deployed host verification pending. |
-| US-09 Accurate product images | MUST | As a shopper, see an accurate, authorised image for the product; missing assets show a usable fallback. | products/catalogue.py; products/test_catalogue_assets.py; docs/catalogue/README.md; docs/ASSETS.md | Nine original AI concept sources received and file/hash/visually inspected; fallback verified. Rights/final owner accuracy approval, real upload and database association remain pending. |
-| US-10 Responsive design evidence | MUST | As a visitor, use key pages on mobile and desktop; review current layouts and honest design documentation. | docs/design; docs/TESTING.md | New retrospective design artifacts and local checks; original historical planning not invented. |
-| US-11 Facebook proposal | MUST | As a reviewer, distinguish a real business-page design from title artwork and know whether it is published. | docs/marketing/facebook-mockup.html | Clearly labelled new concept and genuine local render; no live page/metrics claimed. |
-| US-12 Repeatable deployment | MUST | As a developer, install dependencies, run migrations/tests and configure Render without guessing secrets or environment names. | README.md; .env.example; build.sh; CI | Instructions and local build checks; actual Render release remains owner-approved. |
-| US-13 Published marketing | SHOULD | As an owner, review page copy, publish genuine authorised material and record actual evidence. | docs/EVIDENCE.md | Pending owner decision/access; mockup is not published marketing. |
-| US-14 Catalogue availability | MUST | As a shopper, I cannot buy withdrawn, missing or nonpositive-priced products through direct URLs, stale carts, checkout or Buy Again; historical purchases remain visible. | cart/, checkout/, orders/ and products/ regression tests; products.0002 | Implemented from PR #9 with endpoint/migration regressions and truthful skipped-item feedback. The real PDF is not automatically withdrawn; approved exact-row action and deployed acceptance remain pending. |
+| US-01 | Secure hosted Stripe checkout | Must | [#10](https://github.com/bobes81/Petwell/issues/10) | Implemented; owner sandbox checkout verified |
+| US-02 | Idempotent payment retries | Must | [#11](https://github.com/bobes81/Petwell/issues/11) | Implemented; isolated regression coverage |
+| US-03 | Author-owned blog CRUD | Must | [#12](https://github.com/bobes81/Petwell/issues/12) | Implemented; tests and local browser checks |
+| US-04 | Private pet profile CRUD | Must | [#13](https://github.com/bobes81/Petwell/issues/13) | Implemented; tests and local browser checks |
+| US-05 | Private order history / Buy again | Must | [#14](https://github.com/bobes81/Petwell/issues/14) | Implemented; synthetic-history tests |
+| US-06 | Account sign-in and password recovery | Must | [#15](https://github.com/bobes81/Petwell/issues/15) | **Open:** login covered; SMTP test mail received; full hosted reset link not independently verified |
+| US-07 | Validated newsletter signup | Must | [#16](https://github.com/bobes81/Petwell/issues/16) | Implemented; storage/validation only |
+| US-08 | SEO, robots and sitemap | Must | [#17](https://github.com/bobes81/Petwell/issues/17) | Implemented; automated tests |
+| US-09 | Relevant catalogue imagery | Must | [#18](https://github.com/bobes81/Petwell/issues/18) | Image references updated; owner storefront review |
+| US-10 | Responsive interface | Must | [#19](https://github.com/bobes81/Petwell/issues/19) | Local desktop/mobile evidence |
+| US-11 | Facebook business-page mockup | Must | [#20](https://github.com/bobes81/Petwell/issues/20) | Clearly labelled permitted mockup |
+| US-12 | Documented repeatable deployment | Must | [#21](https://github.com/bobes81/Petwell/issues/21) | README, configuration and CI |
+| US-13 | Publish future marketing campaigns | Should | [#22](https://github.com/bobes81/Petwell/issues/22) | **Open:** published marketing and campaign delivery not implemented |
+| US-14 | Prevent unavailable-product purchase | Must | [#23](https://github.com/bobes81/Petwell/issues/23) | Implemented; production PDF listing withdrawn |
 
-Optional project-management follow-up: create or link a separate issue for each feature story, add priority labels only after reviewing existing labels, and separate implementation/test completion from outstanding deployment/evidence work. Do not close an entire epic merely because its code portion passes locally. This document is a truthful replacement for missing feature-level planning records, not a fabricated issue history.
+**Assessment mapping:** each issue body identifies the relevant LO and criteria, actual user goal, implementation location and honest verification scope. Closing an issue means its described implementation deliverable is complete; it is **not** an assertion that every external-service acceptance test has passed. Independent current e-commerce provider/browser testing limits are recorded in [TESTING.md](TESTING.md).
+
+The unrelated old workout/mood issues (#1–#7) were closed as **not planned for PetWell** on 31 October 2026; the history remains intact rather than being deleted.
+
